@@ -1,0 +1,126 @@
+export type UniverseRow = { symbol: string; name: string; exchange: string; type: string };
+
+export const UNIVERSE: UniverseRow[] = [
+  { symbol: "MSFT", name: "Microsoft Corporation", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "AAPL", name: "Apple Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "NVDA", name: "NVIDIA Corporation", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "TSLA", name: "Tesla, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "AMD", name: "Advanced Micro Devices, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "AMZN", name: "Amazon.com, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "META", name: "Meta Platforms, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "GOOGL", name: "Alphabet Inc. Class A", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "GOOG", name: "Alphabet Inc. Class C", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "AVGO", name: "Broadcom Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "MU", name: "Micron Technology, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "NFLX", name: "Netflix, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "CRM", name: "Salesforce, Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "ORCL", name: "Oracle Corporation", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "ADBE", name: "Adobe Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "INTC", name: "Intel Corporation", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "QCOM", name: "QUALCOMM Incorporated", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "TXN", name: "Texas Instruments Incorporated", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "AMAT", name: "Applied Materials, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "LRCX", name: "Lam Research Corporation", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "KLAC", name: "KLA Corporation", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "SNPS", name: "Synopsys, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "CDNS", name: "Cadence Design Systems, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "NOW", name: "ServiceNow, Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "INTU", name: "Intuit Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "CSCO", name: "Cisco Systems, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "IBM", name: "International Business Machines", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "JPM", name: "JPMorgan Chase & Co.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "GS", name: "Goldman Sachs Group, Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "BAC", name: "Bank of America Corporation", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "WFC", name: "Wells Fargo & Company", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "V", name: "Visa Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "MA", name: "Mastercard Incorporated", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "BRK.B", name: "Berkshire Hathaway Inc. Class B", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "UNH", name: "UnitedHealth Group Incorporated", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "JNJ", name: "Johnson & Johnson", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "LLY", name: "Eli Lilly and Company", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "PFE", name: "Pfizer Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "ABBV", name: "AbbVie Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "MRK", name: "Merck & Co., Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "XOM", name: "Exxon Mobil Corporation", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "CVX", name: "Chevron Corporation", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "COP", name: "ConocoPhillips", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "HD", name: "The Home Depot, Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "COST", name: "Costco Wholesale Corporation", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "WMT", name: "Walmart Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "PG", name: "Procter & Gamble Company", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "KO", name: "The Coca-Cola Company", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "PEP", name: "PepsiCo, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "MCD", name: "McDonald's Corporation", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "NKE", name: "NIKE, Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "DIS", name: "The Walt Disney Company", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "BA", name: "The Boeing Company", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "CAT", name: "Caterpillar Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "GE", name: "GE Aerospace", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "HON", name: "Honeywell International Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "UBER", name: "Uber Technologies, Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "ABNB", name: "Airbnb, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "SHOP", name: "Shopify Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "SNOW", name: "Snowflake Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "PLTR", name: "Palantir Technologies Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "COIN", name: "Coinbase Global, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "SQ", name: "Block, Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "PYPL", name: "PayPal Holdings, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "SMCI", name: "Super Micro Computer, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "ARM", name: "Arm Holdings plc", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "TSM", name: "Taiwan Semiconductor Manufacturing", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "ASML", name: "ASML Holding N.V.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "BABA", name: "Alibaba Group Holding Limited", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "NIO", name: "NIO Inc.", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "RIVN", name: "Rivian Automotive, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "LCID", name: "Lucid Group, Inc.", exchange: "NASDAQ", type: "EQUITY" },
+  { symbol: "F", name: "Ford Motor Company", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "GM", name: "General Motors Company", exchange: "NYSE", type: "EQUITY" },
+  { symbol: "SPY", name: "SPDR S&P 500 ETF Trust", exchange: "ARCA", type: "ETF" },
+  { symbol: "QQQ", name: "Invesco QQQ Trust", exchange: "NASDAQ", type: "ETF" },
+  { symbol: "IWM", name: "iShares Russell 2000 ETF", exchange: "ARCA", type: "ETF" },
+  { symbol: "DIA", name: "SPDR Dow Jones Industrial Average ETF", exchange: "ARCA", type: "ETF" },
+  { symbol: "VOO", name: "Vanguard S&P 500 ETF", exchange: "ARCA", type: "ETF" },
+  { symbol: "VTI", name: "Vanguard Total Stock Market ETF", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLK", name: "Technology Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLF", name: "Financial Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLE", name: "Energy Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLV", name: "Health Care Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLY", name: "Consumer Discretionary Select Sector SPDR", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLP", name: "Consumer Staples Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLI", name: "Industrial Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLB", name: "Materials Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLU", name: "Utilities Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLC", name: "Communication Services Select Sector SPDR", exchange: "ARCA", type: "ETF" },
+  { symbol: "XLRE", name: "Real Estate Select Sector SPDR Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "SOXX", name: "iShares Semiconductor ETF", exchange: "NASDAQ", type: "ETF" },
+  { symbol: "SMH", name: "VanEck Semiconductor ETF", exchange: "NASDAQ", type: "ETF" },
+  { symbol: "XBI", name: "SPDR S&P Biotech ETF", exchange: "ARCA", type: "ETF" },
+  { symbol: "ARKK", name: "ARK Innovation ETF", exchange: "ARCA", type: "ETF" },
+  { symbol: "TQQQ", name: "ProShares UltraPro QQQ", exchange: "NASDAQ", type: "ETF" },
+  { symbol: "SQQQ", name: "ProShares UltraPro Short QQQ", exchange: "NASDAQ", type: "ETF" },
+  { symbol: "GLD", name: "SPDR Gold Shares", exchange: "ARCA", type: "ETF" },
+  { symbol: "SLV", name: "iShares Silver Trust", exchange: "ARCA", type: "ETF" },
+  { symbol: "USO", name: "United States Oil Fund", exchange: "ARCA", type: "ETF" },
+  { symbol: "TLT", name: "iShares 20+ Year Treasury Bond ETF", exchange: "NASDAQ", type: "ETF" },
+  { symbol: "HYG", name: "iShares iBoxx $ High Yield Corporate Bond ETF", exchange: "ARCA", type: "ETF" },
+];
+
+export const BY_SYMBOL: Record<string, UniverseRow> = Object.fromEntries(UNIVERSE.map((r) => [r.symbol.toUpperCase(), r]));
+
+export function searchUniverse(q: string, limit = 12): UniverseRow[] {
+  const needle = q.trim().toLowerCase();
+  if (!needle) return UNIVERSE.slice(0, limit);
+  const scored: [number, UniverseRow][] = [];
+  for (const row of UNIVERSE) {
+    const sym = row.symbol.toLowerCase();
+    const name = row.name.toLowerCase();
+    const exch = row.exchange.toLowerCase();
+    if (needle === sym) scored.push([0, row]);
+    else if (sym.startsWith(needle)) scored.push([1, row]);
+    else if (sym.includes(needle)) scored.push([2, row]);
+    else if (name.includes(needle)) scored.push([3, row]);
+    else if (exch.includes(needle)) scored.push([4, row]);
+  }
+  scored.sort((a, b) => a[0] - b[0] || a[1].symbol.localeCompare(b[1].symbol));
+  return scored.slice(0, limit).map(([, r]) => r);
+}

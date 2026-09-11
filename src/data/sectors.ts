@@ -1,0 +1,193 @@
+export type SectorMeta = {
+  slug: string;
+  name: string;
+  etf: string;
+  members: [string, string][];
+};
+
+export const SECTORS: Record<string, SectorMeta> = {
+  technology: {
+    slug: "technology",
+    name: "Technology",
+    etf: "XLK",
+    members: [
+      ["AAPL", "Apple"],
+      ["MSFT", "Microsoft"],
+      ["CRM", "Salesforce"],
+      ["ORCL", "Oracle"],
+      ["ADBE", "Adobe"],
+      ["CSCO", "Cisco"],
+      ["NOW", "ServiceNow"],
+      ["INTU", "Intuit"],
+    ],
+  },
+  semiconductors: {
+    slug: "semiconductors",
+    name: "Semiconductors",
+    etf: "SOXX",
+    members: [
+      ["NVDA", "NVIDIA"],
+      ["AVGO", "Broadcom"],
+      ["AMD", "AMD"],
+      ["TSM", "TSMC"],
+      ["ASML", "ASML"],
+      ["MU", "Micron"],
+      ["AMAT", "Applied Materials"],
+      ["QCOM", "Qualcomm"],
+    ],
+  },
+  communication: {
+    slug: "communication",
+    name: "Communication Services",
+    etf: "XLC",
+    members: [
+      ["META", "Meta"],
+      ["GOOGL", "Alphabet"],
+      ["NFLX", "Netflix"],
+      ["DIS", "Disney"],
+      ["T", "AT&T"],
+      ["VZ", "Verizon"],
+      ["CMCSA", "Comcast"],
+      ["TMUS", "T-Mobile"],
+    ],
+  },
+  financials: {
+    slug: "financials",
+    name: "Financials",
+    etf: "XLF",
+    members: [
+      ["JPM", "JPMorgan"],
+      ["BAC", "Bank of America"],
+      ["WFC", "Wells Fargo"],
+      ["GS", "Goldman Sachs"],
+      ["V", "Visa"],
+      ["MA", "Mastercard"],
+      ["C", "Citigroup"],
+      ["MS", "Morgan Stanley"],
+    ],
+  },
+  energy: {
+    slug: "energy",
+    name: "Energy",
+    etf: "XLE",
+    members: [
+      ["XOM", "Exxon Mobil"],
+      ["CVX", "Chevron"],
+      ["COP", "ConocoPhillips"],
+      ["SLB", "Schlumberger"],
+      ["EOG", "EOG Resources"],
+      ["MPC", "Marathon Petroleum"],
+      ["OXY", "Occidental"],
+      ["WMB", "Williams"],
+    ],
+  },
+  healthcare: {
+    slug: "healthcare",
+    name: "Health Care",
+    etf: "XLV",
+    members: [
+      ["UNH", "UnitedHealth"],
+      ["LLY", "Eli Lilly"],
+      ["JNJ", "Johnson & Johnson"],
+      ["ABBV", "AbbVie"],
+      ["MRK", "Merck"],
+      ["PFE", "Pfizer"],
+      ["TMO", "Thermo Fisher"],
+      ["ABT", "Abbott"],
+    ],
+  },
+  discretionary: {
+    slug: "discretionary",
+    name: "Consumer Discretionary",
+    etf: "XLY",
+    members: [
+      ["AMZN", "Amazon"],
+      ["TSLA", "Tesla"],
+      ["HD", "Home Depot"],
+      ["MCD", "McDonald's"],
+      ["NKE", "Nike"],
+      ["LOW", "Lowe's"],
+      ["SBUX", "Starbucks"],
+      ["BKNG", "Booking"],
+    ],
+  },
+  industrials: {
+    slug: "industrials",
+    name: "Industrials",
+    etf: "XLI",
+    members: [
+      ["CAT", "Caterpillar"],
+      ["GE", "GE Aerospace"],
+      ["HON", "Honeywell"],
+      ["BA", "Boeing"],
+      ["UNP", "Union Pacific"],
+      ["RTX", "RTX"],
+      ["DE", "Deere"],
+      ["UPS", "UPS"],
+    ],
+  },
+  staples: {
+    slug: "staples",
+    name: "Consumer Staples",
+    etf: "XLP",
+    members: [
+      ["WMT", "Walmart"],
+      ["COST", "Costco"],
+      ["PG", "Procter & Gamble"],
+      ["KO", "Coca-Cola"],
+      ["PEP", "PepsiCo"],
+      ["PM", "Philip Morris"],
+      ["MO", "Altria"],
+      ["CL", "Colgate"],
+    ],
+  },
+  materials: {
+    slug: "materials",
+    name: "Materials",
+    etf: "XLB",
+    members: [
+      ["LIN", "Linde"],
+      ["SHW", "Sherwin-Williams"],
+      ["APD", "Air Products"],
+      ["FCX", "Freeport"],
+      ["NEM", "Newmont"],
+      ["ECL", "Ecolab"],
+      ["NUE", "Nucor"],
+      ["CTVA", "Corteva"],
+    ],
+  },
+  utilities: {
+    slug: "utilities",
+    name: "Utilities",
+    etf: "XLU",
+    members: [
+      ["NEE", "NextEra"],
+      ["SO", "Southern"],
+      ["DUK", "Duke Energy"],
+      ["CEG", "Constellation"],
+      ["AEP", "American Electric"],
+      ["SRE", "Sempra"],
+      ["D", "Dominion"],
+      ["EXC", "Exelon"],
+    ],
+  },
+  "real-estate": {
+    slug: "real-estate",
+    name: "Real Estate",
+    etf: "XLRE",
+    members: [
+      ["PLD", "Prologis"],
+      ["AMT", "American Tower"],
+      ["EQIX", "Equinix"],
+      ["WELL", "Welltower"],
+      ["SPG", "Simon Property"],
+      ["O", "Realty Income"],
+      ["CCI", "Crown Castle"],
+      ["PSA", "Public Storage"],
+    ],
+  },
+};
+
+export function getSector(slug: string): SectorMeta | undefined {
+  return SECTORS[(slug || "").trim().toLowerCase()];
+}
