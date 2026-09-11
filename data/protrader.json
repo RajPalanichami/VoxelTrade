@@ -55502,6 +55502,5266 @@
       "algorithm_version": "1.0.0",
       "id": "7e96d8d5-d93c-45c5-9d19-2b580d96013c",
       "created_at": "2026-09-10T18:23:59.714Z"
+    },
+    {
+      "symbol": "AAPL",
+      "timeframe": "30m",
+      "score": 66,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 9.8,
+            "weight": 16,
+            "weighted_score": 15.68,
+            "details": "Price > EMA9 > EMA21; EMA21 > EMA50; Price > VWAP",
+            "evidence": {
+              "price": 335.5199890136719,
+              "ema9": 331.27188577034536,
+              "ema20": 326.67817545294696,
+              "ema21": 326.3931867241483,
+              "ema50": 322.68524118846676,
+              "ema200": 318.8664129338576
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "CAUTION",
+            "raw_score": 6.5,
+            "weight": 12,
+            "weighted_score": 7.8,
+            "details": "RSI 78.2 > 70 — strong momentum with pullback risk (not auto-bearish).",
+            "evidence": {
+              "rsi": 78.15980220651375,
+              "rsi_prev": 77.95666173635252
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 12,
+            "weighted_score": 9.6,
+            "details": "MACD > signal and histogram > 0.",
+            "evidence": {
+              "macd": 4.506354847934574,
+              "signal": 3.2213827824568906,
+              "hist": 1.2849720654776835,
+              "hist_prev": 1.3762928742796783
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 12,
+            "weighted_score": 3.6,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 4671113.55,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 16,
+            "weighted_score": 12.8,
+            "details": "Holding above S1 333.60; Room to R1 337.06; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 335.5199890136719,
+              "s1": 333.6,
+              "s2": null,
+              "r1": 337.06,
+              "r2": 339.33,
+              "pivot": 335.5,
+              "vwap": 332.81
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 6,
+            "weighted_score": 4.8,
+            "details": "Revenue growth 16.4%; EPS growth 28.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.164,
+              "eps_growth": 0.287,
+              "pe": 38.477062,
+              "forward_pe": 35.042606,
+              "gross_margin": 0.48653,
+              "operating_margin": 0.32623002
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 5,
+            "weighted_score": 4.5,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 48,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 324.40155,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793304000,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 8,
+            "weighted_score": 2.56,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 3,
+            "weighted_score": 1.2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BEARISH",
+            "raw_score": 3.5,
+            "weight": 10,
+            "weighted_score": 3.5,
+            "details": "10 headlines; 1 positive / 2 negative; Event-risk category present",
+            "evidence": {
+              "positive": 1,
+              "negative": 2,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:27:48.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "9bbedccd-109e-4a1b-b15b-5cf275ef9ec2",
+      "created_at": "2026-09-11T15:27:53.619Z"
+    },
+    {
+      "symbol": "AAPL",
+      "timeframe": "1h",
+      "score": 69,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 10,
+            "weight": 15,
+            "weighted_score": 15,
+            "details": "Price > EMA20 > EMA50 > EMA200; All EMA slopes positive; EMA9 > EMA21; Price > VWAP; Higher highs & higher lows",
+            "evidence": {
+              "price": 335.510009765625,
+              "ema9": 328.5958351059959,
+              "ema20": 324.18647721141696,
+              "ema21": 323.99027166490976,
+              "ema50": 321.46520115403257,
+              "ema200": 316.84874939227626
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "CAUTION",
+            "raw_score": 6.5,
+            "weight": 10,
+            "weighted_score": 6.5,
+            "details": "RSI 75.1 > 70 — strong momentum with pullback risk (not auto-bearish).",
+            "evidence": {
+              "rsi": 75.06801354417235,
+              "rsi_prev": 74.90290034582674
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": 3.5775054102429067,
+              "signal": 1.358643897661398,
+              "hist": 2.2188615125815088,
+              "hist_prev": 2.174859479122759
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 7553486.6,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 333.45; Room to R1 337.02; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 335.510009765625,
+              "s1": 333.45,
+              "s2": 330.73,
+              "r1": 337.02,
+              "r2": 338.62,
+              "pivot": 334.66,
+              "vwap": 332.79
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 16.4%; EPS growth 28.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.164,
+              "eps_growth": 0.287,
+              "pe": 38.47821,
+              "forward_pe": 35.04365,
+              "gross_margin": 0.48653,
+              "operating_margin": 0.32623002
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 48,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 324.40155,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793304000,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BEARISH",
+            "raw_score": 3.5,
+            "weight": 10,
+            "weighted_score": 3.5,
+            "details": "10 headlines; 1 positive / 2 negative; Event-risk category present",
+            "evidence": {
+              "positive": 1,
+              "negative": 2,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:27:51.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "594db488-9d38-4430-ac8f-e83ceae61779",
+      "created_at": "2026-09-11T15:27:54.192Z"
+    },
+    {
+      "symbol": "AAPL",
+      "timeframe": "4h",
+      "score": 76,
+      "signal": "BUY",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 10,
+            "weight": 18,
+            "weighted_score": 18,
+            "details": "Price > EMA20 > EMA50 > EMA200; All EMA slopes positive; EMA9 > EMA21",
+            "evidence": {
+              "price": 335.510009765625,
+              "ema9": 323.5329295931017,
+              "ema20": 320.9361345455275,
+              "ema21": 320.7526006731543,
+              "ema50": 317.553458708252,
+              "ema200": 304.40888998398805
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 8,
+            "weighted_score": 7.6,
+            "details": "RSI 67.7 in 55–70 and rising (strong bullish momentum).",
+            "evidence": {
+              "rsi": 67.68707687233143,
+              "rsi_prev": 60.29100766198141
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": 2.7200505912134076,
+              "signal": 2.067356243333413,
+              "hist": 0.6526943478799945,
+              "hist_prev": -0.27562038626527086
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BULLISH",
+            "raw_score": 7.5,
+            "weight": 8,
+            "weighted_score": 6,
+            "details": "Volume 1.29x average — good confirmation.",
+            "evidence": {
+              "volume_ratio": 1.2861733857738014,
+              "last_volume": 23344182,
+              "avg20": 18150105,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 18,
+            "weighted_score": 14.4,
+            "details": "Holding above S1 333.22; Room to R1 338.43; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 335.510009765625,
+              "s1": 333.22,
+              "s2": 330.24,
+              "r1": 338.43,
+              "r2": 341.34,
+              "pivot": 324.85,
+              "vwap": 332.68
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 8,
+            "weighted_score": 6.4,
+            "details": "Revenue growth 16.4%; EPS growth 28.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.164,
+              "eps_growth": 0.287,
+              "pe": 38.47993,
+              "forward_pe": 35.04522,
+              "gross_margin": 0.48653,
+              "operating_margin": 0.32623002
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 6,
+            "weighted_score": 5.4,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 48,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 324.40155,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793304000,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 10,
+            "weighted_score": 3.2,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 4,
+            "weighted_score": 1.6,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BEARISH",
+            "raw_score": 3.5,
+            "weight": 10,
+            "weighted_score": 3.5,
+            "details": "10 headlines; 1 positive / 2 negative; Event-risk category present",
+            "evidence": {
+              "positive": 1,
+              "negative": 2,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T16:00:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "06bb9c99-f6b2-4b5d-b30e-824a48112965",
+      "created_at": "2026-09-11T15:27:54.730Z"
+    },
+    {
+      "symbol": "AAPL",
+      "timeframe": "1d",
+      "score": 70,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 10,
+            "weight": 12,
+            "weighted_score": 12,
+            "details": "Price > EMA20 > EMA50 > EMA200; All EMA slopes positive; EMA9 > EMA21; Higher highs & higher lows",
+            "evidence": {
+              "price": 335.510009765625,
+              "ema9": 323.16225282731403,
+              "ema20": 319.34254609836904,
+              "ema21": 319.13578110326085,
+              "ema50": 314.1814021618801,
+              "ema200": 288.14107249288526
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 8,
+            "weighted_score": 7.6,
+            "details": "RSI 64.7 in 55–70 and rising (strong bullish momentum).",
+            "evidence": {
+              "rsi": 64.67248593959884,
+              "rsi_prev": 58.93762497197149
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 8,
+            "weighted_score": 7.6,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": 3.4854303266891975,
+              "signal": 1.9539432637046423,
+              "hist": 1.5314870629845552,
+              "hist_prev": 0.788916032008028
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 8,
+            "weighted_score": 2.4,
+            "details": "Volume 0.57x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0.5684716860010016,
+              "last_volume": 23400079,
+              "avg20": 41163138.95,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 12,
+            "weighted_score": 9.6,
+            "details": "Holding above S1 334.99; Room to R1 339.90; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 335.510009765625,
+              "s1": 334.99,
+              "s2": 333.09,
+              "r1": 339.9,
+              "r2": 344.06,
+              "pivot": 323.27,
+              "vwap": 332.68
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 14,
+            "weighted_score": 11.2,
+            "details": "Revenue growth 16.4%; EPS growth 28.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.164,
+              "eps_growth": 0.287,
+              "pe": 38.47993,
+              "forward_pe": 35.04522,
+              "gross_margin": 0.48653,
+              "operating_margin": 0.32623002
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 12,
+            "weighted_score": 10.8,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 48,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 324.40155,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793304000,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 10,
+            "weighted_score": 3.2,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 8,
+            "weighted_score": 3.2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BEARISH",
+            "raw_score": 3.5,
+            "weight": 8,
+            "weighted_score": 2.8,
+            "details": "10 headlines; 1 positive / 2 negative; Event-risk category present",
+            "evidence": {
+              "positive": 1,
+              "negative": 2,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T13:30:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "34a6068e-0200-4515-8ae1-8287588d20ee",
+      "created_at": "2026-09-11T15:27:55.139Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "30m",
+      "score": 73,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 8.8,
+            "weight": 16,
+            "weighted_score": 14.08,
+            "details": "Price > EMA9 > EMA21; Price > VWAP",
+            "evidence": {
+              "price": 496.65899658203125,
+              "ema9": 494.47778427216093,
+              "ema20": 493.57699676846454,
+              "ema21": 493.55782348936236,
+              "ema50": 494.7047761703869,
+              "ema200": 494.6121113628418
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 12,
+            "weighted_score": 11.4,
+            "details": "RSI 57.5 in 55–70 and rising (strong bullish momentum).",
+            "evidence": {
+              "rsi": 57.454994307300794,
+              "rsi_prev": 56.39670896204543
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 12,
+            "weighted_score": 11.4,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": 0.5110797978063033,
+              "signal": -0.12948152040054978,
+              "hist": 0.640561318206853,
+              "hist_prev": 0.5786513760545032
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 12,
+            "weighted_score": 3.6,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 882574.9,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 16,
+            "weighted_score": 12.8,
+            "details": "Holding above S1 495.20; Room to R1 498.75; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 496.65899658203125,
+              "s1": 495.2,
+              "s2": null,
+              "r1": 498.75,
+              "r2": null,
+              "pivot": 495,
+              "vwap": 496.01
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 6,
+            "weighted_score": 4.8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.638844,
+              "forward_pe": 21.069462,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 5,
+            "weighted_score": 4.5,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 8,
+            "weighted_score": 2.56,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 3,
+            "weighted_score": 1.2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 4 positive / 1 negative",
+            "evidence": {
+              "positive": 4,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:27:53.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "84153f88-aa2e-4303-bfb8-78aae1810010",
+      "created_at": "2026-09-11T15:27:56.454Z"
+    },
+    {
+      "symbol": "NVDA",
+      "timeframe": "1h",
+      "score": 48,
+      "signal": "SELL",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 15,
+            "weighted_score": 4.8,
+            "details": "Price above 1/3 major EMAs; Price < VWAP; Lower highs & lower lows",
+            "evidence": {
+              "price": 220.22000122070312,
+              "ema9": 220.07016592716678,
+              "ema20": 221.55246506312318,
+              "ema21": 221.66834644361234,
+              "ema50": 222.7535653895582,
+              "ema200": 218.69682706626503
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "RSI 42.3 < 50 (bearish momentum).",
+            "evidence": {
+              "rsi": 42.31778655803439,
+              "rsi_prev": 42.23527274108954
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BEARISH",
+            "raw_score": 2.5,
+            "weight": 10,
+            "weighted_score": 2.5,
+            "details": "MACD < signal and histogram < 0.",
+            "evidence": {
+              "macd": -1.6983595586607976,
+              "signal": -1.6748669833995762,
+              "hist": -0.023492575261221393,
+              "hist_prev": -0.1423461220692741
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 10861719.7,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "NEUTRAL",
+            "raw_score": 5.3,
+            "weight": 15,
+            "weighted_score": 7.95,
+            "details": "Holding above S1 218.89; Room to R1 220.96; Below pivot; Below VWAP",
+            "evidence": {
+              "price": 220.22000122070312,
+              "s1": 218.89,
+              "s2": null,
+              "r1": 220.96,
+              "r2": null,
+              "pivot": 220.36,
+              "vwap": 220.72
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 105.9%; EPS growth 127.8%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 1.059,
+              "eps_growth": 1.278,
+              "pe": 27.87595,
+              "forward_pe": 14.146111,
+              "gross_margin": 0.74674004,
+              "operating_margin": 0.66236997
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 67,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 327.6544,
+              "eps_revision_trend": "up",
+              "earnings_date": 1794945600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 5 positive / 1 negative",
+            "evidence": {
+              "positive": 5,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": [
+          "R:R 1.35 below minimum 1.5 — DO NOT TRADE.",
+          "Selected timeframe trend is bearish."
+        ]
+      },
+      "data_timestamp": "2026-09-11T15:27:53.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "b3905676-f1a9-42e6-9770-d0ec26cdedfd",
+      "created_at": "2026-09-11T15:27:57.622Z"
+    },
+    {
+      "symbol": "TSLA",
+      "timeframe": "4h",
+      "score": 53,
+      "signal": "WEAK",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "CAUTION",
+            "raw_score": 6.4,
+            "weight": 18,
+            "weighted_score": 11.52,
+            "details": "Price above 2/3 major EMAs; EMA9 > EMA21",
+            "evidence": {
+              "price": 365.89801025390625,
+              "ema9": 365.049193253388,
+              "ema20": 361.6343381529912,
+              "ema21": 361.28678765197833,
+              "ema50": 355.2003542062699,
+              "ema200": 371.96543224360386
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 8,
+            "weighted_score": 6.4,
+            "details": "RSI 54.7 in 50–70 and rising.",
+            "evidence": {
+              "rsi": 54.661442955303336,
+              "rsi_prev": 53.260517420832755
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BEARISH",
+            "raw_score": 2,
+            "weight": 10,
+            "weighted_score": 2,
+            "details": "MACD < signal, histogram negative and falling.",
+            "evidence": {
+              "macd": 4.664314039727458,
+              "signal": 5.147731541619243,
+              "hist": -0.48341750189178523,
+              "hist_prev": -0.39690561638200705
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 8,
+            "weighted_score": 2.4,
+            "details": "Volume 0.76x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0.7558194354688618,
+              "last_volume": 14679512,
+              "avg20": 19421982.7,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "CAUTION",
+            "raw_score": 6.8,
+            "weight": 18,
+            "weighted_score": 12.24,
+            "details": "Holding above S1 365.17; Pressed directly under R1 366.61; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 365.89801025390625,
+              "s1": 365.17,
+              "s2": 361.45,
+              "r1": 366.61,
+              "r2": 370.44,
+              "pivot": 364.74,
+              "vwap": 365.39
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 8,
+            "weighted_score": 3.2,
+            "details": "Revenue growth 25.5%; EPS -3.0%; Balance sheet healthy; Profitable",
+            "evidence": {
+              "revenue_growth": 0.255,
+              "eps_growth": -0.03,
+              "pe": 335.68625,
+              "forward_pe": 169.50865,
+              "gross_margin": 0.18852,
+              "operating_margin": 0.014099999
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 6,
+            "weighted_score": 5.4,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 40,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 390.09283,
+              "eps_revision_trend": "up",
+              "earnings_date": 1792612800,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 10,
+            "weighted_score": 3.2,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 4,
+            "weighted_score": 1.6,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "CAUTION",
+            "raw_score": 5.5,
+            "weight": 10,
+            "weighted_score": 5.5,
+            "details": "10 headlines; 1 positive / 0 negative; Event-risk category present",
+            "evidence": {
+              "positive": 1,
+              "negative": 0,
+              "count": 10
+            }
+          }
+        ],
+        "filters": [
+          "R:R 1.25 below minimum 1.5 — DO NOT TRADE."
+        ]
+      },
+      "data_timestamp": "2026-09-11T16:00:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "e9e3838f-d4b6-4222-ae55-73a032100d0b",
+      "created_at": "2026-09-11T15:27:58.818Z"
+    },
+    {
+      "symbol": "SPY",
+      "timeframe": "1d",
+      "score": 48,
+      "signal": "SELL",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 12,
+            "weighted_score": 10.8,
+            "details": "Price > EMA20 > EMA50 > EMA200; EMA9 > EMA21; Lower highs & lower lows",
+            "evidence": {
+              "price": 766.0599975585938,
+              "ema9": 765.1175374274794,
+              "ema20": 765.1836822527735,
+              "ema21": 765.0607537047144,
+              "ema50": 758.5318633926184,
+              "ema200": 718.1576873632588
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 8,
+            "weighted_score": 6.4,
+            "details": "RSI 51.8 in 50–70 and rising.",
+            "evidence": {
+              "rsi": 51.77586542910771,
+              "rsi_prev": 44.09368655250636
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BEARISH",
+            "raw_score": 2.5,
+            "weight": 8,
+            "weighted_score": 2,
+            "details": "MACD < signal and histogram < 0.",
+            "evidence": {
+              "macd": 1.191346282611562,
+              "signal": 2.5075837484085146,
+              "hist": -1.3162374657969527,
+              "hist_prev": -1.610916161193432
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 8,
+            "weighted_score": 2.4,
+            "details": "Volume 0.40x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0.4015629284883059,
+              "last_volume": 14381482,
+              "avg20": 35813769.1,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 12,
+            "weighted_score": 9.6,
+            "details": "Holding above S1 763.50; Room to R1 769.17; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 766.0599975585938,
+              "s1": 763.5,
+              "s2": null,
+              "r1": 769.17,
+              "r2": 775.82,
+              "pivot": 758.19,
+              "vwap": 765.34
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BEARISH",
+            "raw_score": 0.5,
+            "weight": 14,
+            "weighted_score": 0.7,
+            "details": "P/E 24.8",
+            "evidence": {
+              "revenue_growth": null,
+              "eps_growth": null,
+              "pe": 24.75536,
+              "forward_pe": null,
+              "gross_margin": null,
+              "operating_margin": null
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "NEUTRAL",
+            "raw_score": 5,
+            "weight": 12,
+            "weighted_score": 6,
+            "details": "Earnings revision data unavailable — scored neutral.",
+            "evidence": {}
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 10,
+            "weighted_score": 3.2,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 8,
+            "weighted_score": 3.2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "NEUTRAL",
+            "raw_score": 5,
+            "weight": 8,
+            "weighted_score": 4,
+            "details": "10 headlines; 1 positive / 1 negative",
+            "evidence": {
+              "positive": 1,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T13:30:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "6e955750-5f98-47c4-9437-a2b1406f593c",
+      "created_at": "2026-09-11T15:27:59.951Z"
+    },
+    {
+      "symbol": "AMZN",
+      "timeframe": "1h",
+      "score": 70,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "CAUTION",
+            "raw_score": 6.5,
+            "weight": 15,
+            "weighted_score": 9.75,
+            "details": "Price above 2/3 major EMAs; EMA9 > EMA21; Price > VWAP; Lower highs & lower lows",
+            "evidence": {
+              "price": 256.42999267578125,
+              "ema9": 254.20365961388075,
+              "ema20": 254.07613989629965,
+              "ema21": 254.11284015935684,
+              "ema50": 255.47229129731082,
+              "ema200": 257.77208314529014
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "RSI 59.8 in 55–70 and rising (strong bullish momentum).",
+            "evidence": {
+              "rsi": 59.814466880014486,
+              "rsi_prev": 59.7431530694384
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": -0.3296929972244982,
+              "signal": -0.9382856492834251,
+              "hist": 0.6085926520589269,
+              "hist_prev": 0.48666092415524353
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 3017343.25,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 255.74; Room to R1 257.42; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 256.42999267578125,
+              "s1": 255.74,
+              "s2": null,
+              "r1": 257.42,
+              "r2": null,
+              "pivot": 255.88,
+              "vwap": 255.43
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 7.5,
+            "weight": 10,
+            "weighted_score": 7.5,
+            "details": "Revenue growth 19.6%; EPS growth 242.3%; Margin profile constructive; Balance sheet healthy; Profitable; P/E 20.6",
+            "evidence": {
+              "revenue_growth": 0.196,
+              "eps_growth": 2.423,
+              "pe": 20.646538,
+              "forward_pe": 24.655972,
+              "gross_margin": 0.5077,
+              "operating_margin": 0.13689
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 48,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 328.1707,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793304000,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 3 positive / 1 negative",
+            "evidence": {
+              "positive": 3,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:27:56.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "ad256189-2d28-4011-ba81-25e1d190adf5",
+      "created_at": "2026-09-11T15:28:01.036Z"
+    },
+    {
+      "symbol": "META",
+      "timeframe": "1h",
+      "score": 58,
+      "signal": "WEAK",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 9.9,
+            "weight": 15,
+            "weighted_score": 14.85,
+            "details": "Price > EMA20 > EMA50 > EMA200; All EMA slopes positive; EMA9 > EMA21; Price < VWAP; Higher highs & higher lows",
+            "evidence": {
+              "price": 652.8599853515625,
+              "ema9": 649.5575637962969,
+              "ema20": 643.2108055515894,
+              "ema21": 642.5198482825558,
+              "ema50": 624.0999261938027,
+              "ema200": 596.7871175508612
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "CAUTION",
+            "raw_score": 6.5,
+            "weight": 10,
+            "weighted_score": 6.5,
+            "details": "RSI 70.0 > 70 — strong momentum with pullback risk (not auto-bearish).",
+            "evidence": {
+              "rsi": 70.04848048188273,
+              "rsi_prev": 69.91355100444946
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BEARISH",
+            "raw_score": 2.5,
+            "weight": 10,
+            "weighted_score": 2.5,
+            "details": "MACD < signal and histogram < 0.",
+            "evidence": {
+              "macd": 9.186613051173936,
+              "signal": 10.560584632052622,
+              "hist": -1.3739715808786865,
+              "hist_prev": -1.4555148654528551
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 3050555,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "CAUTION",
+            "raw_score": 6.6,
+            "weight": 15,
+            "weighted_score": 9.9,
+            "details": "Holding above S1 651.99; Room to R1 655.69; Above pivot; Below VWAP",
+            "evidence": {
+              "price": 652.8599853515625,
+              "s1": 651.99,
+              "s2": 649.37,
+              "r1": 655.69,
+              "r2": 660.42,
+              "pivot": 651.99,
+              "vwap": 654.18
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "CAUTION",
+            "raw_score": 6,
+            "weight": 10,
+            "weighted_score": 6,
+            "details": "Revenue growth 28.0%; EPS -13.4%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.28,
+              "eps_growth": -0.134,
+              "pe": 24.589079,
+              "forward_pe": 18.674095,
+              "gross_margin": 0.81747,
+              "operating_margin": 0.34827
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 757.31085,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 10,
+            "weighted_score": 4,
+            "details": "10 headlines; 0 positive / 1 negative",
+            "evidence": {
+              "positive": 0,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:28:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "b8dab35d-6c07-4e76-875d-1533113348ea",
+      "created_at": "2026-09-11T15:28:02.422Z"
+    },
+    {
+      "symbol": "GOOGL",
+      "timeframe": "1h",
+      "score": 70,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "CAUTION",
+            "raw_score": 6.9,
+            "weight": 15,
+            "weighted_score": 10.35,
+            "details": "Price above 2/3 major EMAs; EMA9 > EMA21; Price > VWAP",
+            "evidence": {
+              "price": 342.25,
+              "ema9": 336.6557671988754,
+              "ema20": 335.27907560093263,
+              "ema21": 335.28063168281153,
+              "ema50": 336.63509434364397,
+              "ema200": 342.85366312257355
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "RSI 68.1 in 55–70 and rising (strong bullish momentum).",
+            "evidence": {
+              "rsi": 68.12327054755102,
+              "rsi_prev": 68.10751849904365
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": 0.46701159644442214,
+              "signal": -1.0621324779651926,
+              "hist": 1.5291440744096148,
+              "hist_prev": 1.2981103845134958
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 2907986.6,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 340.77; Room to R1 343.47; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 342.25,
+              "s1": 340.77,
+              "s2": null,
+              "r1": 343.47,
+              "r2": null,
+              "pivot": 341.51,
+              "vwap": 339.6
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 7.5,
+            "weight": 10,
+            "weighted_score": 7.5,
+            "details": "Revenue growth 24.2%; EPS growth 294.0%; Margin profile constructive; Balance sheet healthy; Profitable; P/E 17.2",
+            "evidence": {
+              "revenue_growth": 0.242,
+              "eps_growth": 2.94,
+              "pe": 17.181726,
+              "forward_pe": 23.010887,
+              "gross_margin": 0.60897,
+              "operating_margin": 0.34033
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 428.06668,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 5 positive / 1 negative",
+            "evidence": {
+              "positive": 5,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:28:01.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "c148423b-4bc0-4b15-b200-1469ae70e429",
+      "created_at": "2026-09-11T15:28:03.815Z"
+    },
+    {
+      "symbol": "AMD",
+      "timeframe": "1h",
+      "score": 67,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 9.6,
+            "weight": 15,
+            "weighted_score": 14.4,
+            "details": "Price > EMA20 > EMA50 > EMA200; All EMA slopes positive; EMA9 > EMA21; Price > VWAP; Lower highs & lower lows",
+            "evidence": {
+              "price": 516.3400268554688,
+              "ema9": 512.2678157170126,
+              "ema20": 507.95063905754546,
+              "ema21": 507.42179375927384,
+              "ema50": 494.43837298166017,
+              "ema200": 486.75065052529953
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "RSI 61.5 in 55–70 and rising (strong bullish momentum).",
+            "evidence": {
+              "rsi": 61.53797652557287,
+              "rsi_prev": 61.07808475961975
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BEARISH",
+            "raw_score": 2.5,
+            "weight": 10,
+            "weighted_score": 2.5,
+            "details": "MACD < signal and histogram < 0.",
+            "evidence": {
+              "macd": 6.734722116217313,
+              "signal": 8.125588882568088,
+              "hist": -1.3908667663507757,
+              "hist_prev": -1.6968845733796716
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 2490515.25,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 512.89; Room to R1 521.21; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 516.3400268554688,
+              "s1": 512.89,
+              "s2": 507.95,
+              "r1": 521.21,
+              "r2": 526.35,
+              "pivot": 515.94,
+              "vwap": 514.47
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 50.1%; EPS growth 159.5%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.501,
+              "eps_growth": 1.595,
+              "pe": 131.38423,
+              "forward_pe": 33.032845,
+              "gross_margin": 0.55724,
+              "operating_margin": 0.1725
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 53,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 615.3755,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793736000,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "CAUTION",
+            "raw_score": 6,
+            "weight": 10,
+            "weighted_score": 6,
+            "details": "10 headlines; 2 positive / 1 negative",
+            "evidence": {
+              "positive": 2,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:27:59.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "f03efb75-8aca-48c7-b008-350a40165437",
+      "created_at": "2026-09-11T15:28:05.190Z"
+    },
+    {
+      "symbol": "QQQ",
+      "timeframe": "1d",
+      "score": 49,
+      "signal": "SELL",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 9.4,
+            "weight": 12,
+            "weighted_score": 11.28,
+            "details": "Price > EMA20 > EMA50 > EMA200; EMA9 > EMA21",
+            "evidence": {
+              "price": 717.2061767578125,
+              "ema9": 714.9492974777672,
+              "ema20": 714.5014344296011,
+              "ema21": 714.4304195802664,
+              "ema50": 711.1394515390999,
+              "ema200": 666.7446716202763
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 8,
+            "weighted_score": 6.4,
+            "details": "RSI 52.3 in 50–70 and rising.",
+            "evidence": {
+              "rsi": 52.255472425287564,
+              "rsi_prev": 46.313399099046784
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BEARISH",
+            "raw_score": 2.5,
+            "weight": 8,
+            "weighted_score": 2,
+            "details": "MACD < signal and histogram < 0.",
+            "evidence": {
+              "macd": 0.8582731259346019,
+              "signal": 1.1944407456537318,
+              "hist": -0.3361676197191299,
+              "hist_prev": -0.584479025285036
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 8,
+            "weighted_score": 2.4,
+            "details": "Volume 0.42x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0.42135797755777743,
+              "last_volume": 12611426,
+              "avg20": 29930431.3,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "CAUTION",
+            "raw_score": 6.8,
+            "weight": 12,
+            "weighted_score": 8.16,
+            "details": "Holding above S1 714.73; Pressed directly under R1 718.72; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 717.2061767578125,
+              "s1": 714.73,
+              "s2": null,
+              "r1": 718.72,
+              "r2": 725.12,
+              "pivot": 709.2,
+              "vwap": 716.05
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BEARISH",
+            "raw_score": 0.5,
+            "weight": 14,
+            "weighted_score": 0.7,
+            "details": "P/E 29.2",
+            "evidence": {
+              "revenue_growth": null,
+              "eps_growth": null,
+              "pe": 29.240429,
+              "forward_pe": null,
+              "gross_margin": null,
+              "operating_margin": null
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "NEUTRAL",
+            "raw_score": 5,
+            "weight": 12,
+            "weighted_score": 6,
+            "details": "Earnings revision data unavailable — scored neutral.",
+            "evidence": {}
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 10,
+            "weighted_score": 3.2,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 8,
+            "weighted_score": 3.2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "CAUTION",
+            "raw_score": 6.5,
+            "weight": 8,
+            "weighted_score": 5.2,
+            "details": "10 headlines; 2 positive / 0 negative; Event-risk category present",
+            "evidence": {
+              "positive": 2,
+              "negative": 0,
+              "count": 10
+            }
+          }
+        ],
+        "filters": [
+          "R:R 1.28 below minimum 1.5 — DO NOT TRADE."
+        ]
+      },
+      "data_timestamp": "2026-09-11T13:30:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "545f7bc6-dbc1-4e8f-a695-273f3d81329b",
+      "created_at": "2026-09-11T15:28:06.321Z"
+    },
+    {
+      "symbol": "AAPL",
+      "timeframe": "5m",
+      "score": 59,
+      "signal": "WEAK",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 9.8,
+            "weight": 18,
+            "weighted_score": 17.64,
+            "details": "Price > EMA9 > EMA21; EMA21 > EMA50; Price > VWAP",
+            "evidence": {
+              "price": 335.510009765625,
+              "ema9": 335.2194708520491,
+              "ema20": 333.9673241886658,
+              "ema21": 333.8370102643248,
+              "ema50": 330.47106596262074,
+              "ema200": 323.2532157405256
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "CAUTION",
+            "raw_score": 6.5,
+            "weight": 14,
+            "weighted_score": 9.1,
+            "details": "RSI 71.2 > 70 — strong momentum with pullback risk (not auto-bearish).",
+            "evidence": {
+              "rsi": 71.24826608655096,
+              "rsi_prev": 70.41395168958789
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BEARISH",
+            "raw_score": 2,
+            "weight": 14,
+            "weighted_score": 2.8,
+            "details": "MACD < signal, histogram negative and falling.",
+            "evidence": {
+              "macd": 1.7517664238270072,
+              "signal": 1.9628434288850394,
+              "hist": -0.21107700505803217,
+              "hist_prev": -0.1817211471749145
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 14,
+            "weighted_score": 4.2,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 658630.6,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 18,
+            "weighted_score": 14.4,
+            "details": "Holding above S1 334.97; Room to R1 336.41; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 335.510009765625,
+              "s1": 334.97,
+              "s2": null,
+              "r1": 336.41,
+              "r2": null,
+              "pivot": 335.31,
+              "vwap": 333.18
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 4,
+            "weighted_score": 3.2,
+            "details": "Revenue growth 16.4%; EPS growth 28.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.164,
+              "eps_growth": 0.287,
+              "pe": 38.480503,
+              "forward_pe": 35.045742,
+              "gross_margin": 0.48653,
+              "operating_margin": 0.32623002
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 3,
+            "weighted_score": 2.7,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 48,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 324.40155,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793304000,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.94",
+            "evidence": {
+              "as_of": "2026-09-11T15:27:52.174Z",
+              "ndx": 29464.998,
+              "ndx_change_pct": -0.05875385654860308,
+              "ndx_change": -17.322000000000116,
+              "spx": 7675.69,
+              "spx_change_pct": -0.9295649940434069,
+              "spx_change": -72.02000000000044,
+              "dji": 52606.4,
+              "dji_change_pct": -2.011153350466255,
+              "dji_change": -1079.7099999999991,
+              "vix": 15.94,
+              "vix_change_pct": 4.183006535947705,
+              "vix_change": 0.6399999999999988,
+              "qqq": 717.37,
+              "qqq_change_pct": -0.04180194239691704,
+              "qqq_change": -0.2999999999999545,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.29,
+                  "change_percent": -4.6000230866905225
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.155,
+                  "change_percent": -2.3992486338797834
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.97,
+                  "change_percent": -2.996737077108016
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.03,
+                  "change_percent": 5.541616885702904
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.95,
+                  "change_percent": -0.3792556006350261
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 2,
+            "weighted_score": 0.8,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BEARISH",
+            "raw_score": 3.5,
+            "weight": 6,
+            "weighted_score": 2.1,
+            "details": "10 headlines; 1 positive / 2 negative; Event-risk category present",
+            "evidence": {
+              "positive": 1,
+              "negative": 2,
+              "count": 10
+            }
+          }
+        ],
+        "filters": [
+          "R:R 1.43 below minimum 1.5 — DO NOT TRADE."
+        ]
+      },
+      "data_timestamp": "2026-09-11T15:27:51.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "a189e743-33f0-4018-897b-7fe783c95e73",
+      "created_at": "2026-09-11T15:28:06.902Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 69,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 7.6,
+            "weight": 15,
+            "weighted_score": 11.4,
+            "details": "Price above 3/3 major EMAs; Price > VWAP",
+            "evidence": {
+              "price": 496.57000732421875,
+              "ema9": 494.0237716422848,
+              "ema20": 494.0794854593516,
+              "ema21": 494.16577334848716,
+              "ema50": 496.38948529542927,
+              "ema200": 483.41581101503687
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "RSI 55.1 constructive (50–70).",
+            "evidence": {
+              "rsi": 55.09481220937929,
+              "rsi_prev": 55.46930199488922
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": -0.8670913841796164,
+              "signal": -1.8082509958311497,
+              "hist": 0.9411596116515333,
+              "hist_prev": 0.8231118916932076
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1440741.05,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 495.23; Room to R1 498.81; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 496.57000732421875,
+              "s1": 495.23,
+              "s2": null,
+              "r1": 498.81,
+              "r2": null,
+              "pivot": 495.33,
+              "vwap": 495.65
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.63328,
+              "forward_pe": 21.06522,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.93% (risk-off); NDX -0.06%; VIX 15.96",
+            "evidence": {
+              "as_of": "2026-09-11T15:28:17.120Z",
+              "ndx": 29466.016,
+              "ndx_change_pct": -0.05530093968181639,
+              "ndx_change": -16.304000000000087,
+              "spx": 7675.52,
+              "spx_change_pct": -0.9317591907802384,
+              "spx_change": -72.1899999999996,
+              "qqq": 717.39,
+              "qqq_change_pct": -0.03901514623712469,
+              "qqq_change": -0.2799999999999727,
+              "vix": 15.96,
+              "vix_change_pct": 4.313725490196079,
+              "vix_change": 0.6600000000000001,
+              "dji": 52601.35,
+              "dji_change_pct": -2.020559880386197,
+              "dji_change": -1084.760000000002,
+              "sectors": {
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.065,
+                  "change_percent": 0.6886412875270708
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.28,
+                  "change_percent": -4.605794759321245
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.145,
+                  "change_percent": -2.4163251366120204
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.491,
+                  "change_percent": 1.3555949884390037
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.945,
+                  "change_percent": -0.38366554947962805
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 530.15,
+                  "change_percent": 5.565511748307445
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.975,
+                  "change_percent": -2.9924437575133087
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.39,
+                  "change_percent": -1.2431255728689365
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 4 positive / 1 negative",
+            "evidence": {
+              "positive": 4,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:28:14.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "00a17ecb-90cd-4bb7-b17a-8960a1a27940",
+      "created_at": "2026-09-11T15:28:18.399Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 69,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 7.6,
+            "weight": 15,
+            "weighted_score": 11.4,
+            "details": "Price above 3/3 major EMAs; Price > VWAP",
+            "evidence": {
+              "price": 496.6400146484375,
+              "ema9": 494.0377731071286,
+              "ema20": 494.08615282356294,
+              "ema21": 494.17213765068885,
+              "ema50": 496.39223068069276,
+              "ema200": 483.4165076053276
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "RSI 55.3 constructive (50–70).",
+            "evidence": {
+              "rsi": 55.29584346121451,
+              "rsi_prev": 55.46930199488922
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": -0.861506754327479,
+              "signal": -1.8071340698607221,
+              "hist": 0.9456273155332431,
+              "hist_prev": 0.8231118916932076
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1440741.05,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 495.24; Room to R1 498.84; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 496.6400146484375,
+              "s1": 495.24,
+              "s2": null,
+              "r1": 498.84,
+              "r2": null,
+              "pivot": 495.33,
+              "vwap": 495.65
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.637175,
+              "forward_pe": 21.06819,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.95% (risk-off); NDX -0.08%; VIX 16.05",
+            "evidence": {
+              "as_of": "2026-09-11T15:28:57.363Z",
+              "spx": 7673.9,
+              "spx_change_pct": -0.9526685949783923,
+              "spx_change": -73.8100000000004,
+              "ndx": 29459.566,
+              "ndx_change_pct": -0.07717845814033908,
+              "ndx_change": -22.754000000000815,
+              "dji": 52590.52,
+              "dji_change_pct": -2.0407326960362817,
+              "dji_change": -1095.5900000000038,
+              "vix": 16.05,
+              "vix_change_pct": 4.901960784313726,
+              "vix_change": 0.75,
+              "qqq": 717.21,
+              "qqq_change_pct": -0.06409631167527174,
+              "qqq_change": -0.4599999999999227,
+              "sectors": {
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.31,
+                  "change_percent": -4.58847974142906
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.13,
+                  "change_percent": -2.441939890710382
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.47,
+                  "change_percent": 1.344302844544819
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.015,
+                  "change_percent": 0.6112658619622345
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.96,
+                  "change_percent": -3.005323716297441
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.33,
+                  "change_percent": -1.2774977085242838
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.935,
+                  "change_percent": -0.3924854471688068
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 529.92,
+                  "change_percent": 5.519713261648739
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 4 positive / 1 negative",
+            "evidence": {
+              "positive": 4,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:28:48.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "bdc83e38-b738-4ee4-80f8-5a7d0feb083b",
+      "created_at": "2026-09-11T15:28:58.718Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 69,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 7.6,
+            "weight": 15,
+            "weighted_score": 11.4,
+            "details": "Price above 3/3 major EMAs; Price > VWAP",
+            "evidence": {
+              "price": 496.6400146484375,
+              "ema9": 494.0377731071286,
+              "ema20": 494.08615282356294,
+              "ema21": 494.17213765068885,
+              "ema50": 496.39223068069276,
+              "ema200": 483.4165076053276
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "RSI 55.3 constructive (50–70).",
+            "evidence": {
+              "rsi": 55.29584346121451,
+              "rsi_prev": 55.46930199488922
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": -0.861506754327479,
+              "signal": -1.8071340698607221,
+              "hist": 0.9456273155332431,
+              "hist_prev": 0.8231118916932076
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1440741.05,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 495.24; Room to R1 498.84; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 496.6400146484375,
+              "s1": 495.24,
+              "s2": null,
+              "r1": 498.84,
+              "r2": null,
+              "pivot": 495.33,
+              "vwap": 495.65
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.644964,
+              "forward_pe": 21.074127,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.95% (risk-off); NDX -0.08%; VIX 16.05",
+            "evidence": {
+              "as_of": "2026-09-11T15:28:57.363Z",
+              "spx": 7673.9,
+              "spx_change_pct": -0.9526685949783923,
+              "spx_change": -73.8100000000004,
+              "ndx": 29459.566,
+              "ndx_change_pct": -0.07717845814033908,
+              "ndx_change": -22.754000000000815,
+              "dji": 52590.52,
+              "dji_change_pct": -2.0407326960362817,
+              "dji_change": -1095.5900000000038,
+              "vix": 16.05,
+              "vix_change_pct": 4.901960784313726,
+              "vix_change": 0.75,
+              "qqq": 717.21,
+              "qqq_change_pct": -0.06409631167527174,
+              "qqq_change": -0.4599999999999227,
+              "sectors": {
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.31,
+                  "change_percent": -4.58847974142906
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.13,
+                  "change_percent": -2.441939890710382
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.47,
+                  "change_percent": 1.344302844544819
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.015,
+                  "change_percent": 0.6112658619622345
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.96,
+                  "change_percent": -3.005323716297441
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.33,
+                  "change_percent": -1.2774977085242838
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.935,
+                  "change_percent": -0.3924854471688068
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 529.92,
+                  "change_percent": 5.519713261648739
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 4 positive / 1 negative",
+            "evidence": {
+              "positive": 4,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:28:48.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "f93d8529-d7bf-4695-9091-6a4ac17f931d",
+      "created_at": "2026-09-11T15:30:00.520Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 69,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 8.8,
+            "weight": 15,
+            "weighted_score": 13.2,
+            "details": "Price above 3/3 major EMAs; EMA9 > EMA21; Price > VWAP; Higher highs & higher lows",
+            "evidence": {
+              "price": 496.6600036621094,
+              "ema9": 494.5756557415623,
+              "ema20": 494.33923974481155,
+              "ema21": 494.40596878225335,
+              "ema50": 496.4063802561076,
+              "ema200": 483.54107428320776
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "RSI 55.3 constructive (50–70).",
+            "evidence": {
+              "rsi": 55.29598358114849,
+              "rsi_prev": 55.29598358114849
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": -0.563925559928748,
+              "signal": -1.556632283540603,
+              "hist": 0.992706723611855,
+              "hist_prev": 0.9498231810231348
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1400432.05,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "CAUTION",
+            "raw_score": 6.7,
+            "weight": 15,
+            "weighted_score": 10.05,
+            "details": "Holding above S1 495.55; Room to R1 498.03; Below pivot; Above VWAP",
+            "evidence": {
+              "price": 496.6600036621094,
+              "s1": 495.55,
+              "s2": null,
+              "r1": 498.03,
+              "r2": null,
+              "pivot": 496.74,
+              "vwap": 495.68
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.639957,
+              "forward_pe": 21.070309,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.95% (risk-off); NDX -0.08%; VIX 16.05",
+            "evidence": {
+              "as_of": "2026-09-11T15:28:57.363Z",
+              "spx": 7673.9,
+              "spx_change_pct": -0.9526685949783923,
+              "spx_change": -73.8100000000004,
+              "ndx": 29459.566,
+              "ndx_change_pct": -0.07717845814033908,
+              "ndx_change": -22.754000000000815,
+              "dji": 52590.52,
+              "dji_change_pct": -2.0407326960362817,
+              "dji_change": -1095.5900000000038,
+              "vix": 16.05,
+              "vix_change_pct": 4.901960784313726,
+              "vix_change": 0.75,
+              "qqq": 717.21,
+              "qqq_change_pct": -0.06409631167527174,
+              "qqq_change": -0.4599999999999227,
+              "sectors": {
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.31,
+                  "change_percent": -4.58847974142906
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.13,
+                  "change_percent": -2.441939890710382
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.47,
+                  "change_percent": 1.344302844544819
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.015,
+                  "change_percent": 0.6112658619622345
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.96,
+                  "change_percent": -3.005323716297441
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.33,
+                  "change_percent": -1.2774977085242838
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.935,
+                  "change_percent": -0.3924854471688068
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 529.92,
+                  "change_percent": 5.519713261648739
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 4 positive / 1 negative",
+            "evidence": {
+              "positive": 4,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:30:54.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "b9986761-1c6b-45ec-900f-822208b58f6f",
+      "created_at": "2026-09-11T15:31:03.189Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 69,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 8.8,
+            "weight": 15,
+            "weighted_score": 13.2,
+            "details": "Price above 3/3 major EMAs; EMA9 > EMA21; Price > VWAP; Higher highs & higher lows",
+            "evidence": {
+              "price": 496.6600036621094,
+              "ema9": 494.5756557415623,
+              "ema20": 494.33923974481155,
+              "ema21": 494.40596878225335,
+              "ema50": 496.4063802561076,
+              "ema200": 483.54107428320776
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "RSI 55.3 constructive (50–70).",
+            "evidence": {
+              "rsi": 55.29598358114849,
+              "rsi_prev": 55.29598358114849
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": -0.563925559928748,
+              "signal": -1.556632283540603,
+              "hist": 0.992706723611855,
+              "hist_prev": 0.9498231810231348
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1400432.05,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "CAUTION",
+            "raw_score": 6.7,
+            "weight": 15,
+            "weighted_score": 10.05,
+            "details": "Holding above S1 495.55; Room to R1 498.03; Below pivot; Above VWAP",
+            "evidence": {
+              "price": 496.6600036621094,
+              "s1": 495.55,
+              "s2": null,
+              "r1": 498.03,
+              "r2": null,
+              "pivot": 496.74,
+              "vwap": 495.68
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.63606,
+              "forward_pe": 21.067339,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.95% (risk-off); NDX -0.08%; VIX 16.05",
+            "evidence": {
+              "as_of": "2026-09-11T15:28:57.363Z",
+              "spx": 7673.9,
+              "spx_change_pct": -0.9526685949783923,
+              "spx_change": -73.8100000000004,
+              "ndx": 29459.566,
+              "ndx_change_pct": -0.07717845814033908,
+              "ndx_change": -22.754000000000815,
+              "dji": 52590.52,
+              "dji_change_pct": -2.0407326960362817,
+              "dji_change": -1095.5900000000038,
+              "vix": 16.05,
+              "vix_change_pct": 4.901960784313726,
+              "vix_change": 0.75,
+              "qqq": 717.21,
+              "qqq_change_pct": -0.06409631167527174,
+              "qqq_change": -0.4599999999999227,
+              "sectors": {
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.31,
+                  "change_percent": -4.58847974142906
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.13,
+                  "change_percent": -2.441939890710382
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.47,
+                  "change_percent": 1.344302844544819
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.015,
+                  "change_percent": 0.6112658619622345
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.96,
+                  "change_percent": -3.005323716297441
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.33,
+                  "change_percent": -1.2774977085242838
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.935,
+                  "change_percent": -0.3924854471688068
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 529.92,
+                  "change_percent": 5.519713261648739
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 5 positive / 1 negative",
+            "evidence": {
+              "positive": 5,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:30:54.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "8e79c2f1-0e83-4e17-973c-ca4139cb34fa",
+      "created_at": "2026-09-11T15:32:04.912Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 74,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 8.8,
+            "weight": 15,
+            "weighted_score": 13.2,
+            "details": "Price above 3/3 major EMAs; EMA9 > EMA21; Price > VWAP; Higher highs & higher lows",
+            "evidence": {
+              "price": 496.7699890136719,
+              "ema9": 494.6152504681248,
+              "ema20": 494.3591917360247,
+              "ema21": 494.4250571490535,
+              "ema50": 496.4148374150128,
+              "ema200": 483.5432521570538
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "RSI 55.6 in 55–70 and rising (strong bullish momentum).",
+            "evidence": {
+              "rsi": 55.612567212159156,
+              "rsi_prev": 55.61256721215914
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": -0.5483777568848041,
+              "signal": -1.552118921293634,
+              "hist": 1.0037411644088299,
+              "hist_prev": 0.9568421892140351
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1402044.05,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 495.69; Room to R1 498.22; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 496.7699890136719,
+              "s1": 495.69,
+              "s2": null,
+              "r1": 498.22,
+              "r2": null,
+              "pivot": 496.76,
+              "vwap": 495.69
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.639957,
+              "forward_pe": 21.070309,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.95% (risk-off); NDX -0.08%; VIX 16.05",
+            "evidence": {
+              "as_of": "2026-09-11T15:28:57.363Z",
+              "spx": 7673.9,
+              "spx_change_pct": -0.9526685949783923,
+              "spx_change": -73.8100000000004,
+              "ndx": 29459.566,
+              "ndx_change_pct": -0.07717845814033908,
+              "ndx_change": -22.754000000000815,
+              "dji": 52590.52,
+              "dji_change_pct": -2.0407326960362817,
+              "dji_change": -1095.5900000000038,
+              "vix": 16.05,
+              "vix_change_pct": 4.901960784313726,
+              "vix_change": 0.75,
+              "qqq": 717.21,
+              "qqq_change_pct": -0.06409631167527174,
+              "qqq_change": -0.4599999999999227,
+              "sectors": {
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.31,
+                  "change_percent": -4.58847974142906
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.13,
+                  "change_percent": -2.441939890710382
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.47,
+                  "change_percent": 1.344302844544819
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.015,
+                  "change_percent": 0.6112658619622345
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.96,
+                  "change_percent": -3.005323716297441
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.33,
+                  "change_percent": -1.2774977085242838
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.935,
+                  "change_percent": -0.3924854471688068
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 529.92,
+                  "change_percent": 5.519713261648739
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 5 positive / 1 negative",
+            "evidence": {
+              "positive": 5,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:33:02.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "81b4ad93-0da9-42c2-86c8-f3332aa4c59c",
+      "created_at": "2026-09-11T15:33:07.420Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 74,
+      "signal": "WAIT",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "BULLISH",
+            "raw_score": 8.8,
+            "weight": 15,
+            "weighted_score": 13.2,
+            "details": "Price above 3/3 major EMAs; EMA9 > EMA21; Price > VWAP; Higher highs & higher lows",
+            "evidence": {
+              "price": 496.7699890136719,
+              "ema9": 494.6152504681248,
+              "ema20": 494.3591917360247,
+              "ema21": 494.4250571490535,
+              "ema50": 496.4148374150128,
+              "ema200": 483.5432521570538
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "RSI 55.6 in 55–70 and rising (strong bullish momentum).",
+            "evidence": {
+              "rsi": 55.612567212159156,
+              "rsi_prev": 55.61256721215914
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 9.5,
+            "weight": 10,
+            "weighted_score": 9.5,
+            "details": "MACD > signal, histogram positive and rising (strong bullish).",
+            "evidence": {
+              "macd": -0.5483777568848041,
+              "signal": -1.552118921293634,
+              "hist": 1.0037411644088299,
+              "hist_prev": 0.9568421892140351
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1402044.05,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 15,
+            "weighted_score": 12,
+            "details": "Holding above S1 495.69; Room to R1 498.22; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 496.7699890136719,
+              "s1": 495.69,
+              "s2": null,
+              "r1": 498.22,
+              "r2": null,
+              "pivot": 496.76,
+              "vwap": 495.69
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.660545,
+              "forward_pe": 21.086004,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.95% (risk-off); NDX -0.08%; VIX 16.05",
+            "evidence": {
+              "as_of": "2026-09-11T15:28:57.363Z",
+              "spx": 7673.9,
+              "spx_change_pct": -0.9526685949783923,
+              "spx_change": -73.8100000000004,
+              "ndx": 29459.566,
+              "ndx_change_pct": -0.07717845814033908,
+              "ndx_change": -22.754000000000815,
+              "dji": 52590.52,
+              "dji_change_pct": -2.0407326960362817,
+              "dji_change": -1095.5900000000038,
+              "vix": 16.05,
+              "vix_change_pct": 4.901960784313726,
+              "vix_change": 0.75,
+              "qqq": 717.21,
+              "qqq_change_pct": -0.06409631167527174,
+              "qqq_change": -0.4599999999999227,
+              "sectors": {
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.31,
+                  "change_percent": -4.58847974142906
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.13,
+                  "change_percent": -2.441939890710382
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.47,
+                  "change_percent": 1.344302844544819
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.015,
+                  "change_percent": 0.6112658619622345
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 112.96,
+                  "change_percent": -3.005323716297441
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.33,
+                  "change_percent": -1.2774977085242838
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.935,
+                  "change_percent": -0.3924854471688068
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 529.92,
+                  "change_percent": 5.519713261648739
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "10 headlines; 5 positive / 1 negative",
+            "evidence": {
+              "positive": 5,
+              "negative": 1,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T15:33:02.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "1161b2a1-1477-4cef-9d5f-603d955ff2f2",
+      "created_at": "2026-09-11T15:34:09.344Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 62,
+      "signal": "WEAK",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "CAUTION",
+            "raw_score": 5.5,
+            "weight": 15,
+            "weighted_score": 8.25,
+            "details": "Price above 2/3 major EMAs; Price < VWAP; Higher highs & higher lows",
+            "evidence": {
+              "price": 494.7799987792969,
+              "ema9": 494.15444329442175,
+              "ema20": 494.1198609943263,
+              "ema21": 494.1888063384946,
+              "ema50": 496.2253964194682,
+              "ema200": 483.62981147907755
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BULLISH",
+            "raw_score": 7,
+            "weight": 10,
+            "weighted_score": 7,
+            "details": "RSI 50.3 constructive (50–70).",
+            "evidence": {
+              "rsi": 50.28253437356743,
+              "rsi_prev": 50.5585251104083
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "MACD > signal and histogram > 0.",
+            "evidence": {
+              "macd": -0.6536650506841966,
+              "signal": -1.426548534631819,
+              "hist": 0.7728834839476224,
+              "hist_prev": 0.8285463229062044
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1447748.1,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "NEUTRAL",
+            "raw_score": 5.3,
+            "weight": 15,
+            "weighted_score": 7.95,
+            "details": "Holding above S1 493.96; Room to R1 496.22; Below pivot; Below VWAP",
+            "evidence": {
+              "price": 494.7799987792969,
+              "s1": 493.96,
+              "s2": null,
+              "r1": 496.22,
+              "r2": null,
+              "pivot": 494.96,
+              "vwap": 495.6
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.533669,
+              "forward_pe": 20.989285,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 7,
+            "weighted_score": 2.24,
+            "details": "S&P -0.99% (risk-off); NDX -0.16%; VIX 15.72",
+            "evidence": {
+              "as_of": "2026-09-11T17:17:39.970Z",
+              "spx": 7671.27,
+              "spx_change_pct": -0.9866141092012942,
+              "spx_change": -76.4399999999996,
+              "ndx": 29434.45,
+              "ndx_change_pct": -0.16236849745881254,
+              "ndx_change": -47.86999999999898,
+              "dji": 52647.71,
+              "dji_change_pct": -1.9342060730419868,
+              "dji_change": -1038.4000000000015,
+              "qqq": 716.55,
+              "qqq_change_pct": -0.1560605849485146,
+              "qqq_change": -1.1200000000000045,
+              "vix": 15.72,
+              "vix_change_pct": 2.7450980392156854,
+              "vix_change": 0.41999999999999993,
+              "sectors": {
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.2,
+                  "change_percent": -2.3224043715846987
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.035,
+                  "change_percent": 0.6422160321881647
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.06,
+                  "change_percent": 1.1238371780394707
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.7,
+                  "change_percent": -4.363384508830661
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.665,
+                  "change_percent": -1.0855866177818574
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.815,
+                  "change_percent": -0.49832421943905253
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 529.59,
+                  "change_percent": 5.454002389486269
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 113.095,
+                  "change_percent": -2.88940408724025
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 5,
+            "weighted_score": 2,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "10 headlines; 7 positive / 0 negative",
+            "evidence": {
+              "positive": 7,
+              "negative": 0,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T17:17:36.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "bc0e2580-be77-4e9b-a544-69eecffb1970",
+      "created_at": "2026-09-11T17:17:41.376Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "4h",
+      "score": 51,
+      "signal": "WEAK",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "NEUTRAL",
+            "raw_score": 5.2,
+            "weight": 18,
+            "weighted_score": 9.36,
+            "details": "Price above 2/3 major EMAs; Lower highs & lower lows",
+            "evidence": {
+              "price": 494.7799987792969,
+              "ema9": 495.09714470620327,
+              "ema20": 496.33276560502077,
+              "ema21": 496.2801857850436,
+              "ema50": 486.8784338980552,
+              "ema200": 444.7311892921076
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 8,
+            "weighted_score": 2.4,
+            "details": "RSI 49.3 < 50 (bearish momentum).",
+            "evidence": {
+              "rsi": 49.267012172115,
+              "rsi_prev": 49.768340430916204
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BEARISH",
+            "raw_score": 2.5,
+            "weight": 10,
+            "weighted_score": 2.5,
+            "details": "MACD < signal and histogram < 0.",
+            "evidence": {
+              "macd": 0.11910020006439481,
+              "signal": 1.640801469303617,
+              "hist": -1.5217012692392222,
+              "hist_prev": -1.7923542944137378
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 8,
+            "weighted_score": 2.4,
+            "details": "Volume 0.08x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0.08438249130296317,
+              "last_volume": 571549,
+              "avg20": 6773312.7,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "NEUTRAL",
+            "raw_score": 5.3,
+            "weight": 18,
+            "weighted_score": 9.54,
+            "details": "Holding above S1 492.67; Room to R1 497.27; Below pivot; Below VWAP",
+            "evidence": {
+              "price": 494.7799987792969,
+              "s1": 492.67,
+              "s2": 488.87,
+              "r1": 497.27,
+              "r2": null,
+              "pivot": 495.61,
+              "vwap": 495.55
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 8,
+            "weighted_score": 6.4,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 27.537006,
+              "forward_pe": 20.991829,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 6,
+            "weighted_score": 5.4,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 47,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 572.91516,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 3.2,
+            "weight": 10,
+            "weighted_score": 3.2,
+            "details": "S&P -0.99% (risk-off); NDX -0.16%; VIX 15.72",
+            "evidence": {
+              "as_of": "2026-09-11T17:17:39.970Z",
+              "spx": 7671.27,
+              "spx_change_pct": -0.9866141092012942,
+              "spx_change": -76.4399999999996,
+              "ndx": 29434.45,
+              "ndx_change_pct": -0.16236849745881254,
+              "ndx_change": -47.86999999999898,
+              "dji": 52647.71,
+              "dji_change_pct": -1.9342060730419868,
+              "dji_change": -1038.4000000000015,
+              "qqq": 716.55,
+              "qqq_change_pct": -0.1560605849485146,
+              "qqq_change": -1.1200000000000045,
+              "vix": 15.72,
+              "vix_change_pct": 2.7450980392156854,
+              "vix_change": 0.41999999999999993,
+              "sectors": {
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 57.2,
+                  "change_percent": -2.3224043715846987
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 65.035,
+                  "change_percent": 0.6422160321881647
+                },
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 188.06,
+                  "change_percent": 1.1238371780394707
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 165.7,
+                  "change_percent": -4.363384508830661
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 172.665,
+                  "change_percent": -1.0855866177818574
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 112.815,
+                  "change_percent": -0.49832421943905253
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 529.59,
+                  "change_percent": 5.454002389486269
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 113.095,
+                  "change_percent": -2.88940408724025
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "NEUTRAL",
+            "raw_score": 4,
+            "weight": 4,
+            "weighted_score": 1.6,
+            "details": "10Y 4.83%; Yields rising moderately — caution; 1d +0.030",
+            "evidence": {
+              "yield": 4.83,
+              "change_1d": 0.03000000000000025,
+              "change_5d": 0.040000000000000036,
+              "trend_20d": "rising",
+              "as_of": "2026-09-09",
+              "source": "FRED CSV DGS10"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "10 headlines; 7 positive / 0 negative",
+            "evidence": {
+              "positive": 7,
+              "negative": 0,
+              "count": 10
+            }
+          }
+        ],
+        "filters": []
+      },
+      "data_timestamp": "2026-09-11T20:00:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "0fa7077c-a945-4e59-bf41-f331d1b79862",
+      "created_at": "2026-09-11T17:17:44.760Z"
     }
   ]
 }

@@ -5,7 +5,7 @@ import { runBacktest } from "@/src/engines/backtest";
 import { envelope } from "@/src/lib/envelope";
 import { HttpError, ProviderError } from "@/src/lib/errors";
 import { isRegularHours } from "@/src/providers/base";
-import { addSnapshot, addWatch, createAlert, deleteAlert, listAlerts, listWatchlist, removeWatch } from "@/src/repositories/store";
+import { addWatch, createAlert, deleteAlert, listAlerts, listWatchlist, persistSnapshot, removeWatch } from "@/src/repositories/store";
 import { analysis } from "@/src/services/analysis";
 import { buildMag7, INDICATOR_TF as MAG7_TF, RANGES as MAG7_RANGES } from "@/src/services/mag7";
 import { fetchChain, payoffFromPayload } from "@/src/services/options";
@@ -110,7 +110,7 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     const bundle = await analysis.analyze(segs[1], timeframe, false);
     const sig = bundle.signal as Record<string, unknown>;
     if (persist) {
-      addSnapshot({
+      persistSnapshot({
         symbol: segs[1].toUpperCase(),
         timeframe,
         score: Number(sig.score),
@@ -142,7 +142,7 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     const timeframe = tf(url.searchParams.get("timeframe") || "1h");
     const bundle = await analysis.analyze(segs[1], timeframe, true) as Record<string, unknown>;
     const sig = bundle.signal as Record<string, unknown>;
-    addSnapshot({
+    persistSnapshot({
       symbol: segs[1].toUpperCase(),
       timeframe,
       score: Number(sig.score),
@@ -153,6 +153,15 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
       algorithm_version: String(sig.algorithm_version),
     });
     const f = bundle.freshness as { source: string; data_status: "LIVE"; latency_ms: number };
+    console.info("[api] analysis complete", {
+      symbol: segs[1].toUpperCase(),
+      timeframe,
+      score: Number(sig.score),
+      signal: String(sig.signal),
+      bars: Array.isArray(bundle.bars) ? (bundle.bars as unknown[]).length : 0,
+      latency_ms: f.latency_ms,
+      source: f.source,
+    });
     bundle.timeframe_label = TIMEFRAME_LABELS[timeframe];
     bundle.meta = BY_SYMBOL[segs[1].toUpperCase()] || null;
     return json(envelope(bundle, f.source, f.data_status, f.latency_ms));

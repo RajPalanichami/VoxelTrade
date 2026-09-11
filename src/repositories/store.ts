@@ -31,9 +31,33 @@ type StoreData = {
   snapshots: SignalSnap[];
 };
 
-const DEFAULTS = ["NVDA", "MSFT", "TSLA", "AMD", "MU", "AAPL", "AMZN", "GOOGL", "META", "AVGO"];
+type StoreBackend = "file" | "memory";
 
-function storePath(): string {
+const DEFAULTS = ["NVDA", "MSFT", "TSLA", "AMD", "MU", "AAPL", "AMZN", "GOOGL", "META", "AVGO"];
+const READONLY_CODES = new Set(["EROFS", "EACCES", "EPERM"]);
+
+let backend: StoreBackend = "file";
+let memoryStore: StoreData | null = null;
+let loggedBackend = false;
+
+function clone(data: StoreData): StoreData {
+  return JSON.parse(JSON.stringify(data)) as StoreData;
+}
+
+function empty(): StoreData {
+  return { watchlist: [], alerts: [], snapshots: [] };
+}
+
+export function isServerlessRuntime(): boolean {
+  return Boolean(
+    process.env.VERCEL ||
+      process.env.VERCEL_ENV ||
+      process.env.AWS_LAMBDA_FUNCTION_NAME ||
+      process.env.LAMBDA_TASK_ROOT,
+  );
+}
+
+function configuredFilePath(): string {
   const url = process.env.DATABASE_URL || "";
   if (url.startsWith("file:")) {
     return path.resolve(process.cwd(), url.replace(/^file:/, ""));
@@ -41,12 +65,42 @@ function storePath(): string {
   return path.resolve(process.cwd(), "data", "protrader.json");
 }
 
-function empty(): StoreData {
-  return { watchlist: [], alerts: [], snapshots: [] };
+/**
+ * Vercel/Lambda cwd is /var/task (read-only). A file: DATABASE_URL like
+ * ./data/protrader.json resolves there and throws EROFS. /tmp is writable.
+ */
+export function storeFilePath(): string {
+  if (isServerlessRuntime()) {
+    return path.join("/tmp", "voxel-trading", "protrader.json");
+  }
+  return configuredFilePath();
+}
+
+export function storeBackend(): StoreBackend {
+  return backend;
+}
+
+export function resetStoreForTests(): void {
+  backend = "file";
+  memoryStore = null;
+  loggedBackend = false;
+}
+
+function logBackendOnce(file: string | null) {
+  if (loggedBackend) return;
+  loggedBackend = true;
+  console.info("[store] persistence backend", {
+    backend,
+    path: file,
+    serverless: isServerlessRuntime(),
+  });
 }
 
 function readStore(): StoreData {
-  const file = storePath();
+  if (backend === "memory") {
+    return memoryStore ? clone(memoryStore) : empty();
+  }
+  const file = storeFilePath();
   try {
     if (!fs.existsSync(file)) return empty();
     const raw = JSON.parse(fs.readFileSync(file, "utf8"));
@@ -61,9 +115,32 @@ function readStore(): StoreData {
 }
 
 function writeStore(data: StoreData): void {
-  const file = storePath();
-  fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+  if (backend === "memory") {
+    memoryStore = clone(data);
+    logBackendOnce(null);
+    return;
+  }
+  const file = storeFilePath();
+  try {
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, JSON.stringify(data, null, 2));
+    memoryStore = clone(data);
+    logBackendOnce(file);
+  } catch (err) {
+    const code = err && typeof err === "object" && "code" in err ? String((err as { code?: string }).code) : "";
+    if (READONLY_CODES.has(code)) {
+      console.warn("[store] filesystem not writable; switching to in-memory store", {
+        code,
+        attemptedPath: file,
+        serverless: isServerlessRuntime(),
+      });
+      backend = "memory";
+      memoryStore = clone(data);
+      logBackendOnce(null);
+      return;
+    }
+    throw err;
+  }
 }
 
 export function listWatchlist(): WatchlistItem[] {
@@ -126,4 +203,19 @@ export function addSnapshot(snap: Omit<SignalSnap, "id" | "created_at">): Signal
   if (data.snapshots.length > 500) data.snapshots = data.snapshots.slice(-500);
   writeStore(data);
   return row;
+}
+
+/** Snapshot history is optional. Never fail Signal Analyzer because persistence failed. */
+export function persistSnapshot(snap: Omit<SignalSnap, "id" | "created_at">): SignalSnap | null {
+  try {
+    return addSnapshot(snap);
+  } catch (err) {
+    console.error("[store] snapshot persist failed", {
+      symbol: snap.symbol,
+      timeframe: snap.timeframe,
+      score: snap.score,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return null;
+  }
 }

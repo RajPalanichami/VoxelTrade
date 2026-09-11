@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
+import fs from "fs";
+import { describe, expect, it, vi } from "vitest";
 import { dispatchV1, handleV1 } from "@/src/server/apiRouter";
+import { persistSnapshot, resetStoreForTests } from "@/src/repositories/store";
 
 describe("api router", () => {
   it("GET search returns universe hits", async () => {
@@ -44,6 +46,32 @@ describe("api router", () => {
     expect(listed.status).toBe(200);
     const removed = await handleV1("DELETE", ["alerts", id], new URL(`http://localhost/api/v1/alerts/${id}`), undefined);
     expect(removed.status).toBe(200);
+  });
+
+  it("watchlist and snapshots survive a read-only filesystem", async () => {
+    const spy = vi.spyOn(fs, "writeFileSync").mockImplementation((file) => {
+      throw Object.assign(new Error(`EROFS: read-only file system, open '${String(file)}'`), { code: "EROFS" });
+    });
+    try {
+      const add = await handleV1("POST", ["watchlist", "EROFS1"], new URL("http://localhost/api/v1/watchlist/EROFS1"), undefined);
+      expect(add.status).toBe(200);
+      expect((await add.json()).data.symbol).toBe("EROFS1");
+      expect(() =>
+        persistSnapshot({
+          symbol: "AAPL",
+          timeframe: "1h",
+          score: 70,
+          signal: "WAIT",
+          confidence: "MEDIUM",
+          evidence: {},
+          data_timestamp: "2026-09-11T15:00:00.000Z",
+          algorithm_version: "1.0.0",
+        }),
+      ).not.toThrow();
+    } finally {
+      spy.mockRestore();
+      resetStoreForTests();
+    }
   });
 
   it("rejects unknown sector", async () => {

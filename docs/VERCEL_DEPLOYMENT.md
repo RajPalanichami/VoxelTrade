@@ -39,7 +39,7 @@ There is no separate Python, FastAPI, Express, or WebSocket server.
 | Supabase Auth | Yes | `@supabase/ssr` cookie flow |
 | Yahoo / HTTP market providers | Yes | Outbound HTTPS |
 | In-memory cache (`src/lib/cache.ts`) | Partial | Per-instance; not shared across lambdas |
-| **JSON file store** (`store.ts`) | **No durable persistence** | Serverless filesystem is ephemeral; writes do not survive new instances |
+| **JSON file store** (`store.ts`) | **Writable, not durable** | On Vercel/Lambda the store writes `/tmp/voxel-trading/protrader.json` (writable). `/var/task` is read-only and must not be used. Data is still ephemeral across instances. |
 | Long-running Node/Python process | Not required | Do not deploy as a traditional always-on server on Vercel |
 | Cron / queues / WebSockets | None in repo | |
 | Native binaries / Docker-on-Vercel | Not required | Docker is an **alternative** deploy (`Dockerfile`) |
