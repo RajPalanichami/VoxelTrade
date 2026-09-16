@@ -10,7 +10,7 @@ const TABS = [
   { href: "/sectors", label: "Sectors" },
   { href: "/watchlist", label: "Watchlist" },
   { href: "/news", label: "News" },
-  { href: "/signals", label: "Tools" },
+  { href: "/tools", label: "Tools" },
 ];
 
 export function PulseShell({

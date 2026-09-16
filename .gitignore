@@ -9,3 +9,4 @@ venv/
 test-results/
 playwright-report/
 coverage/
+data/economic-calendar-week.json

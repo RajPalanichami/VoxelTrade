@@ -64,6 +64,9 @@ export class AlphaVantageProvider implements MarketDataProvider {
     if (timeframe === "1d") {
       const data = await this.get({ function: "TIME_SERIES_DAILY", symbol, outputsize: "full" });
       series = (data["Time Series (Daily)"] || {}) as Record<string, Record<string, string>>;
+    } else if (timeframe === "1w") {
+      const data = await this.get({ function: "TIME_SERIES_WEEKLY", symbol });
+      series = (data["Weekly Time Series"] || {}) as Record<string, Record<string, string>>;
     } else {
       const interval = AV_INTERVAL[timeframe] || "60min";
       const data = await this.get({

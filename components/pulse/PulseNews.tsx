@@ -12,7 +12,7 @@ export function PulseNews({ items }: { items: NewsItem[] }) {
           View All
         </Link>
       </div>
-      <div className="flex-1 overflow-y-auto divide-y divide-white/5 max-h-[360px]">
+      <div className="flex-1 min-h-0 overflow-y-auto divide-y divide-white/5 max-h-[360px]">
         {items.slice(0, 8).map((n, i) => (
           <a key={n.id || i} href={n.url || "#"} target="_blank" rel="noreferrer" className="block px-4 py-3 hover:bg-white/5">
             <div className="text-[10px] text-slate-500">

@@ -4,6 +4,9 @@ export const DEPLOYED_ENVIRONMENTS = new Set(["qa", "performance", "production",
 export type { Timeframe } from "@/src/config/timeframes";
 export {
   TIMEFRAMES,
+  SWING_TIMEFRAMES,
+  PATTERN_TIMEFRAMES,
+  PATTERN_TIMEFRAME_LABELS,
   TIMEFRAME_LABELS,
   TIMEFRAME_SPECS,
   TWELVE_INTERVAL,
@@ -11,19 +14,28 @@ export {
   YF_INTERVAL,
   YF_PERIOD,
   getTimeframeSpec,
+  isSwingTimeframe,
+  isPatternTimeframe,
+  isPatternSwingTimeframe,
+  swingHigherTimeframe,
 } from "@/src/config/timeframes";
+export type { SwingTimeframe, PatternTimeframe } from "@/src/config/timeframes";
 
 export const CACHE_TTL: Record<string, number> = {
   quote: 10,
   "5m": 20,
+  "15m": 30,
   "30m": 45,
   "1h": 90,
   "4h": 300,
   "1d": 600,
+  "1w": 1800,
+  "1M": 3600,
   fundamentals: 86_400,
   news: 300,
   macro: 600,
   movers: 60,
+  events: 300,
   search: 3600,
 };
 
@@ -108,6 +120,7 @@ export type AppSettings = {
   yahooScreenerUrl: string;
   blsApiUrl: string;
   worldbankCpiUrl: string;
+  economicCalendarUrl: string;
   secTickersUrl: string;
   secFactsUrl: string;
   secSubmissionsUrl: string;
@@ -154,6 +167,10 @@ function readSettings(): AppSettings {
     worldbankCpiUrl: envString(
       "WORLDBANK_CPI_URL",
       "https://api.worldbank.org/v2/country/USA/indicator/FP.CPI.TOTL.ZG",
+    ),
+    economicCalendarUrl: envString(
+      "ECONOMIC_CALENDAR_URL",
+      "https://nfs.faireconomy.media/ff_calendar_thisweek.json",
     ),
     secTickersUrl: envString("SEC_TICKERS_URL", "https://www.sec.gov/files/company_tickers.json"),
     secFactsUrl: envString("SEC_FACTS_URL", "https://data.sec.gov/api/xbrl/companyfacts/CIK{cik}.json"),

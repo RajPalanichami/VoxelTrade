@@ -1,4 +1,6 @@
 export type Timeframe = "5m" | "30m" | "1h" | "4h" | "1d";
+export type SwingTimeframe = "15m" | "30m" | "1h" | "4h" | "1d" | "1w";
+export type PatternTimeframe = "5m" | "15m" | "30m" | "1h" | "4h" | "1d" | "1w" | "1M";
 
 export const TIMEFRAMES: { id: Timeframe; label: string }[] = [
   { id: "5m", label: "5 Minutes" },
@@ -6,6 +8,26 @@ export const TIMEFRAMES: { id: Timeframe; label: string }[] = [
   { id: "1h", label: "1 Hour" },
   { id: "4h", label: "4 Hours" },
   { id: "1d", label: "Daily" },
+];
+
+export const SWING_TIMEFRAMES: { id: SwingTimeframe; label: string }[] = [
+  { id: "15m", label: "15 Minutes" },
+  { id: "30m", label: "30 Minutes" },
+  { id: "1h", label: "1 Hour" },
+  { id: "4h", label: "4 Hours" },
+  { id: "1d", label: "Daily" },
+  { id: "1w", label: "Weekly" },
+];
+
+export const PATTERN_TIMEFRAMES: { id: PatternTimeframe; label: string }[] = [
+  { id: "5m", label: "5 Minutes" },
+  { id: "15m", label: "15 Minutes" },
+  { id: "30m", label: "30 Minutes" },
+  { id: "1h", label: "1 Hour" },
+  { id: "4h", label: "4 Hours" },
+  { id: "1d", label: "Daily" },
+  { id: "1w", label: "Weekly" },
+  { id: "1M", label: "Monthly" },
 ];
 
 export type DataStatus = "LIVE" | "DELAYED" | "EOD" | "STALE" | "UNAVAILABLE";
@@ -206,4 +228,151 @@ export interface SearchHit {
   name: string;
   exchange: string;
   type: string;
+}
+
+export type SwingSignal = "BULLISH" | "BEARISH" | "NEUTRAL" | "NO_TRADE";
+
+export type SwingStrategyId =
+  | "ellipse"
+  | "swing-sr"
+  | "fibonacci"
+  | "liquidity-sweep"
+  | "liquidity-analysis"
+  | "swing-algo"
+  | "big-trend"
+  | "mtf-swing"
+  | "weighted"
+  | "target-isolator";
+
+export interface SwingPlan {
+  allowed: boolean;
+  entry: number | null;
+  entryLow: number | null;
+  entryHigh: number | null;
+  stop: number | null;
+  target1: number | null;
+  target2: number | null;
+  target3: number | null;
+  riskReward: number | null;
+  invalidation: number | null;
+}
+
+export interface SwingOverlayLine {
+  price: number;
+  color: string;
+  title: string;
+  style?: "solid" | "dashed";
+}
+
+export interface SwingMarker {
+  time: number;
+  price: number;
+  kind: "high" | "low" | "sweep" | "signal";
+}
+
+export interface SwingOverlays {
+  emas: boolean;
+  fibonacci: boolean;
+  supportResistance: boolean;
+  liquidity: boolean;
+  entryExit: boolean;
+  targets: boolean;
+  historical: boolean;
+  lines: SwingOverlayLine[];
+  markers: SwingMarker[];
+}
+
+export interface SwingStrategyResult {
+  id: SwingStrategyId;
+  name: string;
+  score: number;
+  signal: SwingSignal;
+  plan: SwingPlan;
+  overlays: SwingOverlays;
+  why: string;
+  whenEnter: string;
+  whenExit: string;
+  risks: string;
+  scoreWhy: string;
+  noTradeReason: string | null;
+}
+
+export interface SwingSummary {
+  overallScore: number;
+  overallSignal: SwingSignal;
+  overallLabel: string;
+  agreement: string;
+  preferredEntryLow: number | null;
+  preferredEntryHigh: number | null;
+  preferredEntry: number | null;
+  stop: number | null;
+  target1: number | null;
+  target2: number | null;
+  target3: number | null;
+  riskReward: number | null;
+  summary: string;
+  action: string;
+}
+
+export interface SwingAnalysis {
+  symbol: string;
+  timeframe: SwingTimeframe;
+  timeframe_label: string;
+  quote: Quote;
+  indicators: Indicators;
+  levels: Levels;
+  bars: Candle[];
+  strategies: SwingStrategyResult[];
+  summary: SwingSummary;
+  higher_timeframe: SwingTimeframe;
+  higher_trend: "BULLISH" | "BEARISH" | "NEUTRAL";
+  freshness: Freshness;
+}
+
+export type PatternBias = "BULLISH" | "BEARISH" | "NEUTRAL";
+export type OverviewDecision = "BUY / ENTER" | "SELL / ENTER" | "WAIT" | "AVOID";
+export type TradeDecision = "ENTER" | "ENTER SWING TRADE" | "WAIT FOR BREAKOUT" | "AVOID / NO TRADE";
+
+export interface PatternSnapshot {
+  timeframe: PatternTimeframe;
+  timeframe_label: string;
+  pattern_name: string;
+  market_structure: string;
+  bias: PatternBias;
+  status: string;
+  decision: OverviewDecision;
+}
+
+export interface PatternTradePlan {
+  style: "day" | "swing";
+  style_label: string;
+  timeframe: PatternTimeframe;
+  timeframe_label: string;
+  heading: string;
+  pattern_name: string;
+  bias: PatternBias;
+  status: string;
+  market_structure: string;
+  entry: string | null;
+  entry_zone: string | null;
+  preferred_entry: string | null;
+  stop: string | null;
+  target_1: string | null;
+  target_2: string | null;
+  target_3: string | null;
+  decision: TradeDecision;
+}
+
+export interface ChartPatternAnalysis {
+  symbol: string;
+  name: string;
+  price: number;
+  change_percent: number | null;
+  overview: {
+    daily: PatternSnapshot;
+    weekly: PatternSnapshot;
+    monthly: PatternSnapshot;
+  };
+  trade: PatternTradePlan;
+  freshness: Freshness;
 }

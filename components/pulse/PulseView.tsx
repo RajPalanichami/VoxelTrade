@@ -12,6 +12,8 @@ import { PulseNews } from "./PulseNews";
 import { KeyMarketTable } from "./KeyMarketTable";
 import { SectorList } from "./SectorList";
 import { Takeaways } from "./Takeaways";
+import { MarketEvents } from "./MarketEvents";
+import { OverviewHub } from "./OverviewHub";
 
 export function PulseView({ variant = "overview" }: { variant?: "overview" | "markets" | "sectors" }) {
   const [range, setRange] = useState<PulseRange>("1W");
@@ -34,12 +36,18 @@ export function PulseView({ variant = "overview" }: { variant?: "overview" | "ma
         <>
           <IndexCards cards={p.cards} />
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[1.4fr_0.8fr_0.8fr] gap-4">
-            <div className="md:col-span-2 xl:col-span-1">
+            <div className="md:col-span-2 xl:col-span-1 min-w-0">
               <PerformanceChart series={p.performance} range={range} onRange={setRange} />
             </div>
-            <Movers gainers={p.movers.gainers} losers={p.movers.losers} active={p.movers.active} />
+            <MarketEvents />
             <PulseNews items={p.news} />
           </div>
+          <Movers
+            layout="band"
+            gainers={p.movers.gainers}
+            losers={p.movers.losers}
+            active={p.movers.active}
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[1.4fr_0.8fr_0.8fr] gap-4">
             <div className="md:col-span-2 xl:col-span-1 min-w-0">
               <KeyMarketTable rows={p.table} />
@@ -47,6 +55,7 @@ export function PulseView({ variant = "overview" }: { variant?: "overview" | "ma
             <SectorList sectors={p.sectors} />
             <Takeaways items={p.takeaways} />
           </div>
+          <OverviewHub />
         </>
       )}
       {p && variant === "markets" && (

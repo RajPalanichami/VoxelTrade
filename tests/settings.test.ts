@@ -28,7 +28,8 @@ describe("settings", () => {
   });
 
   it("vendor urls are overridable", () => {
-    const s = createSettings({ twelveDataBaseUrl: "https://mock.example/td" });
+    const s = createSettings({ twelveDataBaseUrl: "https://mock.example/td", economicCalendarUrl: "https://mock.example/cal" });
     expect(s.twelveDataBaseUrl).toBe("https://mock.example/td");
+    expect(s.economicCalendarUrl).toBe("https://mock.example/cal");
   });
 });

@@ -60,6 +60,12 @@ describe("Signal Analyzer API contract", () => {
     expect(normalizeTimeframe("4hours")).toBe("4h");
     expect(normalizeTimeframe("daily")).toBe("1d");
   });
+
+  it("does not accept swing-only intervals on Signal Analyzer routes", async () => {
+    expect(() => normalizeTimeframe("15m")).toThrow(/Unsupported timeframe/);
+    const res = await dispatchV1(new Request("http://localhost/api/v1/stocks/AAPL/analysis?timeframe=15m"));
+    expect(res.status).toBe(400);
+  });
 });
 
 describe("Signal Analyzer cached market data", () => {

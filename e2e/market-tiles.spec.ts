@@ -40,6 +40,25 @@ test("market tiles stay in one lane and include 2Y + BTC", async ({ page }) => {
   expect(positions).toEqual([...positions].sort((a, b) => a - b));
 });
 
+test("overview keeps Top Market Movers and shows live Market Events This Week", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByText("Market Pulse", { exact: true })).toBeVisible();
+  await expect(page.getByText("TOP MARKET MOVERS")).toBeVisible({ timeout: 45_000 });
+  const events = page.getByTestId("market-events");
+  await expect(events).toBeVisible({ timeout: 45_000 });
+  await expect(events.getByText("MARKET EVENTS THIS WEEK")).toBeVisible();
+  await expect(page.getByTestId("market-events-updated")).toContainText("EST (Eastern Standard Time)");
+  await expect(page.getByTestId("market-event-row").first()).toBeVisible({ timeout: 45_000 });
+  await expect(page.getByText("No U.S. market events were scheduled")).toHaveCount(0);
+  const eventsBox = await events.boundingBox();
+  const movers = page.getByTestId("top-market-movers");
+  await expect(movers).toBeVisible();
+  const moversBox = await movers.boundingBox();
+  expect(eventsBox).toBeTruthy();
+  expect(moversBox).toBeTruthy();
+  expect(moversBox!.y).toBeGreaterThan(eventsBox!.y);
+});
+
 test("overview shows a Login button and not the auth form", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByText("Market Pulse", { exact: true })).toBeVisible();

@@ -14,8 +14,8 @@ describe("timeframe mapping", () => {
     expect(TIMEFRAMES).toEqual(["5m", "30m", "1h", "4h", "1d"]);
   });
 
-  it("keeps Yahoo 5m/30m lookbacks within the 60-day cap", () => {
-    for (const id of ["5m", "30m"] as const) {
+  it("keeps Yahoo 5m/15m/30m lookbacks within the 60-day cap", () => {
+    for (const id of ["5m", "15m", "30m"] as const) {
       const spec = TIMEFRAME_SPECS[id];
       expect(spec.yahooLookbackSec).toBeLessThanOrEqual(60 * DAY);
       expect(spec.yahooLookbackSec).toBeGreaterThan(0);
@@ -48,5 +48,13 @@ describe("timeframe mapping", () => {
 
   it("rejects unknown timeframes", () => {
     expect(() => getTimeframeSpec("2h")).toThrow(/Unsupported timeframe/);
+  });
+
+  it("exposes swing-only 15m and weekly intervals without changing Signal Analyzer", () => {
+    expect(getTimeframeSpec("15m").yahooInterval).toBe("15m");
+    expect(getTimeframeSpec("1w").yahooInterval).toBe("1wk");
+    expect(TIMEFRAMES.includes("15m" as never)).toBe(false);
+    expect(TIMEFRAMES.includes("1w" as never)).toBe(false);
+    expect(() => getTimeframeSpec("1M")).toThrow(/Unsupported timeframe/);
   });
 });

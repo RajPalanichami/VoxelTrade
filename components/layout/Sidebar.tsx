@@ -2,10 +2,13 @@
 
 import {
   Activity,
+  BarChart3,
   Bell,
   Bookmark,
   CandlestickChart,
+  GitCompare,
   HelpCircle,
+  Crosshair,
   Crown,
   Layers,
   LayoutDashboard,
@@ -13,9 +16,12 @@ import {
   Newspaper,
   PieChart,
   Radio,
+  Repeat,
+  Scale,
   Settings,
-  Shield,
+  Triangle,
   Table2,
+  Wrench,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -24,31 +30,35 @@ import { config } from "@/lib/config";
 
 const NAV = [
   { href: "/", label: "Overview", icon: Radio },
-  { href: "/markets", label: "Markets", icon: LineChart },
-  { href: "/sectors", label: "Sectors", icon: PieChart },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/signals", label: "Signal Analyzer", icon: Activity },
-  { href: "/multi-timeframe", label: "Multi-Timeframe", icon: Table2 },
-  { href: "/technical", label: "Technical Analysis", icon: CandlestickChart },
-  { href: "/fundamentals", label: "Fundamentals", icon: LineChart },
-  { href: "/market", label: "Market", icon: Shield },
+  { href: "/patterns", label: "Chart Pattern", icon: Triangle },
+  { href: "/options", label: "Option Visualizer", icon: Layers },
+  { href: "/option-analyzer", label: "Option Analyzer", icon: Crosshair },
+  { href: "/swing", label: "Swing Trading", icon: Repeat },
+  { href: "/compare", label: "Ticker Comparison", icon: GitCompare },
+  { href: "/multi-timeframe", label: "Multi-Time Frame", icon: Table2 },
   { href: "/watchlist", label: "Watchlist", icon: Bookmark },
   { href: "/news", label: "News", icon: Newspaper },
-  { href: "/alerts", label: "Alerts", icon: Bell },
-  { href: "/options", label: "Options Visualizer", icon: Layers },
-  { href: "/mag7", label: "Magnificent 7", icon: Crown },
+  { href: "/mag7", label: "The Magnificent Seven", icon: Crown },
+  { href: "/mag7-compare", label: "Mag 7 Comparison", icon: BarChart3 },
+  { href: "/comparison", label: "Comparison", icon: Scale },
   { href: "/sector/technology", label: "Technology", icon: PieChart },
   { href: "/sector/semiconductors", label: "Semiconductors", icon: PieChart },
   { href: "/sector/communication", label: "Communication", icon: PieChart },
-  { href: "/sector/financials", label: "Financials", icon: PieChart },
+  { href: "/sector/financials", label: "Financial", icon: PieChart },
   { href: "/sector/energy", label: "Energy", icon: PieChart },
-  { href: "/sector/healthcare", label: "Health Care", icon: PieChart },
-  { href: "/sector/discretionary", label: "Discretionary", icon: PieChart },
+  { href: "/sector/healthcare", label: "Healthcare", icon: PieChart },
+  { href: "/sector/discretionary", label: "Consumer Discretionary", icon: PieChart },
   { href: "/sector/industrials", label: "Industrials", icon: PieChart },
-  { href: "/sector/staples", label: "Staples", icon: PieChart },
+  { href: "/sector/staples", label: "Consumer Staples", icon: PieChart },
   { href: "/sector/materials", label: "Materials", icon: PieChart },
   { href: "/sector/utilities", label: "Utilities", icon: PieChart },
   { href: "/sector/real-estate", label: "Real Estate", icon: PieChart },
+  { href: "/tools", label: "Tools", icon: Wrench },
+  { href: "/technical", label: "Technical Analysis", icon: CandlestickChart },
+  { href: "/fundamentals", label: "Fundamentals", icon: LineChart },
+  { href: "/alerts", label: "Alerts", icon: Bell },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -88,13 +98,13 @@ function Links({ onClose }: { onClose?: () => void }) {
             key={item.href}
             href={item.href}
             onClick={onClose}
-            className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] transition ${
-              active
-                ? "bg-accent/15 text-white border border-accent/40"
-                : "text-slate-400 hover:text-white hover:bg-white/5"
-            }`}
+            className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] leading-tight transition ${
+                active
+                  ? "bg-accent/15 text-white border border-accent/40"
+                  : "text-slate-400 hover:text-white hover:bg-white/5"
+              }`}
           >
-            <Icon size={15} className={active ? "text-accent" : ""} />
+            <Icon size={15} className={`shrink-0 ${active ? "text-accent" : ""}`} />
             {item.label}
           </Link>
         );

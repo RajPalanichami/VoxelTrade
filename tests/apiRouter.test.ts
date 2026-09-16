@@ -1,6 +1,6 @@
 import fs from "fs";
 import { describe, expect, it, vi } from "vitest";
-import { dispatchV1, handleV1 } from "@/src/server/apiRouter";
+import { dispatchV1, handleV1, normalizePatternTimeframe, normalizeSwingTimeframe, normalizeTimeframe } from "@/src/server/apiRouter";
 import { persistSnapshot, resetStoreForTests } from "@/src/repositories/store";
 
 describe("api router", () => {
@@ -79,5 +79,66 @@ describe("api router", () => {
     expect(res.status).toBe(404);
     const body = await res.json();
     expect(body.detail).toMatch(/Unknown sector/);
+  });
+
+  it("keeps Signal Analyzer timeframes separate from swing timeframes", async () => {
+    expect(normalizeSwingTimeframe("15minutes")).toBe("15m");
+    expect(normalizeSwingTimeframe("weekly")).toBe("1w");
+    expect(normalizeSwingTimeframe("4hours")).toBe("4h");
+    expect(() => normalizeTimeframe("15m")).toThrow(/Unsupported timeframe/);
+    expect(() => normalizeSwingTimeframe("5m")).toThrow(/Unsupported swing timeframe/);
+    const analysis15 = await dispatchV1(new Request("http://localhost/api/v1/stocks/AAPL/analysis?timeframe=15m"));
+    expect(analysis15.status).toBe(400);
+    const swing5 = await dispatchV1(new Request("http://localhost/api/v1/stocks/AAPL/swing?timeframe=5m"));
+    expect(swing5.status).toBe(400);
+  });
+
+  it("accepts pattern-only 15m and monthly without changing Signal Analyzer", () => {
+    expect(normalizePatternTimeframe("15 Minutes")).toBe("15m");
+    expect(normalizePatternTimeframe("monthly")).toBe("1M");
+    expect(normalizePatternTimeframe("1M")).toBe("1M");
+    expect(normalizePatternTimeframe("5m")).toBe("5m");
+    expect(() => normalizeTimeframe("1M")).toThrow(/Unsupported timeframe/);
+    expect(() => normalizeSwingTimeframe("1M")).toThrow(/Unsupported swing timeframe/);
+    expect(() => normalizePatternTimeframe("2h")).toThrow(/Unsupported pattern timeframe/);
+  });
+
+  it("POST compare validates tickers and timeframe without changing Signal Analyzer TFs", async () => {
+    const missing = await dispatchV1(new Request("http://localhost/api/v1/compare", { method: "POST", body: "{}" }));
+    expect(missing.status).toBe(400);
+    const badTf = await dispatchV1(
+      new Request("http://localhost/api/v1/compare", {
+        method: "POST",
+        body: JSON.stringify({ ticker1: "AAPL", ticker2: "MSFT", timeframe: "1M", period: "1Y" }),
+      }),
+    );
+    expect(badTf.status).toBe(400);
+    const analysis15 = await dispatchV1(new Request("http://localhost/api/v1/stocks/AAPL/analysis?timeframe=15m"));
+    expect(analysis15.status).toBe(400);
+    const mag7Bad = await dispatchV1(new Request("http://localhost/api/v1/compare/mag7?timeframe=5m"));
+    expect(mag7Bad.status).toBe(400);
+    const basketEmpty = await dispatchV1(new Request("http://localhost/api/v1/compare/basket", { method: "POST", body: "{}" }));
+    expect(basketEmpty.status).toBe(400);
+    const basketTooMany = await dispatchV1(
+      new Request("http://localhost/api/v1/compare/basket", {
+        method: "POST",
+        body: JSON.stringify({ tickers: ["AAPL", "MSFT", "NVDA", "AMD", "TSLA", "META", "AMZN", "GOOGL", "AVGO", "MU", "PLTR"], timeframe: "4h" }),
+      }),
+    );
+    expect(basketTooMany.status).toBe(400);
+    const basketDup = await dispatchV1(
+      new Request("http://localhost/api/v1/compare/basket", {
+        method: "POST",
+        body: JSON.stringify({ tickers: ["AAPL", "aapl"], timeframe: "4h" }),
+      }),
+    );
+    expect(basketDup.status).toBe(400);
+    const basketTf = await dispatchV1(
+      new Request("http://localhost/api/v1/compare/basket", {
+        method: "POST",
+        body: JSON.stringify({ tickers: ["AAPL", "MSFT"], timeframe: "5m" }),
+      }),
+    );
+    expect(basketTf.status).toBe(400);
   });
 });

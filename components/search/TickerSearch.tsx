@@ -5,7 +5,21 @@ import { Search } from "lucide-react";
 import { api } from "@/lib/api";
 import { SearchHit } from "@/lib/types";
 
-export function TickerSearch({ value, onSelect }: { value: string; onSelect: (s: string) => void }) {
+export function TickerSearch({
+  value,
+  onSelect,
+  onInputChange,
+  commitOnBlur = false,
+  placeholder = "Search ticker: AAPL, MSFT, TSLA...",
+  label,
+}: {
+  value: string;
+  onSelect: (s: string) => void;
+  onInputChange?: (s: string) => void;
+  commitOnBlur?: boolean;
+  placeholder?: string;
+  label?: string;
+}) {
   const [q, setQ] = useState(value);
   const [open, setOpen] = useState(false);
   const [hits, setHits] = useState<SearchHit[]>([]);
@@ -43,7 +57,14 @@ export function TickerSearch({ value, onSelect }: { value: string; onSelect: (s:
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
       <input
         value={q}
-        onChange={(e) => setQ(e.target.value.toUpperCase())}
+        onChange={(e) => {
+          const next = e.target.value.toUpperCase();
+          setQ(next);
+          onInputChange?.(next);
+        }}
+        onBlur={() => {
+          if (commitOnBlur && q.trim()) onSelect(q.trim().toUpperCase());
+        }}
         onFocus={() => hits.length && setOpen(true)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && q.trim()) {
@@ -51,7 +72,8 @@ export function TickerSearch({ value, onSelect }: { value: string; onSelect: (s:
             setOpen(false);
           }
         }}
-        placeholder="Search ticker: AAPL, MSFT, TSLA..."
+        placeholder={placeholder}
+        aria-label={label || placeholder}
         className="w-full bg-panel2 border border-line rounded-md pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-accent/70"
       />
       {open && hits.length > 0 && (

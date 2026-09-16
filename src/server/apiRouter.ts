@@ -1,4 +1,7 @@
-import { TIMEFRAMES, TIMEFRAME_LABELS, getSettings } from "@/src/config/env";
+import { PATTERN_TIMEFRAMES, SWING_TIMEFRAMES, TIMEFRAMES, TIMEFRAME_LABELS, getSettings } from "@/src/config/env";
+import { isPatternTimeframe, isSwingTimeframe } from "@/src/config/timeframes";
+import { buildSwingAnalysis } from "@/src/services/swing";
+import { buildChartPatternAnalysis } from "@/src/services/chartPattern";
 import { BY_SYMBOL } from "@/src/data/universe";
 import { getSector } from "@/src/data/sectors";
 import { runBacktest } from "@/src/engines/backtest";
@@ -10,11 +13,16 @@ import { analysis } from "@/src/services/analysis";
 import { buildMag7, INDICATOR_TF as MAG7_TF, RANGES as MAG7_RANGES } from "@/src/services/mag7";
 import { fetchChain, payoffFromPayload } from "@/src/services/options";
 import { buildPulse } from "@/src/services/pulse";
+import { buildMarketEvents } from "@/src/services/marketEvents";
 import { buildSector, INDICATOR_TF as SECTOR_TF, RANGES as SECTOR_RANGES, listSectors } from "@/src/services/sectorIntel";
+import { buildCompare } from "@/src/services/compare";
+import { buildBasketCompare, buildMag7Compare, parseBasketTickers } from "@/src/services/mag7Compare";
 
 const TF_ALIASES: Record<string, string> = {
   "5min": "5m",
   "5minutes": "5m",
+  "15min": "15m",
+  "15minutes": "15m",
   "30min": "30m",
   "30minutes": "30m",
   "1hour": "1h",
@@ -24,6 +32,14 @@ const TF_ALIASES: Record<string, string> = {
   daily: "1d",
   "1day": "1d",
   d: "1d",
+  weekly: "1w",
+  "1week": "1w",
+  "1wk": "1w",
+  w: "1w",
+  monthly: "1M",
+  "1month": "1M",
+  "1mo": "1M",
+  "1m": "1M",
 };
 
 export function normalizeTimeframe(value: string) {
@@ -31,6 +47,27 @@ export function normalizeTimeframe(value: string) {
   v = TF_ALIASES[v] || v;
   if (!TIMEFRAMES.includes(v as (typeof TIMEFRAMES)[number])) {
     throw new HttpError(400, `Unsupported timeframe '${value}'. Use: ${TIMEFRAMES.join(", ")}`);
+  }
+  return v;
+}
+
+export function normalizeSwingTimeframe(value: string) {
+  let v = value.toLowerCase().replace(/\s+/g, "");
+  v = TF_ALIASES[v] || v;
+  if (!isSwingTimeframe(v)) {
+    throw new HttpError(400, `Unsupported swing timeframe '${value}'. Use: ${SWING_TIMEFRAMES.join(", ")}`);
+  }
+  return v;
+}
+
+export function normalizePatternTimeframe(value: string) {
+  const raw = value.trim();
+  if (raw === "1M") return "1M";
+  let v = raw.toLowerCase().replace(/\s+/g, "");
+  v = TF_ALIASES[v] || v;
+  if (v === "1m") v = "1M";
+  if (!isPatternTimeframe(v)) {
+    throw new HttpError(400, `Unsupported pattern timeframe '${value}'. Use: ${PATTERN_TIMEFRAMES.join(", ")}`);
   }
   return v;
 }
@@ -57,6 +94,32 @@ function errorResponse(err: unknown) {
 export async function handleV1(method: string, path: string[], url: URL, body: unknown) {
   getSettings().validateRuntime();
   const segs = path.filter(Boolean);
+
+  if ((method === "GET" || method === "POST") && segs[0] === "compare" && segs[1] === "mag7") {
+    const bodyObj = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+    const timeframe = String(bodyObj.timeframe || url.searchParams.get("timeframe") || "4h");
+    const data = await buildMag7Compare(timeframe);
+    return json(envelope(data, "compare-engine", "LIVE", 0));
+  }
+
+  if ((method === "GET" || method === "POST") && segs[0] === "compare" && segs[1] === "basket") {
+    const bodyObj = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+    const tickers = parseBasketTickers(bodyObj.tickers ?? url.searchParams.get("tickers") ?? "");
+    const timeframe = String(bodyObj.timeframe || url.searchParams.get("timeframe") || "4h");
+    const data = await buildBasketCompare(tickers, timeframe);
+    return json(envelope(data, "compare-engine", "LIVE", 0));
+  }
+
+  if ((method === "POST" || method === "GET") && segs[0] === "compare") {
+    const bodyObj = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+    const ticker1 = String(bodyObj.ticker1 || url.searchParams.get("ticker1") || "");
+    const ticker2 = String(bodyObj.ticker2 || url.searchParams.get("ticker2") || "");
+    const timeframe = String(bodyObj.timeframe || url.searchParams.get("timeframe") || "1d");
+    const period = String(bodyObj.period || url.searchParams.get("period") || "1Y");
+    if (!ticker1.trim() || !ticker2.trim()) throw new HttpError(400, "ticker1 and ticker2 are required");
+    const data = await buildCompare(String(ticker1), String(ticker2), timeframe, period);
+    return json(envelope(data, "compare-engine", "LIVE", 0));
+  }
 
   if (method === "GET" && segs[0] === "search") {
     const q = url.searchParams.get("q") || "";
@@ -138,6 +201,20 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     return json(envelope(bundle.multi_timeframe, f.source, f.data_status, f.latency_ms));
   }
 
+  if (method === "GET" && segs[0] === "stocks" && segs[2] === "swing") {
+    const timeframe = normalizeSwingTimeframe(url.searchParams.get("timeframe") || "4h");
+    const bundle = await buildSwingAnalysis(segs[1], timeframe);
+    const f = bundle.freshness;
+    return json(envelope(bundle, f.source, f.data_status, f.latency_ms));
+  }
+
+  if (method === "GET" && segs[0] === "stocks" && segs[2] === "chart-pattern") {
+    const timeframe = normalizePatternTimeframe(url.searchParams.get("timeframe") || "1d");
+    const bundle = await buildChartPatternAnalysis(segs[1], timeframe);
+    const f = bundle.freshness;
+    return json(envelope(bundle, f.source, f.data_status, f.latency_ms));
+  }
+
   if (method === "GET" && segs[0] === "stocks" && segs[2] === "analysis") {
     const timeframe = tf(url.searchParams.get("timeframe") || "1h");
     const bundle = await analysis.analyze(segs[1], timeframe, true) as Record<string, unknown>;
@@ -186,6 +263,11 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     const data = await buildPulse(range);
     const status = (data.cards as unknown[])?.length ? "LIVE" : "UNAVAILABLE";
     return json(envelope(data, "composite", status, Number(data.latency_ms || 0)));
+  }
+
+  if (method === "GET" && segs[0] === "market" && segs[1] === "events") {
+    const data = await buildMarketEvents();
+    return json(envelope(data, data.source || "composite", data.data_status, 0));
   }
 
   if (method === "GET" && segs[0] === "market" && segs[1] === "overview") {

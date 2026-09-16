@@ -1,5 +1,5 @@
 import { apiUrl } from "./config";
-import { AnalysisBundle, Envelope, SearchHit, Timeframe } from "./types";
+import { AnalysisBundle, Envelope, SearchHit, SwingAnalysis, SwingTimeframe, Timeframe } from "./types";
 
 export function parseApiError(text: string, status?: number): string {
   try {
@@ -36,8 +36,16 @@ export const api = {
   search: (q: string) => get<SearchHit[]>(`/api/v1/search?q=${encodeURIComponent(q)}`),
   analysis: (symbol: string, tf: Timeframe, signal?: AbortSignal) =>
     get<AnalysisBundle>(`/api/v1/stocks/${symbol}/analysis?timeframe=${tf}`, signal),
+  swing: (symbol: string, tf: SwingTimeframe, signal?: AbortSignal) =>
+    get<SwingAnalysis>(`/api/v1/stocks/${symbol}/swing?timeframe=${tf}`, signal),
+  chartPattern: (symbol: string, tf: import("./types").PatternTimeframe, signal?: AbortSignal) =>
+    get<import("./types").ChartPatternAnalysis>(
+      `/api/v1/stocks/${symbol}/chart-pattern?timeframe=${encodeURIComponent(tf)}`,
+      signal,
+    ),
   market: () => get<Record<string, unknown>>("/api/v1/market/overview"),
   pulse: (range: string) => get<import("./pulse").PulsePayload>(`/api/v1/market/pulse?range=${range}`),
+  marketEvents: () => get<import("./marketEvents").MarketEventsPayload>("/api/v1/market/events"),
   status: () => get<{ state: string }>("/api/v1/market/status"),
   watchlist: () => get<unknown[]>("/api/v1/watchlist"),
   addWatch: (symbol: string) => send(`/api/v1/watchlist/${symbol}`, "POST"),
@@ -60,18 +68,30 @@ export const api = {
     get<import("./sectors").SectorPayload>(
       `/api/v1/market/sector/${encodeURIComponent(slug)}?timeframe=${encodeURIComponent(timeframe)}&range=${encodeURIComponent(range)}`,
     ),
+  compare: (ticker1: string, ticker2: string, timeframe: string, period: string) =>
+    send<import("./compare").ComparePayload>("/api/v1/compare", "POST", { ticker1, ticker2, timeframe, period }),
+  mag7Compare: (timeframe: string) =>
+    get<import("./mag7Compare").Mag7ComparePayload>(`/api/v1/compare/mag7?timeframe=${encodeURIComponent(timeframe)}`),
+  basketCompare: (tickers: string[], timeframe: string) =>
+    send<import("./mag7Compare").Mag7ComparePayload>("/api/v1/compare/basket", "POST", { tickers, timeframe }),
 };
 
 export const keys = {
   analysis: (s: string, tf: Timeframe) => ["analysis", s, tf] as const,
+  swing: (s: string, tf: SwingTimeframe) => ["swing", s, tf] as const,
+  chartPattern: (s: string, tf: import("./types").PatternTimeframe) => ["chart-pattern", s, tf] as const,
   quote: (s: string) => ["quote", s] as const,
   bars: (s: string, tf: Timeframe) => ["bars", s, tf] as const,
   market: ["market"] as const,
   pulse: (range: string) => ["pulse", range] as const,
+  marketEvents: ["market-events", "v5"] as const,
   watchlist: ["watchlist"] as const,
   alerts: ["alerts"] as const,
   optionChain: (s: string, exp?: string) => ["option-chain", s, exp || ""] as const,
   optionPayoff: (key: string) => ["option-payoff", key] as const,
   mag7: (tf: string, range: string) => ["mag7", tf, range] as const,
   sector: (slug: string, tf: string, range: string) => ["sector", slug, tf, range] as const,
+  compare: (a: string, b: string, tf: string, period: string) => ["compare", a, b, tf, period] as const,
+  mag7Compare: (tf: string) => ["mag7-compare", tf] as const,
+  basketCompare: (tickers: string[], tf: string) => ["basket-compare", tickers.join(","), tf] as const,
 };
