@@ -6,6 +6,7 @@ import {
   formatEstDateTime,
   formatEstTimeLine,
   inEasternWeek,
+  instantFromEastern,
   isoDateEastern,
   parseCalendarTime,
 } from "@/src/lib/easternTime";
@@ -99,7 +100,10 @@ export function eventStatus(raw: RawCalendarEvent, occursAt: Date | null, now: D
   if (/delay|postpon/.test(blob)) return "delayed";
   const actual = displayValue(raw.actual, raw.unit);
   if (actual) return "released";
-  if (occursAt && occursAt.getTime() <= now.getTime()) return "released";
+  if (occursAt) {
+    const expires = raw.dateOnly ? endOfEasternDay(occursAt) : occursAt;
+    if (expires.getTime() <= now.getTime()) return "released";
+  }
   return "upcoming";
 }
 
@@ -107,13 +111,33 @@ function normalizeKey(name: string, day: string) {
   return `${day}|${name.toLowerCase().replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim()}`;
 }
 
-export function toMarketEvent(raw: RawCalendarEvent, now = new Date()): MarketEvent | null {
+const IMPACT_RANK: Record<MarketEventImpact, number> = {
+  Critical: 0,
+  High: 1,
+  Medium: 2,
+  Low: 3,
+};
+
+export function compareMarketEvents(a: MarketEvent, b: MarketEvent) {
+  const rank = IMPACT_RANK[a.impact] - IMPACT_RANK[b.impact];
+  if (rank !== 0) return rank;
+  const at = a.occursAt || "";
+  const bt = b.occursAt || "";
+  if (at !== bt) return at.localeCompare(bt);
+  return a.name.localeCompare(b.name);
+}
+
+export function sortMarketEvents(events: MarketEvent[]) {
+  return [...events].sort(compareMarketEvents);
+}
+
+export function toMarketEvent(raw: RawCalendarEvent, now = new Date(), weekRef: Date = now): MarketEvent | null {
   if (!raw.name?.trim()) return null;
   if (!isUsEvent(raw.country, raw.name)) return null;
   const assumeUtc = raw.timeIsUtc ?? !raw.dateOnly;
   const parsed = raw.time instanceof Date ? raw.time : raw.time ? parseCalendarTime(String(raw.time), assumeUtc) : null;
   if (!parsed || Number.isNaN(parsed.getTime())) return null;
-  if (!inEasternWeek(parsed, now)) return null;
+  if (!inEasternWeek(parsed, weekRef)) return null;
   const hasClock = !raw.dateOnly;
   const dateLabel = formatEstDate(parsed);
   const timeLabel = hasClock ? formatEstTimeLine(parsed) : formatEstTimeLine(null);
@@ -141,20 +165,36 @@ function completeness(event: MarketEvent) {
   return (event.hasClock ? 4 : 0) + (event.actual ? 3 : 0) + (event.forecast ? 2 : 0) + (event.previous ? 1 : 0);
 }
 
-export function mergeMarketEvents(raws: RawCalendarEvent[], now = new Date()) {
+export function endOfEasternDay(date: Date) {
+  const day = isoDateEastern(date);
+  const [y, m, d] = day.split("-").map(Number);
+  return new Date(instantFromEastern(y, m, d, 23, 59, 59).getTime());
+}
+
+export function isUpcomingThisWeek(event: MarketEvent, now = new Date(), weekRef: Date = now) {
+  if (!event.occursAt) return false;
+  const when = new Date(event.occursAt);
+  if (Number.isNaN(when.getTime())) return false;
+  if (!inEasternWeek(when, weekRef)) return false;
+  if (event.status === "cancelled") return false;
+  if (event.status === "released") return false;
+  if (event.hasClock) return when.getTime() > now.getTime();
+  return endOfEasternDay(when).getTime() >= now.getTime();
+}
+
+export function filterUpcomingThisWeek(events: MarketEvent[], now = new Date(), weekRef: Date = now) {
+  return sortMarketEvents(events.filter((event) => isUpcomingThisWeek(event, now, weekRef)));
+}
+
+export function mergeMarketEvents(raws: RawCalendarEvent[], now = new Date(), weekRef: Date = now) {
   const map = new Map<string, MarketEvent>();
   for (const raw of raws) {
-    const event = toMarketEvent(raw, now);
+    const event = toMarketEvent(raw, now, weekRef);
     if (!event) continue;
     const prev = map.get(event.id);
     if (!prev || completeness(event) > completeness(prev)) map.set(event.id, event);
   }
-  return [...map.values()].sort((a, b) => {
-    const at = a.occursAt || "";
-    const bt = b.occursAt || "";
-    if (at !== bt) return at.localeCompare(bt);
-    return a.name.localeCompare(b.name);
-  });
+  return sortMarketEvents([...map.values()]);
 }
 
 export function weekRangeLabel(now = new Date()) {

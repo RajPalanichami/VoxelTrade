@@ -1,5 +1,11 @@
 import { structureFlags, swingPoints } from "@/src/engines/indicators";
 import type { OHLCVBar } from "@/src/types/domain";
+import {
+  analyzeChartPattern,
+  overviewDecisionFromSignal,
+  tradeDecisionFromSignal,
+  type PatternAnalysis,
+} from "@/src/engines/patternEngine";
 
 export type PatternBias = "BULLISH" | "BEARISH" | "NEUTRAL";
 export type PatternDecision = "Entry" | "Wait" | "Avoid";
@@ -34,6 +40,7 @@ export type PrimaryPattern = {
   market_structure: string;
   decision: PatternDecision;
   evaluated: number;
+  analysis?: PatternAnalysis;
 };
 
 export type PatternLevels = {
@@ -576,24 +583,36 @@ export function evaluateAllPatterns(bars: OHLCVBar[]): { evaluated: number; hits
 }
 
 export function pickPrimaryPattern(bars: OHLCVBar[]): PrimaryPattern {
-  const structure = marketStructureLabel(bars);
+  const analysis = analyzeChartPattern(bars);
+  const structure = analysis.marketStructure.label || marketStructureLabel(bars);
   const { evaluated, hits } = evaluateAllPatterns(bars);
-  const ctxBars = bars;
-  const { highs, lows } = collectPivots(ctxBars);
-  const fallback = structureFallback(
-    {
-      bars: ctxBars,
-      n: ctxBars.length,
-      last: ctxBars[ctxBars.length - 1],
-      price: ctxBars[ctxBars.length - 1].close,
-      highs,
-      lows,
-      atr: atrApprox(ctxBars),
-    },
-    structure,
-  );
-  const ranked = [...hits, fallback].sort((a, b) => relevance(b, structure) - relevance(a, structure));
+  if (analysis.primary) {
+    const signal = analysis.signal;
+    return {
+      id: analysis.primary.id,
+      name: analysis.primary.name,
+      bias: analysis.primary.bias,
+      status: analysis.primary.displayStatus,
+      market_structure: structure,
+      decision: signal.action === "BUY" || signal.action === "SELL" ? "Entry" : signal.action === "NO_TRADE" || signal.action === "INSUFFICIENT_DATA" ? "Avoid" : "Wait",
+      evaluated,
+      analysis,
+    };
+  }
+  const ranked = [...hits].sort((a, b) => relevance(b, structure) - relevance(a, structure));
   const best = ranked[0];
+  if (!best) {
+    return {
+      id: "none",
+      name: "No reliable pattern detected",
+      bias: "NEUTRAL",
+      status: "Watching",
+      market_structure: structure,
+      decision: "Avoid",
+      evaluated,
+      analysis,
+    };
+  }
   return {
     id: best.id,
     name: best.name,
@@ -602,6 +621,7 @@ export function pickPrimaryPattern(bars: OHLCVBar[]): PrimaryPattern {
     market_structure: structure,
     decision: decisionFor(best),
     evaluated,
+    analysis,
   };
 }
 
@@ -609,18 +629,17 @@ function isConfirmedStatus(status: string) {
   return /Breakout Confirmed|Confirmed Breakdown|Confirmed/.test(status);
 }
 
-export function overviewDecisionFor(bias: PatternBias, status: string): OverviewDecision {
+export function overviewDecisionFor(bias: PatternBias, status: string, signal?: { action: string }): OverviewDecision {
+  if (signal) return overviewDecisionFromSignal(signal as Parameters<typeof overviewDecisionFromSignal>[0]);
   if (status === "Watching") return "AVOID";
-  if (isConfirmedStatus(status) && bias === "BULLISH") return "BUY / ENTER";
-  if (isConfirmedStatus(status) && bias === "BEARISH") return "SELL / ENTER";
-  if (!isConfirmedStatus(status)) return "WAIT";
-  return "AVOID";
+  return "WAIT";
 }
 
-export function tradeDecisionFor(status: string, style: PatternTradeStyle): TradeDecision {
+export function tradeDecisionFor(status: string, style: PatternTradeStyle, signal?: { action: string }): TradeDecision {
+  if (signal) return tradeDecisionFromSignal(signal as Parameters<typeof tradeDecisionFromSignal>[0], style);
   if (status === "Watching") return "AVOID / NO TRADE";
   if (!isConfirmedStatus(status)) return "WAIT FOR BREAKOUT";
-  return style === "swing" ? "ENTER SWING TRADE" : "ENTER";
+  return "WAIT FOR BREAKOUT";
 }
 
 function roundPx(n: number) {

@@ -10,3 +10,5 @@ test-results/
 playwright-report/
 coverage/
 data/economic-calendar-week.json
+data/market-events-last-good.json
+data/market-events-next-week.json

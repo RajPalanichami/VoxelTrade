@@ -9,10 +9,13 @@ import { useAuth } from "@/components/providers/AuthProvider";
 
 export function OverviewHub() {
   const { user } = useAuth();
-  const watchQ = useQuery({ queryKey: ["watchlist"], queryFn: api.watchlist, staleTime: 30_000 });
-  const marketQ = useQuery({ queryKey: ["market"], queryFn: api.market, staleTime: 60_000 });
+  const watchQ = useQuery({
+    queryKey: ["watchlist"],
+    queryFn: api.watchlist,
+    staleTime: 30_000,
+    enabled: Boolean(user),
+  });
   const watch = ((watchQ.data?.data || []) as { symbol: string; price?: number; change_percent?: number; error?: string }[]).slice(0, 6);
-  const treasury = (marketQ.data?.data as { treasury?: { yield?: number; change_1d?: number } } | undefined)?.treasury;
 
   return (
     <section className="space-y-4" data-testid="overview-hub">
@@ -33,14 +36,6 @@ export function OverviewHub() {
             Live index, movers, and events stay in the tiles above. Open the full Market pages for the complete pulse and
             macro strip.
           </p>
-          {treasury?.yield != null && (
-            <div className="mt-3 text-sm">
-              10Y Treasury <span className="tick text-white">{treasury.yield.toFixed(2)}%</span>
-              {treasury.change_1d != null && (
-                <span className={treasury.change_1d >= 0 ? "text-bull" : "text-bear"}> {treasury.change_1d.toFixed(3)}</span>
-              )}
-            </div>
-          )}
         </div>
 
         <div className="panel p-4">

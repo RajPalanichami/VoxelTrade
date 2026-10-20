@@ -11,9 +11,13 @@ import {
   type PatternTradeStyle,
   type TradeDecision,
 } from "@/src/engines/chartPatterns";
+import { mtfAlignment, type DetectedPattern, type PatternAnalysis } from "@/src/engines/patternEngine";
 import { HttpError } from "@/src/lib/errors";
 import { analysis } from "@/src/services/analysis";
 import type { OHLCVBar, Quote } from "@/src/types/domain";
+
+/** Pattern detection stays on regular-session bars unless a caller opts into extended hours. */
+export const PATTERN_SESSION_MODE = "REGULAR_ONLY" as const;
 
 const TRADE_HEADING: Record<PatternTimeframe, string> = {
   "5m": "5-Minute Day Trading",
@@ -42,9 +46,29 @@ export type PatternSnapshot = {
   timeframe_label: string;
   pattern_name: string;
   market_structure: string;
+  structure_explanation: string;
+  structure_conflict: string | null;
   bias: PatternBias;
   status: string;
+  pattern_status: string;
   decision: OverviewDecision;
+  trading_signal: string;
+  signal_action: string;
+  signal_score: number | null;
+  entry_status: string;
+  explanation: string;
+  alternatives: { name: string; confidence: number }[];
+  points: import("@/src/engines/patternEngine").PatternPoint[];
+  evidence: { label: string; value: string; ok: boolean | null }[];
+  signal_factors: { name: string; score: number; max: number; note: string }[];
+  neckline: number | null;
+  support: number | null;
+  resistance: number | null;
+  breakout_note: string | null;
+  wick_note: string | null;
+  invalidation: string | null;
+  confidence: number | null;
+  volume_note: string | null;
 };
 
 export type PatternTradePlan = {
@@ -65,6 +89,23 @@ export type PatternTradePlan = {
   target_2: string | null;
   target_3: string | null;
   decision: TradeDecision;
+  trading_signal: string;
+  signal_action: string;
+  signal_score: number | null;
+  entry_status: string;
+  explanation: string;
+  alternatives: { name: string; confidence: number }[];
+  points: import("@/src/engines/patternEngine").PatternPoint[];
+  evidence: { label: string; value: string; ok: boolean | null }[];
+  signal_factors: { name: string; score: number; max: number; note: string }[];
+  neckline: number | null;
+  support: number | null;
+  resistance: number | null;
+  breakout_note: string | null;
+  wick_note: string | null;
+  invalidation: string | null;
+  confidence: number | null;
+  volume_note: string | null;
 };
 
 export type ChartPatternAnalysis = {
@@ -78,6 +119,13 @@ export type ChartPatternAnalysis = {
     monthly: PatternSnapshot;
   };
   trade: PatternTradePlan;
+  mtf_summary: {
+    status: string;
+    explanation: string;
+    short_term: string;
+    intermediate_term: string;
+    long_term: string;
+  };
   freshness: Quote["freshness"] & { algorithm_version: string };
 };
 
@@ -93,6 +141,65 @@ function formatEntry(n: number, hint: "above" | "below" | "at") {
   return money(n);
 }
 
+function emptyExplain() {
+  return {
+    structure_explanation: "Unable to evaluate pattern. Insufficient candle data.",
+    structure_conflict: null,
+    pattern_status: "INSUFFICIENT_DATA",
+    trading_signal: "NEUTRAL",
+    signal_action: "INSUFFICIENT_DATA",
+    signal_score: null as number | null,
+    entry_status: "NO TRADE",
+    explanation: "Unable to evaluate pattern. Insufficient candle data.",
+    alternatives: [] as { name: string; confidence: number }[],
+    points: [] as PatternSnapshot["points"],
+    evidence: [],
+    signal_factors: [],
+    neckline: null,
+    support: null,
+    resistance: null,
+    breakout_note: null,
+    wick_note: null,
+    invalidation: null,
+    confidence: null,
+    volume_note: null,
+  };
+}
+
+function packAnalysis(analysis?: PatternAnalysis, pattern?: DetectedPattern | null, fallbackStatus?: string) {
+  const signal = analysis?.signal;
+  const volume = pattern?.breakout?.relativeVolume;
+  const mapped =
+    pattern?.status ||
+    (/Breakout Confirmed|Confirmed Breakdown|Confirmed/.test(fallbackStatus || "")
+      ? "BREAKOUT_CONFIRMED"
+      : fallbackStatus === "Watching"
+        ? "FORMING"
+        : fallbackStatus || "FORMING");
+  return {
+    structure_explanation: analysis?.marketStructure.explanation || "",
+    structure_conflict: analysis?.marketStructure.conflict || null,
+    pattern_status: mapped,
+    trading_signal: signal?.direction || "NEUTRAL",
+    signal_action: signal?.action || "WAIT",
+    signal_score: signal?.score ?? null,
+    entry_status: signal?.entryStatus || "WAITING FOR BREAKOUT",
+    explanation: analysis?.marketStructure.conflict || pattern?.explanation || analysis?.marketStructure.explanation || "",
+    alternatives: [analysis?.secondary, analysis?.alternative].filter(Boolean).map((p) => ({ name: p!.name, confidence: p!.confidence })),
+    points: pattern?.points || [],
+    evidence: pattern?.validation || [],
+    signal_factors: signal?.factors || [],
+    neckline: pattern?.neckline ?? null,
+    support: pattern?.supportLevel ?? null,
+    resistance: pattern?.resistanceLevel ?? null,
+    breakout_note: pattern?.breakout?.explanation || null,
+    wick_note: pattern?.wickNote || null,
+    invalidation: pattern?.invalidation || null,
+    confidence: pattern?.confidence ?? null,
+    volume_note: volume != null ? `${volume.toFixed(2)}x average` : pattern ? "Volume confirmation unavailable." : null,
+  };
+}
+
 function emptySnapshot(tf: PatternTimeframe, reason: string): PatternSnapshot {
   return {
     timeframe: tf,
@@ -102,6 +209,9 @@ function emptySnapshot(tf: PatternTimeframe, reason: string): PatternSnapshot {
     bias: "NEUTRAL",
     status: "Watching",
     decision: "AVOID",
+    ...emptyExplain(),
+    structure_explanation: reason,
+    explanation: reason,
   };
 }
 
@@ -123,7 +233,8 @@ function snapshotFromBars(bars: OHLCVBar[], timeframe: PatternTimeframe): Patter
     market_structure: primary.market_structure,
     bias: primary.bias,
     status: primary.status,
-    decision: overviewDecisionFor(primary.bias, primary.status),
+    decision: overviewDecisionFor(primary.bias, primary.status, primary.analysis?.signal),
+    ...packAnalysis(primary.analysis, primary.analysis?.primary, primary.status),
   };
 }
 
@@ -133,7 +244,7 @@ function tradeFromBars(bars: OHLCVBar[], timeframe: PatternTimeframe): PatternTr
   const timeframe_label = PATTERN_TIMEFRAME_LABELS[timeframe];
   const primary = pickPrimaryPattern(bars);
   const levels = buildTradeLevels(bars, primary);
-  const decision = tradeDecisionFor(primary.status, style);
+  const decision = tradeDecisionFor(primary.status, style, primary.analysis?.signal);
   return {
     style,
     style_label,
@@ -152,6 +263,7 @@ function tradeFromBars(bars: OHLCVBar[], timeframe: PatternTimeframe): PatternTr
     target_2: money(levels.target2),
     target_3: money(levels.target3),
     decision,
+    ...packAnalysis(primary.analysis, primary.analysis?.primary, primary.status),
   };
 }
 
@@ -201,18 +313,39 @@ export async function buildChartPatternAnalysis(symbol: string, timeframe: Patte
 
   const latency = Math.max(dailyRes.latency, weeklyRes.latency, monthlyRes.latency, selected.latency);
   const source = selected.source !== "none" ? selected.source : dailyRes.source;
+  const overview = {
+    daily: dailyRes.snapshot,
+    weekly: weeklyRes.snapshot,
+    monthly: monthlyRes.snapshot,
+  };
+  const mtf = mtfAlignment([overview.daily, overview.weekly, overview.monthly]);
+  const trade = tradeFromBars(selected.bars, timeframe);
+  console.info("[chart-pattern]", {
+    ticker,
+    timeframe,
+    pattern: trade.pattern_name,
+    status: trade.pattern_status,
+    confidence: trade.confidence,
+    neckline: trade.neckline,
+    signal: trade.signal_action,
+    score: trade.signal_score,
+    points: trade.points.map((p) => p.role),
+  });
 
   return {
     symbol: ticker,
     name: quote.name || ticker,
     price: quote.price || selected.bars[selected.bars.length - 1].close,
     change_percent: quote.change_percent ?? null,
-    overview: {
-      daily: dailyRes.snapshot,
-      weekly: weeklyRes.snapshot,
-      monthly: monthlyRes.snapshot,
+    overview,
+    trade,
+    mtf_summary: {
+      status: mtf.status,
+      explanation: mtf.explanation,
+      short_term: `${overview.daily.pattern_name} · ${overview.daily.bias} · ${overview.daily.status}`,
+      intermediate_term: `${overview.weekly.pattern_name} · ${overview.weekly.bias} · ${overview.weekly.status}`,
+      long_term: `${overview.monthly.pattern_name} · ${overview.monthly.bias} · ${overview.monthly.status}`,
     },
-    trade: tradeFromBars(selected.bars, timeframe),
     freshness: {
       ...quote.freshness,
       source,

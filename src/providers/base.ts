@@ -10,6 +10,7 @@ export interface MarketDataProvider {
   available(): boolean;
   fetchQuote(symbol: string): Promise<Quote>;
   fetchBars(symbol: string, timeframe: string, outputsize?: number): Promise<OHLCVBar[]>;
+  fetchExtendedHoursBars?(symbol: string, timeframe?: string, outputsize?: number): Promise<OHLCVBar[]>;
   fetchFundamentals?(symbol: string): Promise<Record<string, unknown> | null>;
   fetchEarnings?(symbol: string): Promise<Record<string, unknown> | null>;
   fetchNews?(symbol: string, limit?: number): Promise<Record<string, unknown>[]>;

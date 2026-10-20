@@ -19,8 +19,8 @@ test("chart pattern page shows daily/weekly/monthly tiles and one trade plan", a
   await expect(page.getByTestId("chart-pattern-target-3")).toContainText("$");
   await expect(page.getByTestId("chart-pattern-decision")).toContainText(/ENTER|WAIT FOR BREAKOUT|AVOID \/ NO TRADE/);
   await expect(page.getByText("Charting by TradingView")).toHaveCount(0);
-  await expect(page.getByText("RSI")).toHaveCount(0);
-  await expect(page.getByText("MACD")).toHaveCount(0);
+  await expect(page.getByTestId("chart-pattern-why")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Why This Pattern?" })).toBeVisible();
 
   await page.getByTestId("pattern-timeframe").locator("select").selectOption("15m");
   await expect(page.getByTestId("chart-pattern-trade-heading")).toContainText("15-Minute Day Trading", {

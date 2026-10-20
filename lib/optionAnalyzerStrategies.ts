@@ -18,7 +18,9 @@ export type AnalyzerStrategyId =
   | "bull_put_spread"
   | "bear_put_spread"
   | "straddle"
+  | "short_straddle"
   | "strangle"
+  | "short_strangle"
   | "butterfly"
   | "iron_butterfly"
   | "condor"
@@ -47,8 +49,10 @@ export const ANALYZER_STRATEGIES: AnalyzerStrategyDef[] = [
   { id: "bear_call_spread", label: "Bear Call Spread", group: "Spreads" },
   { id: "bull_put_spread", label: "Bull Put Spread", group: "Spreads" },
   { id: "bear_put_spread", label: "Bear Put Spread", group: "Spreads" },
-  { id: "straddle", label: "Straddle", group: "Volatility" },
-  { id: "strangle", label: "Strangle", group: "Volatility" },
+  { id: "straddle", label: "Long Straddle", group: "Volatility" },
+  { id: "short_straddle", label: "Short Straddle", group: "Volatility" },
+  { id: "strangle", label: "Long Strangle", group: "Volatility" },
+  { id: "short_strangle", label: "Short Strangle", group: "Volatility" },
   { id: "butterfly", label: "Butterfly", group: "Range" },
   { id: "iron_butterfly", label: "Iron Butterfly", group: "Range" },
   { id: "condor", label: "Condor", group: "Range" },
@@ -187,11 +191,24 @@ export function buildAnalyzerStrategy(
       if (!call || !put) return empty;
       return { legs: [leg(call, "buy"), leg(put, "buy")], contracts: [call, put], stock: null, missing: null };
     }
+    case "short_straddle": {
+      const k = (focusCall || focusPut)?.strike;
+      const call = k != null ? nearest(calls, k) : null;
+      const put = k != null ? nearest(puts, k) : null;
+      if (!call || !put) return empty;
+      return { legs: [leg(call, "sell"), leg(put, "sell")], contracts: [call, put], stock: null, missing: null };
+    }
     case "strangle": {
       const put = focusPut ? below(puts, focusPut.strike) : null;
       const call = focusCall ? above(calls, focusCall.strike) : null;
       if (!put || !call) return empty;
       return { legs: [leg(put, "buy"), leg(call, "buy")], contracts: [put, call], stock: null, missing: null };
+    }
+    case "short_strangle": {
+      const put = focusPut ? below(puts, focusPut.strike) : null;
+      const call = focusCall ? above(calls, focusCall.strike) : null;
+      if (!put || !call) return empty;
+      return { legs: [leg(put, "sell"), leg(call, "sell")], contracts: [put, call], stock: null, missing: null };
     }
     case "butterfly": {
       const mid = focusCall;

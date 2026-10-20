@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, keys } from "@/lib/api";
 import type { MarketEvent } from "@/lib/marketEvents";
@@ -22,10 +23,12 @@ export function MarketEvents() {
   const { data, isLoading, error } = useQuery({
     queryKey: keys.marketEvents,
     queryFn: api.marketEvents,
-    staleTime: 15_000,
-    refetchInterval: 30_000,
+    staleTime: 60_000,
+    refetchInterval: 120_000,
+    refetchOnWindowFocus: false,
   });
   const payload = data?.data;
+  const events = useMemo(() => payload?.events || [], [payload?.events]);
 
   return (
     <div className="panel overflow-hidden h-full flex flex-col max-h-[368px]" data-testid="market-events">
@@ -49,14 +52,12 @@ export function MarketEvents() {
       )}
       {payload && payload.data_status !== "UNAVAILABLE" && (
         <div className="divide-y divide-white/5 flex-1 min-h-0 overflow-y-auto">
-          {payload.events.map((event) => (
+          {events.map((event) => (
             <EventRow key={event.id} event={event} />
           ))}
-          {!payload.events.length && (
+          {!events.length && (
             <div className="p-6 text-sm text-slate-500">
-              {payload.error
-                ? `DATA UNAVAILABLE — ${payload.error}`
-                : "No U.S. events matched this week's live calendar window."}
+              No upcoming market events{payload.week_label ? ` for ${payload.week_label}` : " this week"}.
             </div>
           )}
         </div>

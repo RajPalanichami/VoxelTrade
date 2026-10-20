@@ -14,6 +14,11 @@ import { SectorList } from "./SectorList";
 import { Takeaways } from "./Takeaways";
 import { MarketEvents } from "./MarketEvents";
 import { OverviewHub } from "./OverviewHub";
+import { MarketHistorySection } from "./MarketHistorySection";
+
+function PulsePlaceholder({ label }: { label: string }) {
+  return <div className="panel p-6 text-sm text-slate-500">{label}</div>;
+}
 
 export function PulseView({ variant = "overview" }: { variant?: "overview" | "markets" | "sectors" }) {
   const [range, setRange] = useState<PulseRange>("1W");
@@ -26,51 +31,73 @@ export function PulseView({ variant = "overview" }: { variant?: "overview" | "ma
 
   return (
     <PulseShell updated={p?.last_updated}>
-      {isLoading && <div className="panel p-10 text-center text-slate-400">Loading live market pulse…</div>}
-      {error && (
+      {error && !p && (
         <div className="panel p-6 text-bear text-sm">
           DATA UNAVAILABLE — {(error as Error).message}. Values are never invented.
         </div>
       )}
-      {p && variant === "overview" && (
+      {variant === "overview" && (
         <>
-          <IndexCards cards={p.cards} />
+          {p ? (
+            <IndexCards cards={p.cards} gauge={p.gauge} gaugeLoading={!p.gauge} />
+          ) : (
+            <PulsePlaceholder label={isLoading ? "Loading market tiles…" : "Market tiles unavailable."} />
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[1.4fr_0.8fr_0.8fr] gap-4">
             <div className="md:col-span-2 xl:col-span-1 min-w-0">
-              <PerformanceChart series={p.performance} range={range} onRange={setRange} />
+              {p ? (
+                <PerformanceChart series={p.performance} range={range} onRange={setRange} />
+              ) : (
+                <PulsePlaceholder label={isLoading ? "Loading performance…" : "Performance unavailable."} />
+              )}
             </div>
             <MarketEvents />
-            <PulseNews items={p.news} />
+            {p ? <PulseNews items={p.news} /> : <PulsePlaceholder label={isLoading ? "Loading news…" : "News unavailable."} />}
           </div>
-          <Movers
-            layout="band"
-            gainers={p.movers.gainers}
-            losers={p.movers.losers}
-            active={p.movers.active}
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[1.4fr_0.8fr_0.8fr] gap-4">
-            <div className="md:col-span-2 xl:col-span-1 min-w-0">
+          {p && (
+            <>
+              <Movers
+                layout="band"
+                gainers={p.movers.gainers}
+                losers={p.movers.losers}
+                active={p.movers.active}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-[1.4fr_0.8fr_0.8fr] gap-4">
+                <div className="md:col-span-2 xl:col-span-1 min-w-0">
+                  <KeyMarketTable rows={p.table} />
+                </div>
+                <SectorList sectors={p.sectors} />
+                <Takeaways items={p.takeaways} />
+              </div>
+              <OverviewHub />
+            </>
+          )}
+          <MarketHistorySection />
+        </>
+      )}
+      {variant === "markets" && (
+        <>
+          {p ? (
+            <>
+              <IndexCards cards={p.cards} gauge={p.gauge} gaugeLoading={!p.gauge} />
+              <PerformanceChart series={p.performance} range={range} onRange={setRange} />
               <KeyMarketTable rows={p.table} />
-            </div>
+              <Movers gainers={p.movers.gainers} losers={p.movers.losers} active={p.movers.active} />
+            </>
+          ) : (
+            <PulsePlaceholder label={isLoading ? "Loading live market pulse…" : "Market pulse unavailable."} />
+          )}
+        </>
+      )}
+      {variant === "sectors" && (
+        p ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <SectorList sectors={p.sectors} />
             <Takeaways items={p.takeaways} />
           </div>
-          <OverviewHub />
-        </>
-      )}
-      {p && variant === "markets" && (
-        <>
-          <IndexCards cards={p.cards} />
-          <PerformanceChart series={p.performance} range={range} onRange={setRange} />
-          <KeyMarketTable rows={p.table} />
-          <Movers gainers={p.movers.gainers} losers={p.movers.losers} active={p.movers.active} />
-        </>
-      )}
-      {p && variant === "sectors" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <SectorList sectors={p.sectors} />
-          <Takeaways items={p.takeaways} />
-        </div>
+        ) : (
+          <PulsePlaceholder label={isLoading ? "Loading sectors…" : "Sectors unavailable."} />
+        )
       )}
     </PulseShell>
   );

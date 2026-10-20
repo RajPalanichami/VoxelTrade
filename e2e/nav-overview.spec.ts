@@ -5,15 +5,23 @@ test("sidebar order restores sector pages and keeps existing routes", async ({ p
   const nav = page.locator("aside nav").first();
   await expect(nav.getByRole("link", { name: "Overview" })).toBeVisible();
   const labels = await nav.locator("a").allTextContents();
-  const trimmed = labels.map((s) => s.trim());
-  expect(trimmed.slice(0, 26)).toEqual([
+  const trimmed = labels.map((s) => s.replace(/\s*New\s*$/i, "").replace(/\s+/g, " ").trim());
+  expect(trimmed.slice(0, 33)).toEqual([
     "Overview",
     "Dashboard",
     "Signal Analyzer",
+    "Technical Analysis",
+    "Scalp Analyzer",
+    "Trade Your Plan",
+    "Stock Decision",
     "Chart Pattern",
+    "Stock Buying Engine",
+    "Breakout Potential",
+    "Opportunity Monitor",
     "Option Visualizer",
     "Option Analyzer",
     "Swing Trading",
+    "Crypto",
     "Ticker Comparison",
     "Multi-Time Frame",
     "Watchlist",
@@ -32,13 +40,12 @@ test("sidebar order restores sector pages and keeps existing routes", async ({ p
     "Consumer Staples",
     "Materials",
     "Utilities",
-    "Real Estate",
   ]);
   expect(trimmed).toContain("Tools");
   expect(trimmed).toContain("Technical Analysis");
   expect(trimmed).toContain("Fundamentals");
   expect(trimmed).toContain("Alerts");
-  expect(trimmed).toContain("Settings");
+  expect(trimmed).not.toContain("Settings");
   expect(trimmed).not.toContain("Markets");
   expect(trimmed).not.toContain("Sectors");
   expect(trimmed.filter((x) => x === "Market")).toHaveLength(0);
@@ -47,7 +54,7 @@ test("sidebar order restores sector pages and keeps existing routes", async ({ p
   await expect(page.getByText("MARKET SUMMARY")).toBeVisible();
   await expect(page.getByText("SECTOR SUMMARY")).toBeVisible();
   await page.goto("/markets");
-  await expect(page.getByText("Market Pulse")).toBeVisible();
+  await expect(page.getByText("Market Pulse", { exact: true })).toBeVisible();
   await page.goto("/market");
   await expect(page.getByRole("heading", { name: "Market & Macro" })).toBeVisible();
   await page.goto("/sectors");

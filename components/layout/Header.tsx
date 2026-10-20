@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 import { Menu, RefreshCw } from "lucide-react";
 import { api } from "@/lib/api";
 import { statusDot } from "@/lib/format";
@@ -21,9 +22,12 @@ export function Header({
   onToggleRefresh: () => void;
   onMenu?: () => void;
 }) {
-  const { data } = useQuery({ queryKey: ["market-status"], queryFn: api.status, refetchInterval: 30_000 });
-  const state = data?.data?.state || "—";
-  const now = new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour: "numeric", minute: "2-digit", month: "short", day: "numeric", year: "numeric" });
+  const path = usePathname();
+  const cryptoMode = path === "/crypto";
+  const { data } = useQuery({ queryKey: ["market-status"], queryFn: api.status, refetchInterval: 30_000, enabled: !cryptoMode });
+  const state = cryptoMode ? "LIVE" : data?.data?.state || "—";
+  const sessionLabel = cryptoMode ? "24/7 CRYPTO" : data?.data?.sessionLabel || (state === "OPEN" ? "REGULAR" : state);
+  const now = new Date().toLocaleString("en-US", { timeZone: cryptoMode ? "UTC" : "America/New_York", hour: "numeric", minute: "2-digit", month: "short", day: "numeric", year: "numeric" });
 
   return (
     <header className="h-14 sm:h-16 shrink-0 border-b border-line bg-navy/90 backdrop-blur flex items-center gap-2 sm:gap-4 px-3 sm:px-4">
@@ -40,9 +44,9 @@ export function Header({
       <div className="flex items-center gap-3 text-xs">
         <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 rounded-md border border-line bg-panel">
           <span className={`h-2 w-2 rounded-full ${statusDot(state)}`} />
-          <span className="hidden sm:inline text-slate-300">Market {state}</span>
+          <span className="hidden sm:inline text-slate-300">{cryptoMode ? sessionLabel : `Market ${sessionLabel}`}</span>
         </div>
-        <div className="hidden xl:block text-slate-500 tick">{now} ET</div>
+        <div className="hidden xl:block text-slate-500 tick">{now} {cryptoMode ? "UTC" : "ET"}</div>
         <AuthControls />
         <ThemeToggle />
         <button

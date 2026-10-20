@@ -1,6 +1,6 @@
 import fs from "fs";
 import { describe, expect, it, vi } from "vitest";
-import { dispatchV1, handleV1, normalizePatternTimeframe, normalizeSwingTimeframe, normalizeTimeframe } from "@/src/server/apiRouter";
+import { dispatchV1, handleV1, normalizePatternTimeframe, normalizeScalpTimeframe, normalizeSwingTimeframe, normalizeTimeframe } from "@/src/server/apiRouter";
 import { persistSnapshot, resetStoreForTests } from "@/src/repositories/store";
 
 describe("api router", () => {
@@ -81,6 +81,20 @@ describe("api router", () => {
     expect(body.detail).toMatch(/Unknown sector/);
   });
 
+  it("accepts scalp 5m/15m/30m without changing Signal Analyzer timeframes", async () => {
+    expect(normalizeScalpTimeframe("15minutes")).toBe("15m");
+    expect(normalizeScalpTimeframe("5M")).toBe("5m");
+    expect(() => normalizeScalpTimeframe("1h")).toThrow(/Unsupported scalp timeframe/);
+    const analysis15 = await dispatchV1(new Request("http://localhost/api/v1/stocks/AAPL/analysis?timeframe=15m"));
+    expect(analysis15.status).toBe(400);
+    const scalpHour = await dispatchV1(new Request("http://localhost/api/v1/stocks/AAPL/scalp?timeframe=1h"));
+    expect(scalpHour.status).toBe(400);
+    const missing = await dispatchV1(new Request("http://localhost/api/v1/scalp-analyzer"));
+    expect(missing.status).toBe(400);
+    const noTicker = await dispatchV1(new Request("http://localhost/api/v1/market/ticker"));
+    expect(noTicker.status).toBe(400);
+  });
+
   it("keeps Signal Analyzer timeframes separate from swing timeframes", async () => {
     expect(normalizeSwingTimeframe("15minutes")).toBe("15m");
     expect(normalizeSwingTimeframe("weekly")).toBe("1w");
@@ -140,5 +154,43 @@ describe("api router", () => {
       }),
     );
     expect(basketTf.status).toBe(400);
+  });
+
+  it("opportunity universe persists defaults and rejects duplicates", async () => {
+    const listed = await handleV1("GET", ["opportunity", "universe"], new URL("http://localhost/api/v1/opportunity/universe"), undefined);
+    expect(listed.status).toBe(200);
+    const body = await listed.json();
+    expect(body.data.tickers).toHaveLength(20);
+    expect(body.data.tickers[0]).toBe("NVDA");
+    expect(body.data.tickers[19]).toBe("DELL");
+    const dup = await dispatchV1(
+      new Request("http://localhost/api/v1/opportunity/universe", {
+        method: "POST",
+        body: JSON.stringify({ tickers: ["NVDA", "NVDA"] }),
+      }),
+    );
+    expect(dup.status).toBe(400);
+  });
+
+  it("validates crypto routes without inventing prices", async () => {
+    const missing = await dispatchV1(new Request("http://localhost/api/v1/crypto/search"));
+    expect(missing.status).toBe(400);
+    const badLimit = await dispatchV1(new Request("http://localhost/api/v1/crypto/assets?limit=7"));
+    expect(badLimit.status).toBe(400);
+    const badTf = await dispatchV1(new Request("http://localhost/api/v1/crypto/asset/BTC/history?timeframe=2h"));
+    expect(badTf.status).toBe(400);
+    const badRange = await dispatchV1(new Request("http://localhost/api/v1/crypto/market-chart?range=2Y"));
+    expect(badRange.status).toBe(400);
+    const unknown = await dispatchV1(new Request("http://localhost/api/v1/crypto/not-a-route"));
+    expect(unknown.status).toBe(404);
+  });
+
+  it("lists breakout-potential universes without locking to one ticker", async () => {
+    const listed = await handleV1("GET", ["breakout-potential", "universes"], new URL("http://localhost/api/v1/breakout-potential/universes"), undefined);
+    expect(listed.status).toBe(200);
+    const body = await listed.json();
+    expect(body.data.default).toHaveLength(20);
+    expect(body.data.etf).toContain("SPY");
+    expect(body.data.sectors.some((s: { slug: string }) => s.slug === "technology")).toBe(true);
   });
 });

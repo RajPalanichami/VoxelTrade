@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, keys } from "@/lib/api";
+import type { Indicators } from "@/lib/types";
 import { useTerminal } from "@/components/layout/AppShell";
 import { usd } from "@/lib/format";
 import type { ChainContract } from "@/lib/optionsMath";
@@ -19,10 +20,15 @@ import {
   marketDataFreshness,
   type PremiumSource,
 } from "@/src/engines/optionAnalyzerPayoff";
+import { buildOptionDecision, historicalVolatility, trendFromIndicators } from "@/src/engines/optionStrategyDecision";
 import { AnalyzerPayoffChart } from "./AnalyzerPayoffChart";
+import { StrategyDecisionPanel } from "./StrategyDecisionPanel";
 import { AnalyzerRiskSummary } from "./AnalyzerRiskSummary";
 import { AnalyzerScenarioTable } from "./AnalyzerScenarioTable";
 import { MaximumLossWarning } from "./MaximumLossWarning";
+import { TickerSessionStrip } from "@/components/market/TickerSessionStrip";
+import { SessionBadge } from "@/components/market/SessionBadge";
+import { useTickerMarketContext } from "@/hooks/useTickerMarketContext";
 
 function pnlClass(n: number) {
   return n > 0 ? "text-bull" : n < 0 ? "text-bear" : "text-slate-400";
@@ -50,6 +56,7 @@ const PRICE_SOURCES: { id: PremiumSource | "default"; label: string }[] = [
 
 export function OptionAnalyzer() {
   const { symbol } = useTerminal();
+  const marketCtx = useTickerMarketContext(symbol).data?.data;
   const [strategyId, setStrategyId] = useState<AnalyzerStrategyId>("long_call");
   const [expiration, setExpiration] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -59,6 +66,43 @@ export function OptionAnalyzer() {
   const [customPremiums, setCustomPremiums] = useState<Record<string, number>>({});
 
   const strategy = ANALYZER_STRATEGIES.find((s) => s.id === strategyId) || ANALYZER_STRATEGIES[0];
+
+  const ind5 = useQuery({
+    queryKey: ["opt-ind", symbol, "5m"],
+    queryFn: () => api.indicators(symbol, "5m"),
+    staleTime: 60_000,
+    enabled: Boolean(symbol),
+  });
+  const ind1h = useQuery({
+    queryKey: ["opt-ind", symbol, "1h"],
+    queryFn: () => api.indicators(symbol, "1h"),
+    staleTime: 60_000,
+    enabled: Boolean(symbol),
+  });
+  const ind1d = useQuery({
+    queryKey: ["opt-ind", symbol, "1d"],
+    queryFn: () => api.indicators(symbol, "1d"),
+    staleTime: 60_000,
+    enabled: Boolean(symbol),
+  });
+  const levelsQ = useQuery({
+    queryKey: ["opt-levels", symbol, "1d"],
+    queryFn: () => api.levels(symbol, "1d"),
+    staleTime: 60_000,
+    enabled: Boolean(symbol),
+  });
+  const barsQ = useQuery({
+    queryKey: keys.bars(symbol, "1d"),
+    queryFn: () => api.bars(symbol, "1d"),
+    staleTime: 300_000,
+    enabled: Boolean(symbol),
+  });
+  const fundQ = useQuery({
+    queryKey: ["opt-fund", symbol],
+    queryFn: () => api.fundamentals(symbol),
+    staleTime: 300_000,
+    enabled: Boolean(symbol),
+  });
 
   const chainQ = useQuery({
     queryKey: keys.optionChain(symbol, expiration),
@@ -138,6 +182,58 @@ export function OptionAnalyzer() {
     });
   }, [built, spot, chain, symbol, strategyId, strategy.label, farExp, quantity, analysisError]);
 
+  const decision = useMemo(() => {
+    if (!analysis || !built?.legs.length) return null;
+    const daily = ind1d.data?.data as Indicators | undefined;
+    const earnings = (fundQ.data?.data as { earnings?: { days_to_earnings?: number | null } } | undefined)?.earnings;
+    const support = levelsQ.data?.data?.support?.s1 ?? null;
+    const resistance = levelsQ.data?.data?.resistance?.r1 ?? null;
+    return buildOptionDecision({
+      symbol,
+      strategyId,
+      strategyLabel: strategy.label,
+      spot: analysis.spot,
+      expiration: analysis.expiration,
+      legs: analysis.legs.map((leg) => {
+        const listed = built.contracts.find((c) => c.right === leg.right && c.strike === leg.strike);
+        return {
+          right: leg.right,
+          side: leg.side,
+          strike: leg.strike,
+          premium: leg.premium,
+          quantity: leg.quantity,
+          expiration: leg.expiration || analysis.expiration,
+          iv: leg.iv,
+          bid: leg.bid,
+          ask: leg.ask,
+          volume: listed?.volume,
+          openInterest: listed?.open_interest,
+        };
+      }),
+      stockShares: analysis.stock?.shares,
+      maxProfit: analysis.max_profit,
+      maxLoss: analysis.max_loss,
+      breakevens: analysis.breakevens,
+      riskReward: analysis.risk_reward,
+      profitZones: analysis.profit_zones,
+      context: {
+        hv: historicalVolatility((barsQ.data?.data || []).map((bar) => bar.close), 20),
+        shortTrend: trendFromIndicators(ind5.data?.data),
+        mediumTrend: trendFromIndicators(ind1h.data?.data),
+        longTrend: trendFromIndicators(daily),
+        vwap: daily?.vwap ?? null,
+        rsi: daily?.rsi ?? null,
+        macdBullish: daily?.macd != null && daily?.macd_signal != null ? daily.macd > daily.macd_signal : null,
+        support,
+        resistance,
+        ema20: daily?.ema20 ?? null,
+        ema50: daily?.ema50 ?? null,
+        ema200: daily?.ema200 ?? null,
+        earningsDays: earnings?.days_to_earnings ?? null,
+      },
+    });
+  }, [analysis, built, symbol, strategyId, strategy.label, ind5.data, ind1h.data, ind1d.data, levelsQ.data, barsQ.data, fundQ.data]);
+
   const feed = marketDataFreshness(chain?.source, chain?.as_of);
   const scenarioPrice = hoverPrice ?? analysis?.spot ?? spot;
   const livePnl = analysis
@@ -188,6 +284,7 @@ export function OptionAnalyzer() {
         </div>
       </div>
 
+      <TickerSessionStrip symbol={symbol} compactMode />
       <div className="panel p-3 flex flex-wrap gap-3 items-end">
         <div>
           <div className="text-[10px] text-slate-500">TICKER</div>
@@ -197,8 +294,52 @@ export function OptionAnalyzer() {
           <div className="text-xs text-slate-500">{chain?.name}</div>
         </div>
         <div>
-          <div className="text-[10px] text-slate-500">LIVE PRICE</div>
-          <div className="tick text-lg">{spot ? usd(spot) : "—"}</div>
+          <div className="text-[10px] text-slate-500">UNDERLYING · {marketCtx ? `SOURCE ${marketCtx.session.replaceAll("_", " ")}` : "CHAIN"}</div>
+          <div className="tick text-lg flex items-center gap-2">
+            {usd(marketCtx?.quote.price ?? (spot || null))}
+            <SessionBadge session={marketCtx?.session} />
+          </div>
+        </div>
+        <div className="text-xs text-slate-500">
+          Call / Put
+          <div className="flex gap-1 mt-1" data-testid="analyzer-right">
+            {(["call", "put"] as const).map((right) => {
+              const active =
+                right === "put"
+                  ? strategyId === "long_put" || strategyId === "short_put" || selected?.right === "put"
+                  : strategyId === "long_call" || strategyId === "short_call" || selected?.right === "call";
+              return (
+              <button
+                key={right}
+                type="button"
+                className={`px-2 py-1.5 rounded border text-sm ${active ? "border-accent/50 text-white bg-accent/15" : "border-line text-slate-300 hover:text-white"}`}
+                onClick={() => {
+                  const swap: Partial<Record<AnalyzerStrategyId, AnalyzerStrategyId>> = {
+                    long_call: "long_put",
+                    long_put: "long_call",
+                    short_call: "short_put",
+                    short_put: "short_call",
+                  };
+                  const wantsPut = right === "put";
+                  const singleCall = strategyId === "long_call" || strategyId === "short_call";
+                  const singlePut = strategyId === "long_put" || strategyId === "short_put";
+                  if ((wantsPut && singleCall) || (!wantsPut && singlePut)) {
+                    const next = swap[strategyId];
+                    if (next) setStrategyId(next);
+                    setSelected(null);
+                    return;
+                  }
+                  const pool = right === "call" ? chain?.calls : chain?.puts;
+                  if (!pool?.length || !spot) return;
+                  const nearest = pool.reduce((best, row) => (Math.abs(row.strike - spot) < Math.abs(best.strike - spot) ? row : best), pool[0]);
+                  setSelected(nearest);
+                }}
+              >
+                {right === "call" ? "Call" : "Put"}
+              </button>
+              );
+            })}
+          </div>
         </div>
         <label className="text-xs text-slate-500">
           Expiration
@@ -261,9 +402,14 @@ export function OptionAnalyzer() {
       )}
 
       {chainQ.isLoading && <div className="panel p-8 text-center text-slate-400">Loading live option chain…</div>}
+      {marketCtx?.session === "CLOSED" && (
+        <div className="panel p-3 text-sm text-slate-300" data-testid="analyzer-market-closed">
+          Market closed — displaying latest available data.
+        </div>
+      )}
       {chainQ.error && (
         <div className="panel p-4 text-bear text-sm">
-          DATA UNAVAILABLE — {(chainQ.error as Error).message}. Option prices are never invented.
+          Unable to retrieve option data. Please try again. {(chainQ.error as Error).message} Option prices are never invented.
         </div>
       )}
       {built?.missing && <div className="panel p-3 text-sm text-warn">{built.missing}</div>}
@@ -271,6 +417,7 @@ export function OptionAnalyzer() {
 
       {analysis && (
         <>
+          {decision && <StrategyDecisionPanel decision={decision} symbol={symbol} strategy={strategy.label} expiration={analysis.expiration} />}
           <MaximumLossWarning analysis={analysis} />
           <AnalyzerRiskSummary analysis={analysis} />
 
@@ -479,9 +626,11 @@ export function OptionAnalyzer() {
           ))}
 
           <p className="text-xs text-slate-500 leading-relaxed px-1" data-testid="analyzer-disclaimer">
-            These figures are expiration / scenario payoff calculations for the selected ticker, expiration, strikes,
-            quantities, and listed bid/ask premiums. Actual results can differ because of bid/ask spreads, commissions
-            and fees, early assignment, exercise, liquidity, and changes in option value before expiration.
+            Options involve substantial risk. The displayed Greeks, probabilities, scenarios and strategy scores are
+            estimates based on available market data and assumptions and are not guarantees of future performance.
+            These figures also include expiration payoff for the selected ticker, expiration, strikes, quantities, and
+            listed bid/ask premiums. Actual results can differ because of bid/ask spreads, commissions and fees, early
+            assignment, exercise, liquidity, and changes in option value before expiration.
           </p>
         </>
       )}

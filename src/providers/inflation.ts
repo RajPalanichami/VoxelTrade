@@ -18,7 +18,7 @@ async function blsCpi(): Promise<Record<string, unknown> | null> {
   const year = new Date().getUTCFullYear();
   const body = await httpPostJson<{ Results?: { series?: Array<{ data?: Array<Record<string, string>> }> } }>(
     getSettings().blsApiUrl,
-    { seriesid: ["CUSR0000SA0"], startyear: String(year - 2), endyear: String(year) },
+    { seriesid: ["CUSR0000SA0"], startyear: String(year - 3), endyear: String(year) },
   );
   const series = body.Results?.series || [];
   if (!series.length) return null;
@@ -35,18 +35,24 @@ async function blsCpi(): Promise<Record<string, unknown> | null> {
   if (!yearAgo) return null;
   const yoy = (latest[2] / yearAgo[2] - 1) * 100;
   const mom = rows[rows.length - 2][2] ? (latest[2] / rows[rows.length - 2][2] - 1) * 100 : null;
-  const yoySpark: number[] = [];
+  const points: { date: string; value: number }[] = [];
   for (let i = 0; i < rows.length; i++) {
     const r = rows[i];
     const prior = rows.slice(0, i).find((p) => p[0] === r[0] - 1 && p[1] === r[1]);
-    if (prior) yoySpark.push(Math.round((r[2] / prior[2] - 1) * 10000) / 100);
+    if (prior) {
+      points.push({
+        date: `${r[0]}-${String(r[1]).padStart(2, "0")}-01`,
+        value: Math.round((r[2] / prior[2] - 1) * 10000) / 100,
+      });
+    }
   }
   return {
     yoy: Math.round(yoy * 100) / 100,
     mom: mom != null ? Math.round(mom * 100) / 100 : null,
     index: latest[2],
     as_of: `${latest[0]}-${String(latest[1]).padStart(2, "0")}`,
-    spark: yoySpark.slice(-18),
+    spark: points.slice(-18).map((point) => point.value),
+    points,
     source: "BLS CUSR0000SA0",
   };
 }
@@ -66,14 +72,17 @@ async function fredCpiCsv(): Promise<Record<string, unknown> | null> {
   if (yearAgo == null) yearAgo = vals[vals.length - 13][1];
   const yoy = (latest / yearAgo - 1) * 100;
   const mom = vals[vals.length - 2][1] ? (latest / vals[vals.length - 2][1] - 1) * 100 : null;
-  const yoySpark: number[] = [];
-  for (let i = 12; i < vals.length; i++) yoySpark.push(Math.round((vals[i][1] / vals[i - 12][1] - 1) * 10000) / 100);
+  const points: { date: string; value: number }[] = [];
+  for (let i = 12; i < vals.length; i++) {
+    points.push({ date: vals[i][0].slice(0, 10), value: Math.round((vals[i][1] / vals[i - 12][1] - 1) * 10000) / 100 });
+  }
   return {
     yoy: Math.round(yoy * 100) / 100,
     mom: mom != null ? Math.round(mom * 100) / 100 : null,
     index: latest,
     as_of: latestDate.slice(0, 7),
-    spark: yoySpark.slice(-18),
+    spark: points.slice(-18).map((point) => point.value),
+    points,
     source: "FRED CPIAUCSL",
   };
 }
@@ -92,6 +101,7 @@ async function worldbankCpi(): Promise<Record<string, unknown> | null> {
     index: null,
     as_of: pts[pts.length - 1][0],
     spark: pts.map((p) => p[1]),
+    points: pts.map(([date, value]) => ({ date: /^\d{4}$/.test(date) ? `${date}-07-01` : date.slice(0, 10), value })),
     source: "World Bank FP.CPI.TOTL.ZG (annual)",
     frequency: "annual",
   };

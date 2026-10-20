@@ -62,6 +62,7 @@ export interface AnalysisBundle {
 export interface Quote {
   symbol: string;
   name: string;
+  long_name?: string;
   exchange: string;
   sector: string;
   industry: string;
@@ -82,6 +83,7 @@ export interface Quote {
   week52_low?: number | null;
   week52_high?: number | null;
   market_state: string;
+  currency?: string;
   freshness: Freshness;
 }
 
@@ -333,14 +335,49 @@ export type PatternBias = "BULLISH" | "BEARISH" | "NEUTRAL";
 export type OverviewDecision = "BUY / ENTER" | "SELL / ENTER" | "WAIT" | "AVOID";
 export type TradeDecision = "ENTER" | "ENTER SWING TRADE" | "WAIT FOR BREAKOUT" | "AVOID / NO TRADE";
 
+export interface PatternEvidencePoint {
+  timestamp: string;
+  candleIndex: number;
+  price: number;
+  type: "SWING_HIGH" | "SWING_LOW";
+  role: string;
+}
+
+export interface PatternSignalFactor {
+  name: string;
+  score: number;
+  max: number;
+  note: string;
+}
+
 export interface PatternSnapshot {
   timeframe: PatternTimeframe;
   timeframe_label: string;
   pattern_name: string;
   market_structure: string;
+  structure_explanation: string;
+  structure_conflict: string | null;
   bias: PatternBias;
   status: string;
+  pattern_status: string;
   decision: OverviewDecision;
+  trading_signal: string;
+  signal_action: string;
+  signal_score: number | null;
+  entry_status: string;
+  explanation: string;
+  alternatives: { name: string; confidence: number }[];
+  points: PatternEvidencePoint[];
+  evidence: { label: string; value: string; ok: boolean | null }[];
+  signal_factors: PatternSignalFactor[];
+  neckline: number | null;
+  support: number | null;
+  resistance: number | null;
+  breakout_note: string | null;
+  wick_note: string | null;
+  invalidation: string | null;
+  confidence: number | null;
+  volume_note: string | null;
 }
 
 export interface PatternTradePlan {
@@ -361,6 +398,23 @@ export interface PatternTradePlan {
   target_2: string | null;
   target_3: string | null;
   decision: TradeDecision;
+  trading_signal: string;
+  signal_action: string;
+  signal_score: number | null;
+  entry_status: string;
+  explanation: string;
+  alternatives: { name: string; confidence: number }[];
+  points: PatternEvidencePoint[];
+  evidence: { label: string; value: string; ok: boolean | null }[];
+  signal_factors: PatternSignalFactor[];
+  neckline: number | null;
+  support: number | null;
+  resistance: number | null;
+  breakout_note: string | null;
+  wick_note: string | null;
+  invalidation: string | null;
+  confidence: number | null;
+  volume_note: string | null;
 }
 
 export interface ChartPatternAnalysis {
@@ -374,5 +428,12 @@ export interface ChartPatternAnalysis {
     monthly: PatternSnapshot;
   };
   trade: PatternTradePlan;
+  mtf_summary: {
+    status: string;
+    explanation: string;
+    short_term: string;
+    intermediate_term: string;
+    long_term: string;
+  };
   freshness: Freshness;
 }

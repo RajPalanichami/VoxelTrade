@@ -1,4 +1,5 @@
 import { apiUrl } from "./config";
+import type { MarketGaugeData } from "./fearGreed";
 import { Envelope, NewsItem } from "./types";
 
 export type PulseRange = "1D" | "1W" | "1M" | "3M" | "1Y";
@@ -19,6 +20,12 @@ export interface PulseCard {
   volume?: number | null;
   unit: "usd" | "pts" | "yield" | "inflation";
   spark: number[];
+  history?: {
+    previousClose: number | null;
+    oneWeekAgo: number | null;
+    oneMonthAgo: number | null;
+    oneYearAgo: number | null;
+  };
   source?: string;
   as_of?: string;
   group?: "equity" | "macro";
@@ -60,6 +67,7 @@ export interface PulsePayload {
   treasury?: { yield?: number; change_1d?: number; trend_20d?: string; source?: string } | null;
   movers_universe?: string;
   latency_ms?: number;
+  gauge?: MarketGaugeData | null;
 }
 
 export async function fetchPulse(range: PulseRange): Promise<Envelope<PulsePayload>> {

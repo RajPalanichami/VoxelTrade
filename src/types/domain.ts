@@ -27,6 +27,7 @@ export interface OHLCVBar {
 export interface Quote {
   symbol: string;
   name: string;
+  long_name?: string;
   exchange: string;
   sector: string;
   industry: string;

@@ -1,5 +1,6 @@
 import { PATTERN_TIMEFRAMES, SWING_TIMEFRAMES, TIMEFRAMES, TIMEFRAME_LABELS, getSettings } from "@/src/config/env";
 import { isPatternTimeframe, isSwingTimeframe } from "@/src/config/timeframes";
+import { normalizeChartTimeframe } from "@/src/engines/technicalChart";
 import { buildSwingAnalysis } from "@/src/services/swing";
 import { buildChartPatternAnalysis } from "@/src/services/chartPattern";
 import { BY_SYMBOL } from "@/src/data/universe";
@@ -13,10 +14,39 @@ import { analysis } from "@/src/services/analysis";
 import { buildMag7, INDICATOR_TF as MAG7_TF, RANGES as MAG7_RANGES } from "@/src/services/mag7";
 import { fetchChain, payoffFromPayload } from "@/src/services/options";
 import { buildPulse } from "@/src/services/pulse";
+import { buildMarketHistory } from "@/src/services/marketHistory";
+import { buildMarketGauge } from "@/src/services/marketGauge";
 import { buildMarketEvents } from "@/src/services/marketEvents";
+import { ensureMarketEventsScheduler } from "@/src/services/marketEventsScheduler";
 import { buildSector, INDICATOR_TF as SECTOR_TF, RANGES as SECTOR_RANGES, listSectors } from "@/src/services/sectorIntel";
 import { buildCompare } from "@/src/services/compare";
 import { buildBasketCompare, buildMag7Compare, parseBasketTickers } from "@/src/services/mag7Compare";
+import {
+  buildOpportunityMonitor,
+  loadOpportunityPrefs,
+  persistOpportunitySettings,
+  persistOpportunityUniverse,
+  resetOpportunityUniverse,
+  validateOpportunityTickers,
+} from "@/src/services/opportunity";
+import { buildBreakoutScanner, listBreakoutUniverses } from "@/src/services/breakoutPotential";
+import { buildScalpAnalyzer, normalizeScalpTimeframe } from "@/src/services/scalp";
+import {
+  buildCryptoOverview,
+  getCryptoAsset,
+  getCryptoHistory,
+  getCryptoMarketChart,
+  getCryptoQuotes,
+  listCryptoAssets,
+  searchCrypto,
+} from "@/src/services/crypto";
+import { getTickerMarketContext } from "@/src/services/marketContext";
+import { buildStockBuyingEngine, normalizeBuyingHorizon } from "@/src/services/stockBuying";
+import { BUYING_HORIZON_TIMEFRAME } from "@/lib/stockBuying";
+import { buildTradePlan, normalizeTradePlanTimeframe } from "@/src/services/tradePlan";
+import { buildStockDecision, normalizeStockDecisionTimeframe } from "@/src/services/stockDecision";
+import { classifyMarketSession } from "@/src/engines/marketSessions";
+import { formatMarketSession } from "@/lib/extendedHours";
 
 const TF_ALIASES: Record<string, string> = {
   "5min": "5m",
@@ -60,6 +90,8 @@ export function normalizeSwingTimeframe(value: string) {
   return v;
 }
 
+export { normalizeScalpTimeframe } from "@/src/services/scalp";
+
 export function normalizePatternTimeframe(value: string) {
   const raw = value.trim();
   if (raw === "1M") return "1M";
@@ -93,6 +125,7 @@ function errorResponse(err: unknown) {
 
 export async function handleV1(method: string, path: string[], url: URL, body: unknown) {
   getSettings().validateRuntime();
+  ensureMarketEventsScheduler();
   const segs = path.filter(Boolean);
 
   if ((method === "GET" || method === "POST") && segs[0] === "compare" && segs[1] === "mag7") {
@@ -108,6 +141,73 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     const timeframe = String(bodyObj.timeframe || url.searchParams.get("timeframe") || "4h");
     const data = await buildBasketCompare(tickers, timeframe);
     return json(envelope(data, "compare-engine", "LIVE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "opportunity" && segs[1] === "universe") {
+    const prefs = loadOpportunityPrefs();
+    return json(envelope(prefs, "local", "LIVE", 0));
+  }
+
+  if ((method === "PUT" || method === "POST") && segs[0] === "opportunity" && segs[1] === "universe" && segs[2] === "reset") {
+    const saved = resetOpportunityUniverse();
+    return json(envelope(saved, "local", "LIVE", 0));
+  }
+
+  if ((method === "PUT" || method === "POST") && segs[0] === "opportunity" && segs[1] === "universe" && segs[2] === "validate") {
+    const bodyObj = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+    const result = await validateOpportunityTickers(bodyObj.tickers ?? url.searchParams.get("tickers") ?? "");
+    return json(envelope(result, "local", "LIVE", 0));
+  }
+
+  if ((method === "PUT" || method === "POST") && segs[0] === "opportunity" && segs[1] === "universe") {
+    const bodyObj = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+    const checked = await validateOpportunityTickers(bodyObj.tickers ?? "");
+    if (checked.errors.length && !checked.tickers.length) throw new HttpError(400, checked.errors[0]);
+    if (checked.errors.some((e) => e.startsWith("Duplicate") || e.startsWith("Invalid") || e.startsWith("Maximum"))) {
+      throw new HttpError(400, checked.errors[0]);
+    }
+    const saved = persistOpportunityUniverse(checked.tickers, bodyObj.settings as import("@/lib/opportunity").OpportunitySettings | undefined);
+    return json(envelope(saved, "local", "LIVE", 0));
+  }
+
+  if ((method === "PUT" || method === "POST") && segs[0] === "opportunity" && segs[1] === "settings") {
+    const bodyObj = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+    const saved = persistOpportunitySettings(bodyObj);
+    return json(envelope(saved, "local", "LIVE", 0));
+  }
+
+  if ((method === "GET" || method === "POST") && segs[0] === "opportunity" && !segs[1]) {
+    const bodyObj = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+    const tickers = bodyObj.tickers ?? url.searchParams.get("tickers");
+    const data = await buildOpportunityMonitor({
+      tickers: tickers || undefined,
+      settings: (bodyObj.settings as import("@/lib/opportunity").OpportunitySettings | undefined) || undefined,
+      persist: bodyObj.persist === true,
+    });
+    return json(envelope(data, "opportunity-engine", data.dataStatus, 0));
+  }
+
+  if ((method === "GET" || method === "POST") && segs[0] === "opportunity" && segs[1] && !["universe", "settings"].includes(segs[1])) {
+    const data = await buildOpportunityMonitor({ tickers: [segs[1]] });
+    return json(envelope({ ...data, row: data.rows[0] || null }, "opportunity-engine", data.dataStatus, 0));
+  }
+
+  if (method === "GET" && segs[0] === "breakout-potential" && segs[1] === "universes") {
+    return json(envelope(listBreakoutUniverses(), "local", "LIVE", 0));
+  }
+
+  if ((method === "GET" || method === "POST") && segs[0] === "breakout-potential") {
+    const bodyObj = (body && typeof body === "object" ? body : {}) as Record<string, unknown>;
+    const data = await buildBreakoutScanner({
+      source: (bodyObj.source as import("@/lib/breakoutPotential").BreakoutUniverseSource | undefined) || (url.searchParams.get("source") as import("@/lib/breakoutPotential").BreakoutUniverseSource | undefined) || undefined,
+      tickers: bodyObj.tickers ?? url.searchParams.get("tickers"),
+      sector: String(bodyObj.sector || url.searchParams.get("sector") || ""),
+      timeframe: String(bodyObj.timeframe || url.searchParams.get("timeframe") || "1d"),
+      lifecycleTimeframe: String(bodyObj.lifecycleTimeframe || url.searchParams.get("lifecycleTimeframe") || ""),
+      settings: (bodyObj.settings as import("@/lib/breakoutPotential").BreakoutSettings | undefined) || undefined,
+      selected: String(bodyObj.selected || url.searchParams.get("selected") || segs[1] || ""),
+    });
+    return json(envelope(data, "breakout-potential-engine", data.dataStatus, 0));
   }
 
   if ((method === "POST" || method === "GET") && segs[0] === "compare") {
@@ -132,8 +232,28 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     return json(envelope(q, q.freshness.source, q.freshness.data_status, q.freshness.latency_ms));
   }
 
+  if (method === "GET" && segs[0] === "stocks" && segs[2] === "market-context") {
+    const data = await getTickerMarketContext(segs[1]);
+    return json(envelope(data, data.source, data.dataQuality.stale ? "STALE" : "LIVE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "market" && segs[1] === "ticker") {
+    const data = await getTickerMarketContext(segs[2] || url.searchParams.get("ticker") || url.searchParams.get("symbol") || "");
+    return json(envelope(data, data.source, data.dataQuality.stale ? "STALE" : "LIVE", 0));
+  }
+
   if (method === "GET" && segs[0] === "stocks" && segs[2] === "bars") {
-    const timeframe = tf(url.searchParams.get("timeframe") || "1h");
+    const requested = url.searchParams.get("timeframe") || "1h";
+    let timeframe: string;
+    try {
+      timeframe = normalizeTimeframe(requested);
+    } catch {
+      try {
+        timeframe = normalizeChartTimeframe(requested);
+      } catch (err) {
+        throw new HttpError(400, err instanceof Error ? err.message : "Unsupported timeframe");
+      }
+    }
     const [data, source, latency] = await analysis.bars(segs[1], timeframe);
     return json(envelope(data, source, "LIVE", latency));
   }
@@ -208,11 +328,47 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     return json(envelope(bundle, f.source, f.data_status, f.latency_ms));
   }
 
+  if (method === "GET" && segs[0] === "stocks" && segs[2] === "scalp") {
+    const timeframe = normalizeScalpTimeframe(url.searchParams.get("timeframe") || "15m");
+    const data = await buildScalpAnalyzer(segs[1], timeframe);
+    return json(envelope(data, data.source || "composite", data.data_status, 0));
+  }
+
+  if (method === "GET" && segs[0] === "scalp-analyzer") {
+    const ticker = url.searchParams.get("ticker") || url.searchParams.get("symbol") || "";
+    const timeframe = normalizeScalpTimeframe(url.searchParams.get("timeframe") || "15m");
+    const data = await buildScalpAnalyzer(ticker, timeframe);
+    return json(envelope(data, data.source || "composite", data.data_status, 0));
+  }
+
   if (method === "GET" && segs[0] === "stocks" && segs[2] === "chart-pattern") {
     const timeframe = normalizePatternTimeframe(url.searchParams.get("timeframe") || "1d");
     const bundle = await buildChartPatternAnalysis(segs[1], timeframe);
     const f = bundle.freshness;
     return json(envelope(bundle, f.source, f.data_status, f.latency_ms));
+  }
+
+  if (method === "GET" && segs[0] === "stocks" && segs[2] === "trade-plan") {
+    const timeframe = normalizeTradePlanTimeframe(url.searchParams.get("timeframe") || "1h");
+    const data = await buildTradePlan(segs[1], timeframe);
+    return json(envelope(data, data.freshness.source, data.freshness.dataStatus as "LIVE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "stocks" && segs[2] === "stock-decision") {
+    const timeframe = normalizeStockDecisionTimeframe(url.searchParams.get("timeframe") || "1d");
+    const data = await buildStockDecision(segs[1], timeframe);
+    const status = (["LIVE", "DELAYED", "EOD", "STALE", "UNAVAILABLE"] as const).includes(data.freshness.dataStatus as "LIVE")
+      ? (data.freshness.dataStatus as "LIVE" | "DELAYED" | "EOD" | "STALE" | "UNAVAILABLE")
+      : "UNAVAILABLE";
+    return json(envelope(data, data.freshness.source, status, 0));
+  }
+
+  if (method === "GET" && segs[0] === "stocks" && segs[2] === "buying-engine") {
+    const horizon = normalizeBuyingHorizon(url.searchParams.get("horizon") || "SWING");
+    const timeframe = tf(url.searchParams.get("timeframe") || BUYING_HORIZON_TIMEFRAME[horizon]);
+    const data = await buildStockBuyingEngine(segs[1], horizon, timeframe as import("@/lib/types").Timeframe);
+    const f = data.bundle.freshness;
+    return json(envelope(data, f.source, f.data_status, f.latency_ms));
   }
 
   if (method === "GET" && segs[0] === "stocks" && segs[2] === "analysis") {
@@ -256,6 +412,11 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     return json(envelope(items, "composite", "DELAYED", 0));
   }
 
+  if (method === "GET" && segs[0] === "market" && segs[1] === "gauge") {
+    const data = await buildMarketGauge();
+    return json(envelope(data, data.source || "fear-greed", data.data_status, 0));
+  }
+
   if (method === "GET" && segs[0] === "market" && segs[1] === "pulse") {
     const range = (url.searchParams.get("range") || "1W").toUpperCase();
     const allowed = new Set(["1D", "1W", "1M", "3M", "1Y"]);
@@ -263,6 +424,12 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
     const data = await buildPulse(range);
     const status = (data.cards as unknown[])?.length ? "LIVE" : "UNAVAILABLE";
     return json(envelope(data, "composite", status, Number(data.latency_ms || 0)));
+  }
+
+  if (method === "GET" && segs[0] === "market" && segs[1] === "history") {
+    const data = await buildMarketHistory();
+    const any = data.rows.length > 0 || data.cards.vix.close != null || data.cards.brent.close != null || data.cards.spy.close != null;
+    return json(envelope(data, "yfinance", any ? "DELAYED" : "UNAVAILABLE", 0));
   }
 
   if (method === "GET" && segs[0] === "market" && segs[1] === "events") {
@@ -281,8 +448,10 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
   }
 
   if (method === "GET" && segs[0] === "market" && segs[1] === "status") {
-    const open = isRegularHours();
-    return json(envelope({ state: open ? "OPEN" : "CLOSED", session: open ? "REGULAR" : "CLOSED", timezone: "America/New_York" }, "clock", "LIVE", 0));
+    const session = classifyMarketSession();
+    const state = session === "REGULAR" ? "OPEN" : session === "CLOSED" ? "CLOSED" : "EXTENDED";
+    const sessionLabel = session === "REGULAR" ? "OPEN" : formatMarketSession(session);
+    return json(envelope({ state, session, sessionLabel, timezone: "America/New_York" }, "clock", "LIVE", 0));
   }
 
   if (method === "GET" && segs[0] === "market" && segs[1] === "mag7") {
@@ -389,6 +558,59 @@ export async function handleV1(method: string, path: string[], url: URL, body: u
 
   if (method === "GET" && segs[0] === "health" && !segs[1]) {
     return json({ ok: true, service: "pro-trader-api", version: getSettings().algorithmVersion });
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "overview" && !segs[2]) {
+    const data = await buildCryptoOverview();
+    const status = data.btc?.price ? "LIVE" : data.assets.length ? "STALE" : "UNAVAILABLE";
+    return json(envelope(data, data.sources.join(","), status, 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "assets" && !segs[2]) {
+    const limit = Number(url.searchParams.get("limit") || 20);
+    const data = await listCryptoAssets(limit);
+    return json(envelope(data, "CoinGecko", data.assets.length ? "LIVE" : "UNAVAILABLE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "search" && !segs[2]) {
+    const data = await searchCrypto(url.searchParams.get("q") || "");
+    return json(envelope(data, "CoinGecko", "LIVE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "market-chart" && !segs[2]) {
+    const data = await getCryptoMarketChart(url.searchParams.get("range") || "1M");
+    return json(envelope(data, data.source, data.series.length ? "LIVE" : "UNAVAILABLE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "quotes" && !segs[2]) {
+    const symbols = (url.searchParams.get("symbols") || "BTC,ETH").split(",");
+    const data = await getCryptoQuotes(symbols);
+    return json(envelope(data, "Binance", data.length ? "LIVE" : "UNAVAILABLE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "news" && !segs[2]) {
+    const overview = await buildCryptoOverview();
+    return json(envelope(overview.news, "composite", overview.news.length ? "LIVE" : "UNAVAILABLE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "scanner" && !segs[2]) {
+    const overview = await buildCryptoOverview();
+    return json(envelope(overview.scanner, "crypto-engine", overview.scanner.length ? "LIVE" : "UNAVAILABLE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "sectors" && !segs[2]) {
+    const overview = await buildCryptoOverview();
+    return json(envelope(overview.sectors, "CoinGecko", overview.sectors.length ? "LIVE" : "UNAVAILABLE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "asset" && segs[2] && segs[3] === "history") {
+    const data = await getCryptoHistory(segs[2], url.searchParams.get("timeframe") || "1h");
+    return json(envelope(data, data.source, data.bars.length ? "LIVE" : "UNAVAILABLE", 0));
+  }
+
+  if (method === "GET" && segs[0] === "crypto" && segs[1] === "asset" && segs[2] && !segs[3]) {
+    const data = await getCryptoAsset(segs[2]);
+    return json(envelope(data, "CoinGecko", data.price ? "LIVE" : "UNAVAILABLE", 0));
   }
 
   throw new HttpError(404, `Not found: /api/v1/${segs.join("/")}`);

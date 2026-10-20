@@ -43,13 +43,33 @@ export function instantFromEastern(year: number, month: number, day: number, hou
   return new Date(Date.UTC(year, month - 1, day, hour + 4, minute, second));
 }
 
+function shiftCivilDate(year: number, month: number, day: number, deltaDays: number) {
+  const shifted = new Date(Date.UTC(year, month - 1, day + deltaDays));
+  return { year: shifted.getUTCFullYear(), month: shifted.getUTCMonth() + 1, day: shifted.getUTCDate() };
+}
+
 export function easternWeekWindow(now = new Date()) {
   const p = numericParts(now);
-  const sunday = new Date(instantFromEastern(p.year, p.month, p.day).getTime() - p.weekday * 86_400_000);
-  const startParts = numericParts(sunday);
-  const start = instantFromEastern(startParts.year, startParts.month, startParts.day, 0, 0, 0);
-  const end = new Date(start.getTime() + 7 * 86_400_000 - 1);
+  const sunday = shiftCivilDate(p.year, p.month, p.day, -p.weekday);
+  const saturday = shiftCivilDate(sunday.year, sunday.month, sunday.day, 6);
+  const start = instantFromEastern(sunday.year, sunday.month, sunday.day, 0, 0, 0);
+  const end = instantFromEastern(saturday.year, saturday.month, saturday.day, 23, 59, 59);
   return { start, end };
+}
+
+/** Civil noon on the Sunday that opens the following Eastern week. */
+export function nextEasternWeekAnchor(now = new Date()) {
+  const { end } = easternWeekWindow(now);
+  return new Date(end.getTime() + 1000);
+}
+
+export function isFridayAfternoonEastern(now = new Date()) {
+  const p = numericParts(now);
+  return p.weekday === 5 && p.hour >= 12;
+}
+
+export function isSaturdayEastern(now = new Date()) {
+  return numericParts(now).weekday === 6;
 }
 
 export function inEasternWeek(date: Date, now = new Date()) {
@@ -63,6 +83,18 @@ export function formatEstDate(date: Date) {
 
 export function formatEstClock(date: Date) {
   return part(date, { hour: "numeric", minute: "2-digit", hour12: true });
+}
+
+export function formatEstClockSeconds(date: Date) {
+  return part(date, { hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true });
+}
+
+export function easternDateParts(date: Date) {
+  return numericParts(date);
+}
+
+export function shiftEasternDate(year: number, month: number, day: number, deltaDays: number) {
+  return shiftCivilDate(year, month, day, deltaDays);
 }
 
 export function formatEstDateTime(date: Date) {

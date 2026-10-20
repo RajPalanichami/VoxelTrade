@@ -1,11 +1,14 @@
 "use client";
 
 import { memo } from "react";
+import type { MarketGaugeData } from "@/lib/fearGreed";
 import { PulseCard } from "@/lib/pulse";
 import { pct } from "@/lib/format";
 import { orderMarketTiles } from "@/lib/tileOrder";
-import { pulseChange, pulsePrice } from "./formatPulse";
+import { formatPulseLevel, pulseChange, pulsePrice } from "./formatPulse";
+import { MarketGaugeTile } from "./MarketGaugeTile";
 import { Sparkline } from "./Sparkline";
+import { COMPARE_LABELS, TileCompareRows } from "./TileCompareRows";
 
 const TONE: Record<string, string> = {
   HEALTHY: "bg-bull/15 text-bull border-bull/40",
@@ -13,15 +16,28 @@ const TONE: Record<string, string> = {
   STRESS: "bg-bear/15 text-bear border-bear/40",
 };
 
-export const IndexCards = memo(function IndexCards({ cards }: { cards: PulseCard[] }) {
-  const ordered = orderMarketTiles(cards);
+export const IndexCards = memo(function IndexCards({
+  cards,
+  gauge,
+  gaugeLoading,
+}: {
+  cards: PulseCard[];
+  gauge?: MarketGaugeData | null;
+  gaugeLoading?: boolean;
+}) {
+  const slot = { symbol: "GAUGE" } as PulseCard;
+  const ordered = orderMarketTiles([...cards.filter((c) => c.symbol !== "GAUGE"), slot]);
   return (
     <div className="min-w-0">
       <div className="market-tile-lane overflow-x-auto overflow-y-hidden overscroll-x-contain">
         <div className="flex flex-nowrap gap-1.5 min-[1280px]:w-full" data-testid="market-tile-row">
-          {ordered.map((c) => (
-            <MarketTile key={c.symbol} card={c} />
-          ))}
+          {ordered.map((c) =>
+            c.symbol === "GAUGE" ? (
+              <MarketGaugeTile key="GAUGE" data={gauge} loading={gaugeLoading} />
+            ) : (
+              <MarketTile key={c.symbol} card={c} />
+            ),
+          )}
         </div>
       </div>
     </div>
@@ -54,6 +70,16 @@ const MarketTile = memo(function MarketTile({ card }: { card: PulseCard }) {
               : "—"
           : `${pulseChange(card)}${card.change_percent != null ? ` (${pct(card.change_percent)})` : ""}`}
       </div>
+      <TileCompareRows
+        testId={`tile-history-${card.symbol}`}
+        rows={(["previousClose", "oneWeekAgo", "oneMonthAgo", "oneYearAgo"] as const).map((key) => {
+          const value = card.history?.[key];
+          return {
+            label: COMPARE_LABELS[key],
+            text: value != null && Number.isFinite(value) ? formatPulseLevel(card.unit, value) : null,
+          };
+        })}
+      />
       <div className="mt-0.5">
         <Sparkline values={card.spark || []} up={status ? status.tone !== "STRESS" : up} compact />
       </div>

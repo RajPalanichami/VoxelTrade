@@ -1,11 +1,15 @@
 import { money } from "@/lib/format";
 import { PulseCard } from "@/lib/pulse";
 
+export function formatPulseLevel(unit: PulseCard["unit"], value: number) {
+  if (unit === "yield" || unit === "inflation") return `${value.toFixed(2)}%`;
+  if (unit === "usd") return `$${money(value)}`;
+  return money(value);
+}
+
 export function pulsePrice(card: PulseCard) {
   if (card.price === null || card.price === undefined) return "—";
-  if (card.unit === "yield" || card.unit === "inflation") return `${card.price.toFixed(2)}%`;
-  if (card.unit === "usd") return `$${money(card.price)}`;
-  return money(card.price);
+  return formatPulseLevel(card.unit, card.price);
 }
 
 export function pulseChange(card: PulseCard) {

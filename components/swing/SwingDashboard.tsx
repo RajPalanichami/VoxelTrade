@@ -8,6 +8,7 @@ import type { SwingAnalysis, SwingTimeframe } from "@/lib/types";
 import { useState } from "react";
 import { SwingStrategyCard } from "./SwingStrategyCard";
 import { SwingTimeframeSelect } from "./SwingTimeframeSelect";
+import { TickerSessionStrip } from "@/components/market/TickerSessionStrip";
 
 export function matchesSwingSelection(bundle: SwingAnalysis | undefined, symbol: string, timeframe: SwingTimeframe) {
   if (!bundle) return false;
@@ -33,6 +34,7 @@ export function SwingDashboard() {
 
   return (
     <div className="p-4 space-y-6 pb-16">
+      <TickerSessionStrip symbol={symbol} compactMode />
       <div className="panel p-4 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">

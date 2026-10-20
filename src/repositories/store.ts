@@ -25,10 +25,19 @@ export type SignalSnap = {
   created_at: string;
 };
 
+export type OpportunityStore = {
+  source: "default" | "custom";
+  tickers: string[];
+  settings: Record<string, unknown>;
+  events: { symbol: string; at: string; from: string; to: string; note: string }[];
+  alertsFired?: { key: string; at: string }[];
+};
+
 type StoreData = {
   watchlist: WatchlistItem[];
   alerts: AlertRow[];
   snapshots: SignalSnap[];
+  opportunity?: OpportunityStore;
 };
 
 type StoreBackend = "file" | "memory";
@@ -108,6 +117,7 @@ function readStore(): StoreData {
       watchlist: raw.watchlist || [],
       alerts: raw.alerts || [],
       snapshots: raw.snapshots || [],
+      opportunity: raw.opportunity,
     };
   } catch {
     return empty();
@@ -218,4 +228,57 @@ export function persistSnapshot(snap: Omit<SignalSnap, "id" | "created_at">): Si
     });
     return null;
   }
+}
+
+export function getOpportunityStore(): OpportunityStore | null {
+  return readStore().opportunity || null;
+}
+
+export function saveOpportunityStore(next: OpportunityStore): OpportunityStore {
+  const data = readStore();
+  data.opportunity = {
+    source: next.source,
+    tickers: next.tickers.map((t) => t.toUpperCase()),
+    settings: next.settings || {},
+    events: (next.events || []).slice(-200),
+    alertsFired: (next.alertsFired || []).slice(-300),
+  };
+  writeStore(data);
+  return data.opportunity;
+}
+
+export function appendOpportunityEvents(events: OpportunityStore["events"]): void {
+  if (!events.length) return;
+  const data = readStore();
+  const current = data.opportunity || { source: "default" as const, tickers: [], settings: {}, events: [], alertsFired: [] };
+  current.events = [...(current.events || []), ...events].slice(-200);
+  data.opportunity = current;
+  writeStore(data);
+}
+
+export function filterFreshOpportunityAlerts<T extends { key: string; type: string; symbol: string; message: string }>(
+  alerts: T[],
+  cooldownMs = 6 * 60 * 60 * 1000,
+): T[] {
+  if (!alerts.length) return [];
+  const data = readStore();
+  const current = data.opportunity || { source: "default" as const, tickers: [], settings: {}, events: [], alertsFired: [] };
+  const now = Date.now();
+  const fired = new Map((current.alertsFired || []).map((a) => [a.key, a.at]));
+  const fresh: T[] = [];
+  const nextFired = [...(current.alertsFired || [])];
+  for (const alert of alerts) {
+    const last = fired.get(alert.key);
+    if (last && now - new Date(last).getTime() < cooldownMs) continue;
+    fresh.push(alert);
+    nextFired.push({ key: alert.key, at: new Date().toISOString() });
+  }
+  current.alertsFired = nextFired.slice(-300);
+  data.opportunity = current;
+  try {
+    writeStore(data);
+  } catch {
+    /* optional */
+  }
+  return fresh;
 }

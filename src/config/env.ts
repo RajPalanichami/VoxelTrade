@@ -37,6 +37,17 @@ export const CACHE_TTL: Record<string, number> = {
   movers: 60,
   events: 300,
   search: 3600,
+  extended: 15,
+  marketContext: 15,
+  cryptoOverview: 45,
+  cryptoMarkets: 45,
+  cryptoHistory: 60,
+  cryptoOnchain: 600,
+  cryptoStable: 180,
+  cryptoSentiment: 300,
+  stockBuying: 45,
+  tradePlan: 45,
+  stockDecision: 45,
 };
 
 export const SECTOR_ETF: Record<string, string> = {
@@ -137,6 +148,10 @@ export type AppSettings = {
   moversExcludeEtf: boolean;
   moversExcludeOtc: boolean;
   moversExchanges: string;
+  coinGeckoApiKey: string;
+  coinGeckoBaseUrl: string;
+  binanceRestBaseUrl: string;
+  binanceFuturesBaseUrl: string;
 };
 
 function readSettings(): AppSettings {
@@ -188,6 +203,10 @@ function readSettings(): AppSettings {
     moversExcludeEtf: envBool("MOVERS_EXCLUDE_ETF", true),
     moversExcludeOtc: envBool("MOVERS_EXCLUDE_OTC", true),
     moversExchanges: envString("MOVERS_EXCHANGES", "NYSE,NASDAQ,AMEX,ARCA,BATS,NMS,NYQ"),
+    coinGeckoApiKey: envString("COINGECKO_API_KEY"),
+    coinGeckoBaseUrl: envString("COINGECKO_BASE_URL", "https://api.coingecko.com/api/v3"),
+    binanceRestBaseUrl: envString("BINANCE_REST_URL", "https://api.binance.com"),
+    binanceFuturesBaseUrl: envString("BINANCE_FUTURES_URL", "https://fapi.binance.com"),
   };
 }
 

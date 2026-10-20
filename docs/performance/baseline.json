@@ -1,0 +1,98 @@
+{
+  "measuredAt": "2026-10-20T19:12:32.923Z",
+  "base": "http://localhost:3000",
+  "routes": [
+    {
+      "route": "/",
+      "status": 200,
+      "elapsedMs": 6634,
+      "requests": 12,
+      "nextAssets": 7,
+      "ttfb": 4005,
+      "dom": 4098,
+      "load": 5180,
+      "fcp": 4340
+    },
+    {
+      "route": "/dashboard",
+      "status": 200,
+      "elapsedMs": 5223,
+      "requests": 14,
+      "nextAssets": 9,
+      "ttfb": 2609,
+      "dom": 2690,
+      "load": 4140,
+      "fcp": 2736
+    },
+    {
+      "route": "/signals",
+      "status": 200,
+      "elapsedMs": 9278,
+      "requests": 14,
+      "nextAssets": 9,
+      "ttfb": 6714,
+      "dom": 6756,
+      "load": 7568,
+      "fcp": 6844
+    },
+    {
+      "route": "/technical",
+      "status": 200,
+      "elapsedMs": 3699,
+      "requests": 18,
+      "nextAssets": 10,
+      "ttfb": 1107,
+      "dom": 1178,
+      "load": 1777,
+      "fcp": 1232
+    },
+    {
+      "route": "/crypto",
+      "status": 200,
+      "elapsedMs": 4905,
+      "requests": 18,
+      "nextAssets": 9,
+      "ttfb": 2328,
+      "dom": 2376,
+      "load": 3142,
+      "fcp": 2464
+    },
+    {
+      "route": "/login",
+      "status": 200,
+      "elapsedMs": 3866,
+      "requests": 12,
+      "nextAssets": 9,
+      "ttfb": 1282,
+      "dom": 1344,
+      "load": 2219,
+      "fcp": 1400
+    }
+  ],
+  "apis": [
+    {
+      "path": "/api/v1/stocks/MSFT/quote",
+      "status": 200,
+      "ms": 477,
+      "bytes": 741
+    },
+    {
+      "path": "/api/v1/stocks/MSFT/quote",
+      "status": 200,
+      "ms": 104,
+      "bytes": 737
+    },
+    {
+      "path": "/api/v1/market/pulse?range=1D",
+      "status": 200,
+      "ms": 40854,
+      "bytes": 45956
+    },
+    {
+      "path": "/api/v1/market/pulse?range=1D",
+      "status": 200,
+      "ms": 162,
+      "bytes": 45956
+    }
+  ]
+}

@@ -1,24 +1,38 @@
-import { getSettings } from "@/src/config/env";
+import { CACHE_TTL, getSettings } from "@/src/config/env";
+import { cacheGet, cacheSet } from "@/src/lib/cache";
 import { httpGetJson, httpGetText, toFloat } from "@/src/lib/http";
+import { singleFlight } from "@/src/lib/singleFlight";
 import { YFinanceProvider } from "@/src/providers/yfinance";
 
 const YF_YIELD: Record<string, string> = { DGS10: "^TNX", DGS30: "^TYX" };
 
 export async function fetchFredCsv(seriesId: string): Promise<[string, number][] | null> {
-  const settings = getSettings();
-  const text = await httpGetText(settings.fredCsvUrl, { id: seriesId }, { "User-Agent": settings.resolvedSecUserAgent() });
-  const rows: [string, number][] = [];
-  for (const line of text.split(/\r?\n/).slice(1)) {
-    const parts = line.split(",");
-    if (parts.length < 2 || [".", "", "NA"].includes(parts[1])) continue;
-    const n = Number(parts[1]);
-    if (!Number.isFinite(n)) continue;
-    rows.push([parts[0].trim(), n]);
-  }
-  return rows.length ? rows.slice(-80) : null;
+  const start = new Date();
+  start.setUTCFullYear(start.getUTCFullYear() - 4);
+  const cosd = start.toISOString().slice(0, 10);
+  const key = `fred:csv:v2:${seriesId}:${cosd}`;
+  const cached = cacheGet<[string, number][]>(key);
+  if (cached?.length) return cached;
+  return singleFlight(key, async () => {
+    const again = cacheGet<[string, number][]>(key);
+    if (again?.length) return again;
+    const settings = getSettings();
+    const text = await httpGetText(settings.fredCsvUrl, { id: seriesId, cosd }, { "User-Agent": settings.resolvedSecUserAgent() });
+    const rows: [string, number][] = [];
+    for (const line of text.split(/\r?\n/).slice(1)) {
+      const parts = line.split(",");
+      if (parts.length < 2 || [".", "", "NA"].includes(parts[1])) continue;
+      const n = Number(parts[1]);
+      if (!Number.isFinite(n)) continue;
+      rows.push([parts[0].trim(), n]);
+    }
+    const trimmed = rows.length ? rows.slice(-450) : null;
+    if (trimmed) cacheSet(key, trimmed, CACHE_TTL.macro);
+    return trimmed;
+  });
 }
 
-function fromYields(vals: [string, number][], source: string) {
+export function fromYields(vals: [string, number][], source: string) {
   const y = vals[vals.length - 1][1];
   const d1 = vals.length > 1 ? y - vals[vals.length - 2][1] : 0;
   const d5 = vals.length > 6 ? y - vals[vals.length - 6][1] : null;

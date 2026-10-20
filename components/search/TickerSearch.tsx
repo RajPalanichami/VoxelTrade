@@ -67,10 +67,12 @@ export function TickerSearch({
         }}
         onFocus={() => hits.length && setOpen(true)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && q.trim()) {
-            onSelect(q.trim().toUpperCase());
-            setOpen(false);
-          }
+          if (e.key !== "Enter") return;
+          const next = e.currentTarget.value.trim().toUpperCase();
+          if (!next) return;
+          onSelect(next);
+          window.dispatchEvent(new CustomEvent("voxel:symbol", { detail: next }));
+          setOpen(false);
         }}
         placeholder={placeholder}
         aria-label={label || placeholder}
@@ -83,6 +85,7 @@ export function TickerSearch({
               key={h.symbol}
               onClick={() => {
                 onSelect(h.symbol);
+                window.dispatchEvent(new CustomEvent("voxel:symbol", { detail: h.symbol }));
                 setQ(h.symbol);
                 setOpen(false);
               }}

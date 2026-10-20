@@ -65,7 +65,7 @@ describe("primary pattern selection", () => {
     expect(primary.name).toBeTruthy();
     expect(["BULLISH", "BEARISH", "NEUTRAL"]).toContain(primary.bias);
     expect(["Entry", "Wait", "Avoid"]).toContain(primary.decision);
-    expect(primary.market_structure).toMatch(/High|Low|Range/);
+    expect(primary.market_structure).toMatch(/High|Low|Range|Trough|Peak/);
     expect(hits.filter((h) => h.id === "bull_flag").length).toBeGreaterThan(0);
     expect(primary.name).toBe("Bull Flag");
     expect(primary.bias).toBe("BULLISH");
@@ -76,8 +76,9 @@ describe("primary pattern selection", () => {
     expect(levels.target3).toBeGreaterThan(levels.target2);
     expect(overviewDecisionFor(primary.bias, primary.status)).toMatch(/ENTER|WAIT|AVOID/);
     expect(tradeDecisionFor(primary.status, "day")).toMatch(/ENTER|WAIT FOR BREAKOUT|AVOID \/ NO TRADE/);
-    expect(tradeDecisionFor("Breakout Confirmed", "swing")).toBe("ENTER SWING TRADE");
+    expect(tradeDecisionFor("Breakout Confirmed", "swing")).toBe("WAIT FOR BREAKOUT");
     expect(tradeDecisionFor("Forming", "day")).toBe("WAIT FOR BREAKOUT");
+    expect(tradeDecisionFor("Breakout Confirmed", "swing", { action: "BUY" })).toBe("ENTER SWING TRADE");
   });
 
   it("resamples daily bars into monthly candles", () => {

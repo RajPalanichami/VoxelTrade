@@ -34,10 +34,42 @@ test("market tiles stay in one lane and include 2Y + BTC", async ({ page }) => {
   const ids = await page.locator("[data-testid^='tile-']").evaluateAll((els) =>
     els.map((e) => (e.getAttribute("data-testid") || "").replace("tile-", "")),
   );
-  const lead = ["BTC", "VIX", "BRENT", "WTI", "SPY", "IWM", "US2Y", "US10Y", "CPI"];
+  const lead = ["BTC", "VIX", "BRENT", "WTI", "SPY", "GAUGE", "US2Y", "US10Y", "CPI"];
   const present = lead.filter((s) => ids.includes(s));
   const positions = present.map((s) => ids.indexOf(s));
   expect(positions).toEqual([...positions].sort((a, b) => a - b));
+  expect(ids.filter((s) => s === "IWM")).toHaveLength(ids.includes("IWM") ? 1 : 0);
+  if (ids.includes("IWM")) {
+    expect(ids.lastIndexOf("IWM")).toBe(ids.length - 1);
+  }
+  if (ids.includes("SPY") && ids.includes("GAUGE")) {
+    expect(ids.indexOf("GAUGE")).toBe(ids.indexOf("SPY") + 1);
+  }
+
+  const gauge = page.getByTestId("tile-GAUGE");
+  await expect(gauge.getByText("Market Gauge")).toBeVisible();
+  await expect(gauge.getByText("What emotion is driving the market now?")).toBeVisible();
+  const value = gauge.getByTestId("gauge-value");
+  const unavailable = gauge.getByTestId("gauge-error");
+  await expect(value.or(unavailable)).toBeVisible({ timeout: 45_000 });
+  if (await value.isVisible()) {
+    const reading = Number((await value.textContent())?.trim());
+    expect(Number.isFinite(reading)).toBe(true);
+    expect(reading).toBeGreaterThanOrEqual(0);
+    expect(reading).toBeLessThanOrEqual(100);
+    await expect(gauge.getByText("Previous close")).toBeVisible();
+    await expect(gauge.getByText("1 year ago")).toBeVisible();
+  }
+
+  for (const symbol of ["VIX", "BTC", "BRENT", "WTI", "US2Y", "US10Y", "US20Y", "US30Y", "SPY", "CPI", "IWM"]) {
+    const tile = page.getByTestId(`tile-${symbol}`);
+    if ((await tile.count()) === 0) continue;
+    const history = tile.getByTestId(`tile-history-${symbol}`);
+    await expect(history.getByText("Previous close")).toBeVisible();
+    await expect(history.getByText("1 week ago")).toBeVisible();
+    await expect(history.getByText("1 month ago")).toBeVisible();
+    await expect(history.getByText("1 year ago")).toBeVisible();
+  }
 });
 
 test("overview keeps Top Market Movers and shows live Market Events This Week", async ({ page }) => {
@@ -48,7 +80,9 @@ test("overview keeps Top Market Movers and shows live Market Events This Week", 
   await expect(events).toBeVisible({ timeout: 45_000 });
   await expect(events.getByText("MARKET EVENTS THIS WEEK")).toBeVisible();
   await expect(page.getByTestId("market-events-updated")).toContainText("EST (Eastern Standard Time)");
-  await expect(page.getByTestId("market-event-row").first()).toBeVisible({ timeout: 45_000 });
+  const eventRow = events.getByTestId("market-event-row").first();
+  const empty = events.getByText("No upcoming market events this week.");
+  await expect(eventRow.or(empty)).toBeVisible({ timeout: 45_000 });
   await expect(page.getByText("No U.S. market events were scheduled")).toHaveCount(0);
   const eventsBox = await events.boundingBox();
   const movers = page.getByTestId("top-market-movers");

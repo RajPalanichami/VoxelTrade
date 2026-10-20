@@ -28,6 +28,9 @@ loadEnvFile(path.join(root, ".env.development"));
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    optimizePackageImports: ["lucide-react", "@tanstack/react-query"],
+  },
 };
 
 export default nextConfig;

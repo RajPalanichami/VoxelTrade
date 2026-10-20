@@ -1,10 +1,13 @@
 import { CACHE_TTL } from "@/src/config/env";
 import { attachMacroStatus } from "@/src/engines/regime";
 import { cacheGet, cacheSet } from "@/src/lib/cache";
-import { fetchFredCsv } from "@/src/providers/macro";
+import { fetchFredCsv, fromYields } from "@/src/providers/macro";
+import { singleFlight } from "@/src/lib/singleFlight";
 import { fetchCpi } from "@/src/providers/inflation";
 import { analysis } from "@/src/services/analysis";
 import { scanMarketMovers } from "@/src/services/movers";
+import { compareLevels, type LevelComparisons } from "@/src/engines/tileHistory";
+import { buildMarketGauge, unavailableGauge } from "@/src/services/marketGauge";
 
 const PULSE_RANGE: Record<string, string> = { "1D": "5m", "1W": "1h", "1M": "1d", "3M": "1d", "1Y": "1d" };
 const RANGE_BARS: Record<string, number> = { "1D": 90, "1W": 50, "1M": 24, "3M": 70, "1Y": 260 };
@@ -41,6 +44,20 @@ const SECTORS: [string, string, string][] = [
   ["Semiconductors", "SOXX", "#f472b6"],
 ];
 
+async function mapPool<T, R>(items: T[], limit: number, fn: (item: T) => Promise<R>): Promise<R[]> {
+  const out = new Array<R>(items.length);
+  let cursor = 0;
+  async function worker() {
+    while (cursor < items.length) {
+      const index = cursor;
+      cursor += 1;
+      out[index] = await fn(items[index]);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) || 1 }, () => worker()));
+  return out;
+}
+
 async function closes(symbol: string, timeframe: string, limit: number) {
   const [bars] = await analysis.bars(symbol, timeframe);
   return bars.slice(-limit).map((b) => ({ time: Math.floor(b.timestamp.getTime() / 1000), close: b.close }));
@@ -52,22 +69,27 @@ function pctSeries(rows: { time: number; close: number }[]) {
   return rows.map((p) => ({ time: p.time, value: Math.round((p.close / base - 1) * 10000) / 100 }));
 }
 
+function scaleYield(value: number | null | undefined, scale: number) {
+  if (value == null || !Number.isFinite(value)) return value ?? null;
+  return scale !== 1 && value > 20 ? value * scale : value;
+}
+
 async function card(meta: (typeof INDICES)[number]) {
   try {
-    const q = await analysis.quote(meta.symbol);
-    let price = q.price;
-    let change = q.change;
-    if (meta.unit === "yield" && price && price > 20) {
-      price = price / 10;
-      change = change != null ? change / 10 : null;
-    }
-    let spark: number[] = [];
-    try {
-      spark = (await closes(meta.symbol, "1d", 20)).map((p) => p.close);
-      if (meta.unit === "yield" && spark.length && spark[spark.length - 1] > 20) spark = spark.map((c) => c / 10);
-    } catch {
-      spark = [];
-    }
+    const [q, daily] = await Promise.all([
+      analysis.quote(meta.symbol),
+      closes(meta.symbol, "1d", 420).catch(() => [] as { time: number; close: number }[]),
+    ]);
+    const scale = meta.unit === "yield" && q.price != null && q.price > 20 ? 0.1 : 1;
+    const price = scaleYield(q.price, scale);
+    const change = scale === 1 ? q.change : q.change != null ? q.change * scale : null;
+    const series = daily.map((point) => ({ time: point.time, close: scaleYield(point.close, scale) as number }));
+    const calendar = meta.symbol === "BTC-USD";
+    const history = compareLevels({
+      points: series.map((point) => ({ time: point.time * 1000, close: point.close })),
+      mode: calendar ? "calendar" : "trading",
+      zone: calendar ? "utc" : "et",
+    });
     return {
       symbol: meta.display,
       ticker: meta.symbol,
@@ -83,7 +105,8 @@ async function card(meta: (typeof INDICES)[number]) {
       week52_low: q.week52_low,
       volume: q.volume,
       unit: meta.unit,
-      spark,
+      spark: series.slice(-20).map((point) => point.close),
+      history,
       source: q.freshness.source,
     };
   } catch {
@@ -144,31 +167,82 @@ function takeaways(cards: Record<string, unknown>[], sectors: Record<string, unk
 export async function buildPulse(rangeKey = "1W") {
   let key = (rangeKey || "1W").toUpperCase();
   if (!(key in PULSE_RANGE)) key = "1W";
-  const cached = cacheGet<{ payload: Record<string, unknown> }>(`pulse:v3:${key}`);
+  const liveKey = `pulse:v8:${key}`;
+  const lastKey = `pulse:last:v8:${key}`;
+  const cached = cacheGet<{ payload: Record<string, unknown> }>(liveKey);
   if (cached?.payload) return cached.payload;
+  const stale = cacheGet<{ payload: Record<string, unknown> }>(lastKey);
+  const job = singleFlight(liveKey, () => computePulse(key));
+  if (stale?.payload) {
+    void job;
+    return stale.payload;
+  }
+  return job;
+}
+
+async function computePulse(key: string) {
+  const liveKey = `pulse:v8:${key}`;
+  const lastKey = `pulse:last:v8:${key}`;
   const t0 = Date.now();
-  const cards: Record<string, unknown>[] = (await Promise.all(INDICES.map(card))).filter(
-    (c): c is NonNullable<typeof c> => Boolean(c),
-  );
   const tf = PULSE_RANGE[key];
   const limit = RANGE_BARS[key];
-  const series: Record<string, unknown[]> = {};
   const legend: Record<string, string> = { SPY: "SPY", QQQ: "QQQ", IWM: "IWM", "^GSPC": "S&P 500", "^IXIC": "Nasdaq" };
-  await Promise.all(
-    PERF_KEYS.map(async (sym) => {
+  const FRED_SERIES = [
+    ["DGS2", "US2Y", "U.S. 2-Year Treasury Yield"],
+    ["DGS10", "US10Y", "U.S. 10-Year Treasury Yield"],
+    ["DGS20", "US20Y", "U.S. 20-Year Treasury Yield"],
+    ["DGS30", "US30Y", "U.S. 30-Year Treasury Yield"],
+  ] as const;
+
+  const [indexCards, seriesPairs, scanned, sectorRows, newsRaw, treasuryRows, cpi, gauge] = await Promise.all([
+    mapPool(INDICES, 4, card),
+    mapPool(PERF_KEYS, 3, async (sym) => {
       try {
         const pts = pctSeries(await closes(sym, tf, limit));
-        if (pts.length) series[legend[sym]] = pts;
+        return pts.length ? ([legend[sym], pts] as const) : null;
       } catch {
-        /* skip */
+        return null;
       }
     }),
-  );
-  let scanned: Record<string, unknown> = {};
-  try {
-    scanned = await scanMarketMovers();
-  } catch {
-    scanned = {};
+    scanMarketMovers().catch(() => ({} as Record<string, unknown>)),
+    mapPool(SECTORS, 4, async ([name, etf, color]) => {
+      try {
+        const q = await analysis.quote(etf);
+        return { name, etf, color, price: q.price, change_percent: q.change_percent };
+      } catch {
+        return null;
+      }
+    }),
+    Promise.all(
+      ["SPY", "QQQ"].map(async (sym) => {
+        try {
+          return ((await analysis.first("fetchNews", sym)) as Record<string, unknown>[]) || [];
+        } catch {
+          return [] as Record<string, unknown>[];
+        }
+      }),
+    ),
+    mapPool([...FRED_SERIES], 4, async ([seriesId, display, name]) => {
+      try {
+        const csv = (await fetchFredCsv(seriesId)) || [];
+        if (csv.length) {
+          return { seriesId, display, name, row: fromYields(csv, `FRED CSV ${seriesId}`), spark: csv.slice(-20).map(([, value]) => value), csv };
+        }
+        const row = await analysis.fred.series(seriesId);
+        if (!row) return null;
+        return { seriesId, display, name, row, spark: [] as number[], csv: [] as [string, number][] };
+      } catch {
+        return null;
+      }
+    }),
+    fetchCpi().catch(() => null),
+    buildMarketGauge().catch((err) => unavailableGauge(err instanceof Error ? err.message : "Data temporarily unavailable")),
+  ]);
+
+  const cards: Record<string, unknown>[] = indexCards.filter((c): c is NonNullable<typeof c> => Boolean(c));
+  const series: Record<string, unknown[]> = {};
+  for (const pair of seriesPairs) {
+    if (pair) series[pair[0]] = pair[1];
   }
   let gainers = (scanned.gainers as Record<string, unknown>[]) || [];
   let losers = (scanned.losers as Record<string, unknown>[]) || [];
@@ -179,31 +253,12 @@ export async function buildPulse(rangeKey = "1W") {
     if (losers.length < 5) losers = [...moversRaw].sort((a, b) => Number(a.change_percent) - Number(b.change_percent)).slice(0, 5);
     if (!active.length) active = [...moversRaw].sort((a, b) => Number(b.volume || 0) - Number(a.volume || 0)).slice(0, 8);
   }
-  const sectors = (
-    await Promise.all(
-      SECTORS.map(async ([name, etf, color]) => {
-        try {
-          const q = await analysis.quote(etf);
-          return { name, etf, color, price: q.price, change_percent: q.change_percent };
-        } catch {
-          return null;
-        }
-      }),
-    )
-  )
+  const sectors = sectorRows
     .filter((s): s is NonNullable<typeof s> => Boolean(s))
     .sort((a, b) => (b.change_percent || 0) - (a.change_percent || 0));
 
-  let news: Record<string, unknown>[] = [];
-  for (const sym of ["SPY", "QQQ"]) {
-    try {
-      news = news.concat(((await analysis.first("fetchNews", sym)) as Record<string, unknown>[]) || []);
-    } catch {
-      /* skip */
-    }
-  }
   const seen = new Set<string>();
-  news = news.filter((n) => {
+  const news = newsRaw.flat().filter((n) => {
     const h = String(n.headline || "");
     if (!h || seen.has(h)) return false;
     seen.add(h);
@@ -211,50 +266,37 @@ export async function buildPulse(rangeKey = "1W") {
   }).slice(0, 12);
 
   const treasury: Record<string, Record<string, unknown>> = {};
-  for (const [seriesId, display, name] of [
-    ["DGS2", "US2Y", "U.S. 2-Year Treasury Yield"],
-    ["DGS10", "US10Y", "U.S. 10-Year Treasury Yield"],
-    ["DGS20", "US20Y", "U.S. 20-Year Treasury Yield"],
-    ["DGS30", "US30Y", "U.S. 30-Year Treasury Yield"],
-  ] as const) {
-    try {
-      const row = await analysis.fred.series(seriesId);
-      if (!row) continue;
-      treasury[display] = row;
-      const existing = cards.find((c) => c.symbol === display);
-      let spark: number[] = [];
-      try {
-        spark = ((await fetchFredCsv(seriesId)) || []).slice(-20).map(([, v]) => v);
-      } catch {
-        spark = [];
-      }
-      const payloadCard = {
-        symbol: display,
-        ticker: seriesId,
-        name,
-        price: row.yield,
-        change: row.change_1d,
-        change_percent: null,
-        unit: "yield",
-        spark,
-        source: row.source,
-        as_of: row.as_of,
-        has_signal: true,
-      };
-      if (existing) Object.assign(existing, payloadCard, { name });
-      else cards.push(payloadCard as (typeof cards)[number]);
-    } catch {
-      continue;
-    }
-  }
-
-  let cpi: Record<string, unknown> | null = null;
-  try {
-    cpi = await fetchCpi();
-  } catch {
-    cpi = null;
+  for (const item of treasuryRows) {
+    if (!item) continue;
+    treasury[item.display] = item.row;
+    const existing = cards.find((c) => c.symbol === item.display);
+    const history: LevelComparisons | undefined = item.csv.length
+      ? compareLevels({
+          points: item.csv.map(([date, value]) => ({ time: Date.parse(`${date}T12:00:00Z`), close: value })),
+          mode: "trading",
+          zone: "utc",
+          currentIsLatestPoint: true,
+        })
+      : undefined;
+    const payloadCard = {
+      symbol: item.display,
+      ticker: item.seriesId,
+      name: item.name,
+      price: item.row.yield,
+      change: item.row.change_1d,
+      change_percent: null,
+      unit: "yield",
+      spark: item.spark,
+      history,
+      source: item.row.source,
+      as_of: item.row.as_of,
+      has_signal: true,
+    };
+    if (existing) Object.assign(existing, payloadCard, { name: item.name });
+    else cards.push(payloadCard as (typeof cards)[number]);
   }
   if (cpi && cpi.yoy != null) {
+    const points = Array.isArray(cpi.points) ? (cpi.points as { date: string; value: number }[]) : [];
     cards.push({
       symbol: "CPI",
       ticker: "CPI-U",
@@ -264,6 +306,14 @@ export async function buildPulse(rangeKey = "1W") {
       change_percent: cpi.mom as number | null,
       unit: "inflation",
       spark: (cpi.spark as number[]) || [],
+      history: compareLevels({
+        points: points
+          .map((point) => ({ time: Date.parse(`${String(point.date).slice(0, 10)}T12:00:00Z`), close: point.value }))
+          .filter((point) => Number.isFinite(point.time) && Number.isFinite(point.close)),
+        mode: "monthly",
+        zone: "utc",
+        currentIsLatestPoint: true,
+      }),
       source: cpi.source as string,
       as_of: cpi.as_of as string,
       has_signal: true,
@@ -303,7 +353,9 @@ export async function buildPulse(rangeKey = "1W") {
     inflation: cpi,
     movers_universe: scanned.universe || "market-wide",
     latency_ms: Date.now() - t0,
+    gauge,
   };
-  cacheSet(`pulse:v3:${key}`, { payload, source: "composite" }, CACHE_TTL.macro);
+  cacheSet(liveKey, { payload, source: "composite" }, CACHE_TTL.macro);
+  cacheSet(lastKey, { payload, source: "composite" }, 6 * 3600);
   return payload;
 }

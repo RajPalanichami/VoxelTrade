@@ -7,7 +7,9 @@ import {
   Bookmark,
   CandlestickChart,
   GitCompare,
+  Map,
   HelpCircle,
+  Compass,
   Crosshair,
   Crown,
   Layers,
@@ -15,27 +17,39 @@ import {
   LineChart,
   Newspaper,
   PieChart,
+  Radar,
   Radio,
   Repeat,
   Scale,
-  Settings,
   Triangle,
   Table2,
+  Target,
   Wrench,
   X,
+  Flame,
+  Zap,
+  Bitcoin,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { config } from "@/lib/config";
 
 const NAV = [
   { href: "/", label: "Overview", icon: Radio },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/signals", label: "Signal Analyzer", icon: Activity },
+  { href: "/technical", label: "Technical Analysis", icon: CandlestickChart },
+  { href: "/scalp-analyzer", label: "Scalp Analyzer", icon: Zap },
+  { href: "/trade-your-plan", label: "Trade Your Plan", icon: Map },
+  { href: "/stock-decision", label: "Stock Decision", icon: Compass },
   { href: "/patterns", label: "Chart Pattern", icon: Triangle },
+  { href: "/stock-buying-engine", label: "Stock Buying Engine", icon: Target },
+  { href: "/breakout-potential", label: "Breakout Potential", icon: Flame },
+  { href: "/opportunity", label: "Opportunity Monitor", icon: Radar },
   { href: "/options", label: "Option Visualizer", icon: Layers },
   { href: "/option-analyzer", label: "Option Analyzer", icon: Crosshair },
   { href: "/swing", label: "Swing Trading", icon: Repeat },
+  { href: "/crypto", label: "Crypto", icon: Bitcoin },
   { href: "/compare", label: "Ticker Comparison", icon: GitCompare },
   { href: "/multi-timeframe", label: "Multi-Time Frame", icon: Table2 },
   { href: "/watchlist", label: "Watchlist", icon: Bookmark },
@@ -56,10 +70,8 @@ const NAV = [
   { href: "/sector/utilities", label: "Utilities", icon: PieChart },
   { href: "/sector/real-estate", label: "Real Estate", icon: PieChart },
   { href: "/tools", label: "Tools", icon: Wrench },
-  { href: "/technical", label: "Technical Analysis", icon: CandlestickChart },
   { href: "/fundamentals", label: "Fundamentals", icon: LineChart },
   { href: "/alerts", label: "Alerts", icon: Bell },
-  { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 function Brand() {
@@ -88,15 +100,19 @@ function Brand() {
 
 function Links({ onClose }: { onClose?: () => void }) {
   const path = usePathname();
+  const router = useRouter();
   return (
     <nav className="flex-1 py-3 space-y-0.5 px-2 overflow-y-auto">
       {NAV.map((item) => {
-        const active = path === item.href;
+        const active = path === item.href || (item.href !== "/" && path.startsWith(`${item.href}/`));
         const Icon = item.icon;
         return (
           <Link
             key={item.href}
             href={item.href}
+            prefetch={false}
+            onMouseEnter={() => router.prefetch(item.href)}
+            onFocus={() => router.prefetch(item.href)}
             onClick={onClose}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-md text-[13px] leading-tight transition ${
                 active
@@ -106,6 +122,9 @@ function Links({ onClose }: { onClose?: () => void }) {
           >
             <Icon size={15} className={`shrink-0 ${active ? "text-accent" : ""}`} />
             {item.label}
+            {item.href === "/breakout-potential" ? (
+              <span aria-hidden className="ml-auto text-[9px] px-1.5 py-0.5 rounded bg-sky-500/20 text-sky-300">New</span>
+            ) : null}
           </Link>
         );
       })}

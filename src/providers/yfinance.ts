@@ -22,7 +22,19 @@ function collectCookies(res: Response): string {
   return single ? single.split(";")[0] : "";
 }
 
+let sessionPromise: Promise<YahooSession> | null = null;
+
 async function ensureYahooSession(): Promise<YahooSession> {
+  if (session && Date.now() - sessionAt < 30 * 60 * 1000) return session;
+  if (!sessionPromise) {
+    sessionPromise = openYahooSession().finally(() => {
+      sessionPromise = null;
+    });
+  }
+  return sessionPromise;
+}
+
+async function openYahooSession(): Promise<YahooSession> {
   if (session && Date.now() - sessionAt < 30 * 60 * 1000) return session;
   const headers = { "User-Agent": UA, Accept: "*/*" };
   const consent = await fetch("https://fc.yahoo.com", { headers, redirect: "manual", cache: "no-store" });
@@ -123,6 +135,7 @@ export class YFinanceProvider implements MarketDataProvider {
     return {
       symbol: symbol.toUpperCase(),
       name: String(meta.shortName || meta.longName || metaRow.name || symbol),
+      long_name: String(meta.longName || meta.shortName || metaRow.name || symbol),
       exchange: String(meta.exchangeName || meta.fullExchangeName || metaRow.exchange || ""),
       sector: "",
       industry: "",
@@ -217,6 +230,47 @@ export class YFinanceProvider implements MarketDataProvider {
     bars = bars.slice(-outputsize);
     if (!bars.length) throw new ProviderError(this.name, `No bars for ${symbol} ${timeframe}`);
     return bars;
+  }
+
+  async fetchExtendedHoursBars(symbol: string, timeframe = "1m", outputsize = 2000): Promise<OHLCVBar[]> {
+    const interval = timeframe === "5m" ? "5m" : "1m";
+    const lookback = interval === "1m" ? 5 * 86_400 : 10 * 86_400;
+    const period2 = Math.floor(Date.now() / 1000);
+    const chart = await yahooGet<{
+      chart?: { result?: Array<Record<string, unknown>>; error?: { description?: string } };
+    }>(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}`, {
+      interval,
+      period1: String(period2 - lookback),
+      period2: String(period2),
+      includePrePost: "true",
+    });
+    const result = chart.chart?.result?.[0];
+    if (!result) throw new ProviderError(this.name, `No extended-hours bars for ${symbol}`);
+    const timestamps = (result.timestamp as number[]) || [];
+    const quote = ((result.indicators as Record<string, unknown>)?.quote as Record<string, unknown>[])?.[0] || {};
+    const opens = (quote.open as (number | null)[]) || [];
+    const highs = (quote.high as (number | null)[]) || [];
+    const lows = (quote.low as (number | null)[]) || [];
+    const closes = (quote.close as (number | null)[]) || [];
+    const vols = (quote.volume as (number | null)[]) || [];
+    const bars: OHLCVBar[] = [];
+    for (let i = 0; i < timestamps.length; i++) {
+      if (opens[i] == null || highs[i] == null || lows[i] == null || closes[i] == null) continue;
+      bars.push({
+        symbol: symbol.toUpperCase(),
+        timestamp: new Date(timestamps[i] * 1000),
+        open: Number(opens[i]),
+        high: Number(highs[i]),
+        low: Number(lows[i]),
+        close: Number(closes[i]),
+        volume: Number(vols[i] || 0),
+        timeframe: interval,
+        source: "yfinance",
+      });
+    }
+    const sliced = bars.slice(-outputsize);
+    if (!sliced.length) throw new ProviderError(this.name, `No extended-hours bars for ${symbol}`);
+    return sliced;
   }
 
   async fetchFundamentals(symbol: string): Promise<Record<string, unknown> | null> {

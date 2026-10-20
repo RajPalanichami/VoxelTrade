@@ -4,6 +4,9 @@ import Link from "next/link";
 import { PulseShell } from "@/components/pulse/PulseShell";
 
 const TOOLS = [
+  { href: "/stock-buying-engine", title: "Stock Buying Engine", body: "Horizon-aware decision context, levels, R:R, and explanations." },
+  { href: "/trade-your-plan", title: "Trade Your Plan", body: "15m–4h structure map, Fibonacci, VWAP, and confirmation levels." },
+  { href: "/stock-decision", title: "Stock Decision", body: "Any ticker, Daily default. Weighted 0–100 decision with factor table, MTF confirmation, and the existing setup map below." },
   { href: "/compare", title: "Ticker Comparison", body: "Side-by-side technical analysis of two symbols." },
   { href: "/backtesting", title: "Backtesting", body: "Replay strategy rules on historical bars." },
   { href: "/alerts", title: "Alerts", body: "Price and signal alerts for watched names." },

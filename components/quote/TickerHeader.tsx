@@ -4,6 +4,9 @@ import { Quote } from "@/lib/types";
 import { compact, money, pct, usd } from "@/lib/format";
 import { TimeframeSelect } from "@/components/search/TimeframeSelect";
 import { Timeframe } from "@/lib/types";
+import { TickerSessionStrip } from "@/components/market/TickerSessionStrip";
+import { SessionBadge } from "@/components/market/SessionBadge";
+import { useTickerMarketContext } from "@/hooks/useTickerMarketContext";
 
 export function TickerHeader({
   quote,
@@ -14,7 +17,12 @@ export function TickerHeader({
   timeframe: Timeframe;
   onTimeframe: (t: Timeframe) => void;
 }) {
-  const up = (quote.change || 0) >= 0;
+  const ctx = useTickerMarketContext(quote.symbol).data?.data;
+  const price = ctx?.quote.price ?? quote.price;
+  const change = ctx?.quote.change ?? quote.change;
+  const changePct = ctx?.quote.changePercent ?? quote.change_percent;
+  const prevClose = ctx?.previousRegularClose ?? quote.previous_close;
+  const up = (change || 0) >= 0;
   const lo = quote.week52_low;
   const hi = quote.week52_high;
   const pos = lo && hi && hi !== lo ? ((quote.price - lo) / (hi - lo)) * 100 : 50;
@@ -23,7 +31,7 @@ export function TickerHeader({
     ["OPEN", usd(quote.open)],
     ["HIGH", usd(quote.high)],
     ["LOW", usd(quote.low)],
-    ["PREV CLOSE", usd(quote.previous_close)],
+    ["PREV CLOSE", usd(prevClose)],
     ["VOLUME", compact(quote.volume)],
     ["VOL RATIO", quote.volume_ratio ? `${quote.volume_ratio.toFixed(2)}x` : "—"],
     ["MKT CAP", compact(quote.market_cap)],
@@ -43,10 +51,13 @@ export function TickerHeader({
           </div>
         </div>
         <div>
-          <div className="text-3xl font-semibold tick">{usd(quote.price)}</div>
+          <div className="text-3xl font-semibold tick flex items-center gap-2">
+            {usd(price)}
+            <SessionBadge session={ctx?.session} />
+          </div>
           <div className={`text-sm tick ${up ? "text-bull" : "text-bear"}`}>
             {up ? "+" : ""}
-            {money(quote.change)} ({pct(quote.change_percent)})
+            {money(change)} ({pct(changePct)})
           </div>
         </div>
         <TimeframeSelect value={timeframe} onChange={onTimeframe} />
@@ -60,6 +71,9 @@ export function TickerHeader({
             <span>{usd(hi)}</span>
           </div>
         </div>
+      </div>
+      <div className="mt-3">
+        <TickerSessionStrip symbol={quote.symbol} />
       </div>
       <div className="grid grid-cols-3 md:grid-cols-9 gap-2 mt-4">
         {stats.map(([k, v]) => (

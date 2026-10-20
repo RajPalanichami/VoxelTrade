@@ -6,6 +6,7 @@ import { applyHardFilters, buildExplanation, classify, computeConfidence, scoreA
 import { calculateLevels } from "@/src/engines/supportResistance";
 import { buildPlans } from "@/src/engines/tradingPlan";
 import { cacheGet, cacheSet } from "@/src/lib/cache";
+import { singleFlight } from "@/src/lib/singleFlight";
 import { HttpError, ProviderError } from "@/src/lib/errors";
 import { AlphaVantageProvider } from "@/src/providers/alphaVantage";
 import { FinnhubProvider } from "@/src/providers/finnhub";
@@ -45,6 +46,15 @@ export class AnalysisService {
   }
 
   async failover<T>(fn: (p: MarketDataProvider) => Promise<T>, cacheKey: string | null, ttl: number): Promise<[T, string, number]> {
+    if (cacheKey) {
+      const hit = cacheGet<{ payload: T; source?: string }>(cacheKey);
+      if (hit?.payload != null) return [hit.payload, hit.source || "Cache", 0];
+      return singleFlight(`failover:${cacheKey}`, () => this.failoverUncached(fn, cacheKey, ttl));
+    }
+    return this.failoverUncached(fn, cacheKey, ttl);
+  }
+
+  private async failoverUncached<T>(fn: (p: MarketDataProvider) => Promise<T>, cacheKey: string | null, ttl: number): Promise<[T, string, number]> {
     if (cacheKey) {
       const hit = cacheGet<{ payload: T; source?: string }>(cacheKey);
       if (hit?.payload != null) return [hit.payload, hit.source || "Cache", 0];
@@ -88,14 +98,14 @@ export class AnalysisService {
   }
 
   async quote(symbol: string): Promise<Quote> {
-    const cached = cacheGet<{ payload: Quote }>(`quote:${symbol.toUpperCase()}`);
+    const cached = cacheGet<{ payload: Quote }>(`quote:v2:${symbol.toUpperCase()}`);
     if (cached?.payload) {
       const q = cached.payload;
       const age = (Date.now() - new Date(q.freshness.timestamp).getTime()) / 1000;
       if (age < CACHE_TTL.quote) return q;
       if (age > getSettings().staleQuoteSeconds) q.freshness.data_status = "STALE";
     }
-    const [result, source, latency] = await this.failover((p) => p.fetchQuote(symbol), `quote:${symbol.toUpperCase()}`, CACHE_TTL.quote);
+    const [result, source, latency] = await this.failover((p) => p.fetchQuote(symbol), `quote:v2:${symbol.toUpperCase()}`, CACHE_TTL.quote);
     result.freshness.source = source;
     result.freshness.latency_ms = latency;
     return result;
@@ -331,6 +341,14 @@ export class AnalysisService {
       }
     }
 
+    let extendedHours = null;
+    try {
+      const { getTickerMarketContext } = await import("@/src/services/marketContext");
+      extendedHours = await getTickerMarketContext(symbol);
+    } catch {
+      extendedHours = null;
+    }
+
     const lastBar = bars[bars.length - 1];
     const result = {
       symbol: symbol.toUpperCase(),
@@ -382,6 +400,7 @@ export class AnalysisService {
       news: news.slice(0, 12),
       market,
       multi_timeframe: mtfTable,
+      extendedHours,
       freshness: result.freshness,
     };
   }
