@@ -4,7 +4,8 @@ import { EST_LABEL, formatEstDateTime, formatEstTimeLine, inEasternWeek, instant
 import { cacheClear } from "@/src/lib/cache";
 import { resetSettings } from "@/src/config/env";
 import { forexFactoryWeekSlug, parseForexFactoryCalendarHtml } from "@/src/providers/economicCalendar";
-import { buildMarketEvents, prepareNextWeekMarketEvents, resetMarketEventsRuntime, shouldPrepareNextWeek } from "@/src/services/marketEvents";
+import { MARKET_EVENTS_REFRESH_MS, buildMarketEvents, getStoredMarketEvents, prepareNextWeekMarketEvents, refreshDue, resetMarketEventsRuntime, shouldPrepareNextWeek } from "@/src/services/marketEvents";
+import { clearMarketEventsRecord, readMarketEventsRecord, saveMarketEventsRecord } from "@/src/repositories/store";
 import { dispatchV1 } from "@/src/server/apiRouter";
 
 const NOW = new Date("2026-09-14T14:05:00.000Z");
@@ -268,6 +269,7 @@ describe("market events service", () => {
   beforeEach(() => {
     cacheClear();
     resetMarketEventsRuntime();
+    clearMarketEventsRecord();
     vi.useFakeTimers();
     vi.setSystemTime(NOW);
     process.env.FINNHUB_API_KEY = "test-token";
@@ -281,6 +283,7 @@ describe("market events service", () => {
     resetSettings();
     cacheClear();
     resetMarketEventsRuntime();
+    clearMarketEventsRecord();
   });
 
   it("synchronizes from the calendar API and never invents a missing print", async () => {
@@ -442,5 +445,148 @@ describe("market events service", () => {
     const json = await res.json();
     expect(json.data.last_updated_est).toContain("EST (Eastern Standard Time)");
     expect(json.data.events).toEqual([]);
+  });
+
+  it("reuses a dataset younger than seven days and refreshes once the interval has elapsed", async () => {
+    let calls = 0;
+    vi.stubGlobal("fetch", async (input: string | URL) => {
+      const url = new URL(String(input));
+      if (url.pathname.includes("/calendar/economic")) {
+        calls += 1;
+        return Response.json({
+          economicCalendar: [
+            {
+              event: calls === 1 ? "CPI" : "GDP",
+              country: "US",
+              time: calls === 1 ? "2026-09-16 12:30:00" : "2026-09-22 12:30:00",
+              impact: "high",
+              actual: null,
+            },
+          ],
+        });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    const first = await buildMarketEvents(NOW);
+    expect(first.events.map((event) => event.name)).toEqual(["CPI"]);
+    expect(calls).toBe(1);
+    const stored = getStoredMarketEvents(NOW);
+    expect(stored?.events.map((event) => event.name)).toEqual(["CPI"]);
+    const stillFresh = new Date(NOW.getTime() + 24 * 60 * 60 * 1000);
+    const again = await buildMarketEvents(stillFresh);
+    expect(again.events.map((event) => event.name)).toEqual(["CPI"]);
+    expect(calls).toBe(1);
+    const due = new Date(NOW.getTime() + MARKET_EVENTS_REFRESH_MS);
+    expect(refreshDue(readMarketEventsRecord(), due)).toBe(true);
+    vi.setSystemTime(due);
+    const refreshed = await buildMarketEvents(due);
+    expect(refreshed.events.map((event) => event.name)).toEqual(["GDP"]);
+    expect(calls).toBe(2);
+    expect(readMarketEventsRecord()?.lastSuccessfulRefreshAt).toBe(due.toISOString());
+  });
+
+  it("lets one in-flight refresh serve concurrent readers", async () => {
+    let calls = 0;
+    vi.stubGlobal("fetch", async (input: string | URL) => {
+      const url = new URL(String(input));
+      if (url.pathname.includes("/calendar/economic")) {
+        calls += 1;
+        return Response.json({
+          economicCalendar: [{ event: "Retail Sales", country: "US", time: "2026-09-16 12:30:00", impact: "high", actual: null }],
+        });
+      }
+      return new Response("not found", { status: 404 });
+    });
+    const [left, right] = await Promise.all([buildMarketEvents(NOW), buildMarketEvents(NOW)]);
+    expect(calls).toBe(1);
+    expect(left.events.map((event) => event.name)).toEqual(["Retail Sales"]);
+    expect(right.events.map((event) => event.name)).toEqual(["Retail Sales"]);
+  });
+
+  it("keeps the last good payload and backs off after a failed refresh", async () => {
+    let calls = 0;
+    let fail = false;
+    vi.stubGlobal("fetch", async (input: string | URL) => {
+      const url = new URL(String(input));
+      calls += 1;
+      if (!fail && url.pathname.includes("/calendar/economic")) {
+        return Response.json({
+          economicCalendar: [{ event: "CPI", country: "US", time: "2026-09-16 12:30:00", impact: "high", actual: null }],
+        });
+      }
+      return new Response("down", { status: 500 });
+    });
+    const saved = await buildMarketEvents(NOW);
+    expect(saved.events).toHaveLength(1);
+    const stamp = readMarketEventsRecord()?.lastSuccessfulRefreshAt;
+    const afterSave = calls;
+    fail = true;
+    const later = new Date(NOW.getTime() + MARKET_EVENTS_REFRESH_MS);
+    vi.setSystemTime(later);
+    const failed = await buildMarketEvents(later);
+    expect(failed.data_status).toBe("STALE");
+    expect(failed.events).toEqual([]);
+    const kept = readMarketEventsRecord();
+    expect((kept?.payload as { events?: { name: string }[] } | undefined)?.events?.map((event) => event.name)).toEqual(["CPI"]);
+    expect(kept?.lastSuccessfulRefreshAt).toBe(stamp);
+    expect(calls).toBeGreaterThan(afterSave);
+    const afterFailure = calls;
+    const duringBackoff = await buildMarketEvents(new Date(later.getTime() + 60_000));
+    expect((readMarketEventsRecord()?.payload as { events?: { name: string }[] } | undefined)?.events?.map((event) => event.name)).toEqual(["CPI"]);
+    expect(duringBackoff.data_status).toBe("STALE");
+    expect(calls).toBe(afterFailure);
+  });
+
+  it("stores a valid empty US week and ignores an invalid refresh plus an expired lock", async () => {
+    let calls = 0;
+    vi.stubGlobal("fetch", async (input: string | URL) => {
+      calls += 1;
+      const url = new URL(String(input));
+      if (url.pathname.endsWith(".xml")) {
+        return new Response(
+          `<?xml version="1.0"?><weeklyevents><event><title>Spanish CPI</title><country>EUR</country><date><![CDATA[09-16-2026]]></date><time><![CDATA[6:00am]]></time><impact><![CDATA[High]]></impact></event></weeklyevents>`,
+          { headers: { "content-type": "text/xml" } },
+        );
+      }
+      return new Response("not found", { status: 404 });
+    });
+    delete process.env.FINNHUB_API_KEY;
+    resetSettings();
+    const empty = await buildMarketEvents(NOW);
+    expect(empty.data_status).toBe("LIVE");
+    expect(empty.events).toEqual([]);
+    const afterEmpty = calls;
+    await buildMarketEvents(new Date(NOW.getTime() + 1000));
+    expect(calls).toBe(afterEmpty);
+    const record = readMarketEventsRecord();
+    const due = new Date(NOW.getTime() + MARKET_EVENTS_REFRESH_MS);
+    saveMarketEventsRecord({
+      ...record!,
+      lock: { owner: "abandoned", expiresAt: new Date(NOW.getTime() - 1000).toISOString() },
+      lastSuccessfulRefreshAt: new Date(due.getTime() - MARKET_EVENTS_REFRESH_MS).toISOString(),
+    });
+    resetMarketEventsRuntime();
+    vi.setSystemTime(due);
+    vi.stubGlobal("fetch", async () => new Response("not-json", { status: 200, headers: { "content-type": "text/plain" } }));
+    const kept = await buildMarketEvents(due);
+    expect(kept.data_status).toBe("STALE");
+    expect(kept.events).toEqual([]);
+    expect(readMarketEventsRecord()?.payload).toMatchObject({ data_status: "LIVE", events: [] });
+  });
+
+  it("backs off the first fetch when no snapshot exists and the provider is down", async () => {
+    let calls = 0;
+    vi.stubGlobal("fetch", async () => {
+      calls += 1;
+      return new Response("down", { status: 500 });
+    });
+    const first = await buildMarketEvents(NOW);
+    expect(first.data_status).toBe("UNAVAILABLE");
+    expect(first.events).toEqual([]);
+    const afterFailure = calls;
+    expect(afterFailure).toBeGreaterThan(0);
+    const second = await buildMarketEvents(new Date(NOW.getTime() + 1000));
+    expect(second.data_status).toBe("UNAVAILABLE");
+    expect(calls).toBe(afterFailure);
   });
 });

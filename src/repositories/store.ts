@@ -33,11 +33,31 @@ export type OpportunityStore = {
   alertsFired?: { key: string; at: string }[];
 };
 
+/**
+ * Shared Market Events snapshot. On a long-running Node process this file is the
+ * durable copy. On Vercel the same store is written under /tmp, which is local to
+ * one instance and is cleared on cold start or deploy, so it cannot coordinate
+ * refreshes across instances.
+ */
+export type MarketEventsStoreRecord = {
+  schemaVersion: 1;
+  payload: unknown;
+  weekStart: string;
+  lastSuccessfulRefreshAt: string | null;
+  nextEligibleAt: string | null;
+  lastFailureAt: string | null;
+  lastError: string | null;
+  backoffUntil: string | null;
+  failureCount: number;
+  lock: { owner: string; expiresAt: string } | null;
+};
+
 type StoreData = {
   watchlist: WatchlistItem[];
   alerts: AlertRow[];
   snapshots: SignalSnap[];
   opportunity?: OpportunityStore;
+  marketEvents?: MarketEventsStoreRecord;
 };
 
 type StoreBackend = "file" | "memory";
@@ -118,6 +138,7 @@ function readStore(): StoreData {
       alerts: raw.alerts || [],
       snapshots: raw.snapshots || [],
       opportunity: raw.opportunity,
+      marketEvents: raw.marketEvents,
     };
   } catch {
     return empty();
@@ -254,6 +275,56 @@ export function appendOpportunityEvents(events: OpportunityStore["events"]): voi
   current.events = [...(current.events || []), ...events].slice(-200);
   data.opportunity = current;
   writeStore(data);
+}
+
+export function readMarketEventsRecord(): MarketEventsStoreRecord | null {
+  const record = readStore().marketEvents;
+  if (!record || record.schemaVersion !== 1) return null;
+  return record;
+}
+
+export function saveMarketEventsRecord(record: MarketEventsStoreRecord): void {
+  const data = readStore();
+  data.marketEvents = record;
+  writeStore(data);
+}
+
+export function clearMarketEventsRecord(): void {
+  const data = readStore();
+  delete data.marketEvents;
+  writeStore(data);
+}
+
+/**
+ * Synchronous read-modify-write. One Node process cannot interleave this with
+ * another call. Separate serverless instances do not share the file.
+ */
+export function claimMarketEventsLock(
+  now: Date,
+  owner: string,
+  leaseMs: number,
+  eligible: (record: MarketEventsStoreRecord | null) => boolean,
+): { claimed: boolean; record: MarketEventsStoreRecord | null } {
+  const current = readMarketEventsRecord();
+  const lockUntil = current?.lock ? Date.parse(current.lock.expiresAt) : 0;
+  if (current?.lock && Number.isFinite(lockUntil) && lockUntil > now.getTime()) {
+    return { claimed: false, record: current };
+  }
+  if (!eligible(current)) return { claimed: false, record: current };
+  const next: MarketEventsStoreRecord = {
+    schemaVersion: 1,
+    payload: current?.payload ?? null,
+    weekStart: current?.weekStart || "",
+    lastSuccessfulRefreshAt: current?.lastSuccessfulRefreshAt ?? null,
+    nextEligibleAt: current?.nextEligibleAt ?? null,
+    lastFailureAt: current?.lastFailureAt ?? null,
+    lastError: current?.lastError ?? null,
+    backoffUntil: current?.backoffUntil ?? null,
+    failureCount: current?.failureCount ?? 0,
+    lock: { owner, expiresAt: new Date(now.getTime() + leaseMs).toISOString() },
+  };
+  saveMarketEventsRecord(next);
+  return { claimed: true, record: next };
 }
 
 export function filterFreshOpportunityAlerts<T extends { key: string; type: string; symbol: string; message: string }>(

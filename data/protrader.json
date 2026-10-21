@@ -89906,6 +89906,468 @@
       "algorithm_version": "1.0.0",
       "id": "1075e810-20f1-43a1-a85f-6747c47f15c8",
       "created_at": "2026-10-20T20:26:27.481Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 59,
+      "signal": "WEAK",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "NEUTRAL",
+            "raw_score": 4.6,
+            "weight": 15,
+            "weighted_score": 6.9,
+            "details": "Price above 1/3 major EMAs; Price > VWAP",
+            "evidence": {
+              "price": 531.8699951171875,
+              "ema9": 532.1150321854387,
+              "ema20": 532.7144569556617,
+              "ema21": 532.7786381204392,
+              "ema50": 533.1306853296005,
+              "ema200": 518.5918739778217
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "RSI 46.6 < 50 (bearish momentum).",
+            "evidence": {
+              "rsi": 46.58362451551059,
+              "rsi_prev": 47.207331944183395
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "MACD > signal and histogram > 0.",
+            "evidence": {
+              "macd": -0.8296393720448805,
+              "signal": -0.9459610410798474,
+              "hist": 0.11632166903496688,
+              "hist_prev": 0.11668829239597178
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1678792.7,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "CAUTION",
+            "raw_score": 6.8,
+            "weight": 15,
+            "weighted_score": 10.2,
+            "details": "Holding above S1 530.23; Pressed directly under R1 532.78; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 531.8699951171875,
+              "s1": 530.23,
+              "s2": null,
+              "r1": 532.78,
+              "r2": null,
+              "pivot": 531.53,
+              "vwap": 531.29
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 29.63064,
+              "forward_pe": 22.442898,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 7,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 599.27527,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 2.2,
+            "weight": 7,
+            "weighted_score": 1.54,
+            "details": "S&P -1.19% (risk-off); NDX -3.53%; VIX 17.31",
+            "evidence": {
+              "as_of": "2026-10-20T22:47:03.943Z",
+              "spx": 7712.57,
+              "spx_change_pct": -1.1899377998706047,
+              "spx_change": -92.88000000000011,
+              "ndx": 29490.283,
+              "ndx_change_pct": -3.5303086607950154,
+              "ndx_change": -1079.1970000000001,
+              "dji": 52495.88,
+              "dji_change_pct": 1.5981776694838967,
+              "dji_change": 825.7799999999988,
+              "vix": 17.31,
+              "vix_change_pct": 2.6081802015411837,
+              "vix_change": 0.4399999999999977,
+              "qqq": 717.63,
+              "qqq_change_pct": -3.4885753863119886,
+              "qqq_change": -25.940000000000055,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 185.44,
+                  "change_percent": -5.5227226411249255
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 179.82,
+                  "change_percent": 5.988447483201695
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 67.97,
+                  "change_percent": 1.1458333333333273
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 55.72,
+                  "change_percent": 1.6417365924844922
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 166.8,
+                  "change_percent": -1.1086737416256456
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 115.5,
+                  "change_percent": 2.794588821644714
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 110.19,
+                  "change_percent": -1.8614178838617772
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 500.01,
+                  "change_percent": -8.069498069498067
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 5,
+            "weighted_score": 4,
+            "details": "10Y 5.12%; Yields falling/stable — supportive for growth; 1d -0.019",
+            "evidence": {
+              "yield": 5.116999626159668,
+              "change_1d": -0.019000530242919922,
+              "change_5d": -0.10000038146972656,
+              "trend_20d": "stable",
+              "as_of": "2026-10-20",
+              "source": "yfinance:^TNX"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7.5,
+            "weight": 10,
+            "weighted_score": 7.5,
+            "details": "17 headlines; 7 positive / 0 negative; Event-risk category present",
+            "evidence": {
+              "positive": 7,
+              "negative": 0,
+              "count": 17
+            }
+          }
+        ],
+        "filters": [
+          "R:R 1.08 below minimum 1.5 — DO NOT TRADE."
+        ]
+      },
+      "data_timestamp": "2026-10-20T20:00:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "4bdcdc9e-395f-4a73-a6c5-61be7196f122",
+      "created_at": "2026-10-20T22:47:06.173Z"
+    },
+    {
+      "symbol": "MSFT",
+      "timeframe": "1h",
+      "score": 59,
+      "signal": "WEAK",
+      "confidence": "MEDIUM",
+      "evidence": {
+        "categories": [
+          {
+            "id": 1,
+            "name": "Price Trend",
+            "status": "NEUTRAL",
+            "raw_score": 4.6,
+            "weight": 15,
+            "weighted_score": 6.9,
+            "details": "Price above 1/3 major EMAs; Price > VWAP",
+            "evidence": {
+              "price": 531.8699951171875,
+              "ema9": 532.1150321854387,
+              "ema20": 532.7144569556617,
+              "ema21": 532.7786381204392,
+              "ema50": 533.1306853296005,
+              "ema200": 518.5918739778217
+            }
+          },
+          {
+            "id": 2,
+            "name": "RSI Momentum",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "RSI 46.6 < 50 (bearish momentum).",
+            "evidence": {
+              "rsi": 46.58362451551059,
+              "rsi_prev": 47.207331944183395
+            }
+          },
+          {
+            "id": 3,
+            "name": "MACD",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "MACD > signal and histogram > 0.",
+            "evidence": {
+              "macd": -0.8296393720448805,
+              "signal": -0.9459610410798474,
+              "hist": 0.11632166903496688,
+              "hist_prev": 0.11668829239597178
+            }
+          },
+          {
+            "id": 4,
+            "name": "Volume",
+            "status": "BEARISH",
+            "raw_score": 3,
+            "weight": 10,
+            "weighted_score": 3,
+            "details": "Volume 0.00x average — weak participation.",
+            "evidence": {
+              "volume_ratio": 0,
+              "last_volume": 0,
+              "avg20": 1678792.7,
+              "breakout": false
+            }
+          },
+          {
+            "id": 5,
+            "name": "Support/Resistance",
+            "status": "CAUTION",
+            "raw_score": 6.8,
+            "weight": 15,
+            "weighted_score": 10.2,
+            "details": "Holding above S1 530.23; Pressed directly under R1 532.78; Above pivot; Above VWAP",
+            "evidence": {
+              "price": 531.8699951171875,
+              "s1": 530.23,
+              "s2": null,
+              "r1": 532.78,
+              "r2": null,
+              "pivot": 531.53,
+              "vwap": 531.29
+            }
+          },
+          {
+            "id": 6,
+            "name": "Fundamentals",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 10,
+            "weighted_score": 8,
+            "details": "Revenue growth 17.7%; EPS growth 31.7%; Margin profile constructive; Balance sheet healthy; Profitable; Valuation reasonable vs growth",
+            "evidence": {
+              "revenue_growth": 0.177,
+              "eps_growth": 0.317,
+              "pe": 29.63064,
+              "forward_pe": 22.442898,
+              "gross_margin": 0.67944,
+              "operating_margin": 0.45111
+            }
+          },
+          {
+            "id": 7,
+            "name": "Earnings Revisions",
+            "status": "BULLISH",
+            "raw_score": 9,
+            "weight": 8,
+            "weighted_score": 7.2,
+            "details": "Analysts raising EPS estimates; Street bias buy",
+            "evidence": {
+              "days_to_earnings": 7,
+              "recommendation": "buy",
+              "recommendation_mean": null,
+              "target_mean": 599.27527,
+              "eps_revision_trend": "up",
+              "earnings_date": 1793217600,
+              "source": "yfinance"
+            }
+          },
+          {
+            "id": 8,
+            "name": "Market/Sector",
+            "status": "BEARISH",
+            "raw_score": 2.2,
+            "weight": 7,
+            "weighted_score": 1.54,
+            "details": "S&P -1.19% (risk-off); NDX -3.53%; VIX 17.31",
+            "evidence": {
+              "as_of": "2026-10-20T22:47:03.943Z",
+              "spx": 7712.57,
+              "spx_change_pct": -1.1899377998706047,
+              "spx_change": -92.88000000000011,
+              "ndx": 29490.283,
+              "ndx_change_pct": -3.5303086607950154,
+              "ndx_change": -1079.1970000000001,
+              "dji": 52495.88,
+              "dji_change_pct": 1.5981776694838967,
+              "dji_change": 825.7799999999988,
+              "vix": 17.31,
+              "vix_change_pct": 2.6081802015411837,
+              "vix_change": 0.4399999999999977,
+              "qqq": 717.63,
+              "qqq_change_pct": -3.4885753863119886,
+              "qqq_change": -25.940000000000055,
+              "sectors": {
+                "Technology": {
+                  "etf": "XLK",
+                  "price": 185.44,
+                  "change_percent": -5.5227226411249255
+                },
+                "Health Care": {
+                  "etf": "XLV",
+                  "price": 179.82,
+                  "change_percent": 5.988447483201695
+                },
+                "Energy": {
+                  "etf": "XLE",
+                  "price": 67.97,
+                  "change_percent": 1.1458333333333273
+                },
+                "Financials": {
+                  "etf": "XLF",
+                  "price": 55.72,
+                  "change_percent": 1.6417365924844922
+                },
+                "Industrials": {
+                  "etf": "XLI",
+                  "price": 166.8,
+                  "change_percent": -1.1086737416256456
+                },
+                "Consumer Discretionary": {
+                  "etf": "XLY",
+                  "price": 115.5,
+                  "change_percent": 2.794588821644714
+                },
+                "Communication": {
+                  "etf": "XLC",
+                  "price": 110.19,
+                  "change_percent": -1.8614178838617772
+                },
+                "Semiconductors": {
+                  "etf": "SOXX",
+                  "price": 500.01,
+                  "change_percent": -8.069498069498067
+                }
+              }
+            }
+          },
+          {
+            "id": 9,
+            "name": "Interest Rates",
+            "status": "BULLISH",
+            "raw_score": 8,
+            "weight": 5,
+            "weighted_score": 4,
+            "details": "10Y 5.12%; Yields falling/stable — supportive for growth; 1d -0.019",
+            "evidence": {
+              "yield": 5.116999626159668,
+              "change_1d": -0.019000530242919922,
+              "change_5d": -0.10000038146972656,
+              "trend_20d": "stable",
+              "as_of": "2026-10-20",
+              "source": "yfinance:^TNX"
+            }
+          },
+          {
+            "id": 10,
+            "name": "Catalysts/Risk",
+            "status": "BULLISH",
+            "raw_score": 7.5,
+            "weight": 10,
+            "weighted_score": 7.5,
+            "details": "17 headlines; 7 positive / 0 negative; Event-risk category present",
+            "evidence": {
+              "positive": 7,
+              "negative": 0,
+              "count": 17
+            }
+          }
+        ],
+        "filters": [
+          "R:R 1.08 below minimum 1.5 — DO NOT TRADE."
+        ]
+      },
+      "data_timestamp": "2026-10-20T20:00:00.000Z",
+      "algorithm_version": "1.0.0",
+      "id": "e2e5dfea-84bd-4332-8f72-4f598b553a65",
+      "created_at": "2026-10-20T22:47:41.411Z"
     }
   ],
   "opportunity": {
@@ -90845,5 +91307,282 @@
         "at": "2026-10-01T21:45:41.570Z"
       }
     ]
+  },
+  "marketEvents": {
+    "schemaVersion": 1,
+    "payload": {
+      "week_label": "October 18, 2026 – October 24, 2026",
+      "last_updated": "2026-10-21T18:58:59.497Z",
+      "last_updated_est": "October 21, 2026, 2:58 PM EST (Eastern Standard Time)",
+      "time_zone_label": "EST (Eastern Standard Time)",
+      "events": [
+        {
+          "id": "2026-10-22|unemployment claims",
+          "name": "Unemployment Claims",
+          "category": "Employment",
+          "dateLabel": "October 22, 2026",
+          "timeLabel": "8:30 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 22, 2026 · 8:30 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-22T12:30:00.000Z",
+          "impact": "Medium",
+          "previous": "199K",
+          "forecast": "200K",
+          "actual": null,
+          "status": "upcoming",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-23|flash manufacturing pmi",
+          "name": "Flash Manufacturing PMI",
+          "category": "Growth",
+          "dateLabel": "October 23, 2026",
+          "timeLabel": "9:45 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 23, 2026 · 9:45 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-23T13:45:00.000Z",
+          "impact": "Medium",
+          "previous": "57.0",
+          "forecast": "55.4",
+          "actual": null,
+          "status": "upcoming",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-23|flash services pmi",
+          "name": "Flash Services PMI",
+          "category": "Growth",
+          "dateLabel": "October 23, 2026",
+          "timeLabel": "9:45 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 23, 2026 · 9:45 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-23T13:45:00.000Z",
+          "impact": "Medium",
+          "previous": "58.7",
+          "forecast": "57.9",
+          "actual": null,
+          "status": "upcoming",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-23|revised uom consumer sentiment",
+          "name": "Revised UoM Consumer Sentiment",
+          "category": "Economic Release",
+          "dateLabel": "October 23, 2026",
+          "timeLabel": "10:00 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 23, 2026 · 10:00 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-23T14:00:00.000Z",
+          "impact": "Medium",
+          "previous": "46.3",
+          "forecast": "46.3",
+          "actual": null,
+          "status": "upcoming",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-23|revised uom inflation expectations",
+          "name": "Revised UoM Inflation Expectations",
+          "category": "Inflation",
+          "dateLabel": "October 23, 2026",
+          "timeLabel": "10:00 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 23, 2026 · 10:00 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-23T14:00:00.000Z",
+          "impact": "Medium",
+          "previous": "4.7%",
+          "forecast": null,
+          "actual": null,
+          "status": "upcoming",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-19|nahb housing market index",
+          "name": "NAHB Housing Market Index",
+          "category": "Housing",
+          "dateLabel": "October 19, 2026",
+          "timeLabel": "10:00 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 19, 2026 · 10:00 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-19T14:00:00.000Z",
+          "impact": "Low",
+          "previous": "32",
+          "forecast": "31",
+          "actual": null,
+          "status": "released",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-20|adp weekly employment change",
+          "name": "ADP Weekly Employment Change",
+          "category": "Employment",
+          "dateLabel": "October 20, 2026",
+          "timeLabel": "8:15 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 20, 2026 · 8:15 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-20T12:15:00.000Z",
+          "impact": "Low",
+          "previous": "24.8K",
+          "forecast": null,
+          "actual": null,
+          "status": "released",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-20|building permits",
+          "name": "Building Permits",
+          "category": "Housing",
+          "dateLabel": "October 20, 2026",
+          "timeLabel": "8:30 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 20, 2026 · 8:30 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-20T12:30:00.000Z",
+          "impact": "Low",
+          "previous": "1.39M",
+          "forecast": "1.39M",
+          "actual": null,
+          "status": "released",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-20|housing starts",
+          "name": "Housing Starts",
+          "category": "Housing",
+          "dateLabel": "October 20, 2026",
+          "timeLabel": "8:30 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 20, 2026 · 8:30 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-20T12:30:00.000Z",
+          "impact": "Low",
+          "previous": "1.28M",
+          "forecast": "1.30M",
+          "actual": null,
+          "status": "released",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-20|pending home sales m m",
+          "name": "Pending Home Sales m/m",
+          "category": "Housing",
+          "dateLabel": "October 20, 2026",
+          "timeLabel": "10:00 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 20, 2026 · 10:00 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-20T14:00:00.000Z",
+          "impact": "Low",
+          "previous": "0.3%",
+          "forecast": "-0.6%",
+          "actual": null,
+          "status": "released",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-20|api weekly statistical bulletin",
+          "name": "API Weekly Statistical Bulletin",
+          "category": "Economic Release",
+          "dateLabel": "October 20, 2026",
+          "timeLabel": "4:30 PM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 20, 2026 · 4:30 PM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-20T20:30:00.000Z",
+          "impact": "Low",
+          "previous": null,
+          "forecast": null,
+          "actual": null,
+          "status": "released",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-21|crude oil inventories",
+          "name": "Crude Oil Inventories",
+          "category": "Economic Release",
+          "dateLabel": "October 21, 2026",
+          "timeLabel": "10:30 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 21, 2026 · 10:30 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-21T14:30:00.000Z",
+          "impact": "Low",
+          "previous": "-8.6M",
+          "forecast": "-0.1M",
+          "actual": null,
+          "status": "released",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-22|cb leading index m m",
+          "name": "CB Leading Index m/m",
+          "category": "Economic Release",
+          "dateLabel": "October 22, 2026",
+          "timeLabel": "10:00 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 22, 2026 · 10:00 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-22T14:00:00.000Z",
+          "impact": "Low",
+          "previous": "-0.1%",
+          "forecast": "-0.1%",
+          "actual": null,
+          "status": "upcoming",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        },
+        {
+          "id": "2026-10-22|natural gas storage",
+          "name": "Natural Gas Storage",
+          "category": "Economic Release",
+          "dateLabel": "October 22, 2026",
+          "timeLabel": "10:30 AM EST (Eastern Standard Time)",
+          "timeZoneLabel": "EST (Eastern Standard Time)",
+          "datetimeEst": "October 22, 2026 · 10:30 AM EST (Eastern Standard Time)",
+          "occursAt": "2026-10-22T14:30:00.000Z",
+          "impact": "Low",
+          "previous": "67B",
+          "forecast": "80B",
+          "actual": null,
+          "status": "upcoming",
+          "country": "United States",
+          "source": "Live economic calendar",
+          "hasClock": true
+        }
+      ],
+      "source": "Live economic calendar, Federal Reserve",
+      "sources": [
+        "Live economic calendar",
+        "Federal Reserve"
+      ],
+      "data_status": "LIVE"
+    },
+    "weekStart": "2026-10-18",
+    "lastSuccessfulRefreshAt": "2026-10-21T18:58:59.497Z",
+    "nextEligibleAt": "2026-10-28T18:58:59.497Z",
+    "lastFailureAt": null,
+    "lastError": null,
+    "backoffUntil": null,
+    "failureCount": 0,
+    "lock": null
   }
 }

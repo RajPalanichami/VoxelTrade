@@ -17,7 +17,6 @@ import { buildPulse } from "@/src/services/pulse";
 import { buildMarketHistory } from "@/src/services/marketHistory";
 import { buildMarketGauge } from "@/src/services/marketGauge";
 import { buildMarketEvents } from "@/src/services/marketEvents";
-import { ensureMarketEventsScheduler } from "@/src/services/marketEventsScheduler";
 import { buildSector, INDICATOR_TF as SECTOR_TF, RANGES as SECTOR_RANGES, listSectors } from "@/src/services/sectorIntel";
 import { buildCompare } from "@/src/services/compare";
 import { buildBasketCompare, buildMag7Compare, parseBasketTickers } from "@/src/services/mag7Compare";
@@ -125,7 +124,6 @@ function errorResponse(err: unknown) {
 
 export async function handleV1(method: string, path: string[], url: URL, body: unknown) {
   getSettings().validateRuntime();
-  ensureMarketEventsScheduler();
   const segs = path.filter(Boolean);
 
   if ((method === "GET" || method === "POST") && segs[0] === "compare" && segs[1] === "mag7") {

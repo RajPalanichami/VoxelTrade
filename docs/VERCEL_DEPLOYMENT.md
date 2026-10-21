@@ -176,7 +176,11 @@ No region or memory is hardcoded in the repo.
 
 ## 11. Cron Jobs
 
-This repository has **no cron jobs**, no `vercel.json` crons, and no scheduled API. Do not invent a scheduler.
+This repository has **no cron jobs**, no `vercel.json`, and no GitHub Actions scheduler. Do not add one.
+
+Market Events refresh on demand. The first server request after the stored `lastSuccessfulRefreshAt` is seven days old fetches the calendar once, writes the JSON into the existing application store (`data/protrader.json` locally, `/tmp/voxel-trading/protrader.json` on Vercel), and every later read reuses that payload. A failed refresh keeps the previous payload and waits out a backoff before trying again.
+
+`/tmp` on Vercel is not shared across instances and does not survive a cold start or a deploy. A new instance with an empty store fetches again. There is no durable database in this repository. `REDIS_URL` is unused. Do not treat the serverless file as a cross-instance lock.
 
 ## 12. External API Dependencies
 
