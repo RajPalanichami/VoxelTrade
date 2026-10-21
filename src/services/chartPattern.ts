@@ -80,6 +80,7 @@ export type PatternTradePlan = {
   pattern_name: string;
   bias: PatternBias;
   status: string;
+  pattern_status: string;
   market_structure: string;
   entry: string | null;
   entry_zone: string | null;

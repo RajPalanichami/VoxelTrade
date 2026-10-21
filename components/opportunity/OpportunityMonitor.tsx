@@ -300,16 +300,18 @@ export function OpportunityMonitor() {
               </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 text-sm">
-              {[
-                ["SPY", payload.regime.spy],
-                ["QQQ", payload.regime.qqq],
-                ["IWM", payload.regime.iwm],
-              ].map(([label, pack]) => (
-                <div key={String(label)} className="rounded-md border border-line/40 p-3">
+              {(
+                [
+                  ["SPY", payload.regime.spy],
+                  ["QQQ", payload.regime.qqq],
+                  ["IWM", payload.regime.iwm],
+                ] as [string, typeof payload.regime.spy][]
+              ).map(([label, pack]) => (
+                <div key={label} className="rounded-md border border-line/40 p-3">
                   <div className="text-slate-500 text-xs">{label}</div>
-                  <div>Trend: {(pack as { trend: string }).trend}</div>
-                  <div>Price vs 20 EMA: {(pack as { vs20: string }).vs20}</div>
-                  <div>Price vs 50 EMA: {(pack as { vs50: string }).vs50}</div>
+                  <div>Trend: {pack.trend}</div>
+                  <div>Price vs 20 EMA: {pack.vs20}</div>
+                  <div>Price vs 50 EMA: {pack.vs50}</div>
                 </div>
               ))}
               <div className="rounded-md border border-line/40 p-3">

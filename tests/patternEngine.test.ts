@@ -95,7 +95,7 @@ function explicit(n: number, close0: number, edits: Array<{ i: number; high?: nu
 
 describe("head and shoulders", () => {
   function hs(breakdown = true) {
-    const edits = [
+    const edits: Array<{ i: number; high?: number; low?: number; close?: number; volume?: number }> = [
       { i: 20, high: 128, close: 124 },
       { i: 26, low: 108, close: 110 },
       { i: 34, high: 146, close: 140 },

@@ -175,7 +175,11 @@ export async function buildStockDecision(symbol: string, timeframe: StockDecisio
   const [context, events, dailyPack, spy, qqq, iwm, vix, fundamentals, ...mtfPacks] = await Promise.all([
     settled(() => getTickerMarketContext(ticker)),
     settled(() => buildMarketEvents()),
-    settled(() => (timeframe === "1d" ? Promise.resolve([ind, bars, source] as const) : analysis.indicators(ticker, "1d"))),
+    settled(async (): Promise<[Indicators, OHLCVBar[], string]> => {
+      if (timeframe === "1d") return [ind, bars, source];
+      const [dailyInd, dailyBars, dailySource] = await analysis.indicators(ticker, "1d");
+      return [dailyInd, dailyBars, dailySource];
+    }),
     settled(() => analysis.quote("SPY")),
     settled(() => analysis.quote(INDEX_SYMBOLS.qqq)),
     settled(() => analysis.quote("IWM")),

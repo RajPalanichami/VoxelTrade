@@ -58,7 +58,7 @@ export async function buildStockBuyingEngine(
   const hit = cacheGet<StockBuyingPayload>(key);
   if (hit) return hit;
 
-  const bundle = (await analysis.analyze(ticker, tf, true)) as AnalysisBundle;
+  const bundle = (await analysis.analyze(ticker, tf, true)) as unknown as AnalysisBundle;
   const events = await settled(buildMarketEvents);
   const closes = (bundle.bars || []).map((b) => b.close);
   const overlays = movingAveragesFromCloses(closes);

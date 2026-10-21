@@ -306,10 +306,10 @@ export function assembleTickerMarketContext(input: {
       belowOvernightHigh: levels.overnightHigh.priceAboveLevel === null ? null : !levels.overnightHigh.priceAboveLevel,
     },
     volumes: {
-      overnight: overnight.volume,
-      preMarket: preMarket.volume,
-      regular: regular.volume,
-      afterHours: afterHours.volume,
+      overnight: overnight.volume ?? null,
+      preMarket: preMarket.volume ?? null,
+      regular: regular.volume ?? null,
+      afterHours: afterHours.volume ?? null,
       extendedTotal: [overnight.volume, preMarket.volume, afterHours.volume].reduce<number | null>((s, v) => (v == null ? s : (s || 0) + v), null),
     },
     dataQuality: {

@@ -326,7 +326,7 @@ export function walkRecovery(bars: OHLCVBar[], settings: BreakoutSettings, resis
 
   const lastAtr = atrs[atrs.length - 1];
   const lastRange = last.high - last.low;
-  if (lastAtr && lastRange > lastAtr * 1.5 && (lastC?.rvol ?? 0) >= settings.rvolHigh && last.direction) {
+  if (lastAtr && lastRange > lastAtr * 1.5 && (lastC?.rvol ?? 0) >= settings.rvolHigh && lastC?.direction) {
     push(lastRange > lastAtr * 2 && (lastC?.rvol ?? 0) >= settings.rvolExtreme ? "MAJOR_EXPANSION" : "MOMENTUM_EXPANSION", bars.length - 1, [
       `Range ${ (lastRange / lastAtr).toFixed(2)} × ATR`,
       `RVOL ${lastC?.rvol?.toFixed(2) ?? "n/a"}`,

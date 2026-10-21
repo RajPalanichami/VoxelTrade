@@ -55,13 +55,13 @@ describe("decision ladder", () => {
 
 describe("structure language", () => {
   it("calls a range when HH/HL are mixed", () => {
-    const s = describeStructure({ higher_highs: true, higher_lows: false }, 110, 90, 100);
+    const s = describeStructure({ higher_highs: true, higher_lows: false, lower_highs: false, lower_lows: false }, 110, 90, 100);
     expect(s.label).toBe("RANGE");
     expect(s.detail).toMatch(/90/);
   });
 
   it("does not invent structure without a price", () => {
-    expect(describeStructure({}, 110, 90, null).label).toBe("INSUFFICIENT DATA");
+    expect(describeStructure({ higher_highs: false, higher_lows: false, lower_highs: false, lower_lows: false }, 110, 90, null).label).toBe("INSUFFICIENT DATA");
   });
 });
 

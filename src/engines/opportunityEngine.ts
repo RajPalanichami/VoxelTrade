@@ -456,7 +456,7 @@ export function ageLabel(iso: string | null, now = Date.now()) {
 export function mapNews(raw: Record<string, unknown>[], lookbackHours: number, now = Date.now()): OpportunityNewsItem[] {
   const cutoff = now - lookbackHours * 3600_000;
   return raw
-    .map((item) => {
+    .map((item): OpportunityNewsItem | null => {
       const headline = String(item.headline || item.title || "");
       const publishedAt = item.published_at ? String(item.published_at) : item.publishedAt ? String(item.publishedAt) : null;
       const ts = publishedAt ? new Date(publishedAt).getTime() : NaN;
@@ -478,9 +478,9 @@ export function mapNews(raw: Record<string, unknown>[], lookbackHours: number, n
         freshness: Math.round(freshness),
         technicalImpact,
         url: item.url ? String(item.url) : undefined,
-      } satisfies OpportunityNewsItem;
+      };
     })
-    .filter((x): x is OpportunityNewsItem => !!x && !!x.headline)
+    .filter((x): x is OpportunityNewsItem => x != null && !!x.headline)
     .slice(0, 8);
 }
 
@@ -948,7 +948,7 @@ export function analyzeOpportunityTicker(input: {
   const scoreBreakdown: ScoreFactor[] = [
     { name: "Daily / Weekly Structure", score: dailyStruct, max: 15, note: `${daily.structure} / ${weekly?.structure || "—"}` },
     { name: "30m Structure", score: m30Struct, max: 10, note: m30?.structure || "Unavailable" },
-    { name: "15m Momentum", score: m15Mom, max: 10, note: String(momentumLabel(m15)) },
+    { name: "15m Momentum", score: m15Mom, max: 10, note: String(momentumLabel(m15 ?? null)) },
     { name: "5m Entry Structure", score: m5Entry, max: 5, note: m5?.structure || "Unavailable" },
     { name: "VWAP Alignment", score: vwapPts, max: 10, note: vwapPack.label },
     { name: "Volume", score: volPts, max: 10, note: rvol != null ? `${rvol.toFixed(2)}x` : "n/a" },

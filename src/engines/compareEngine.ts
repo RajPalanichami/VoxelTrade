@@ -160,7 +160,7 @@ export function buildSnapshot(symbol: string, name: string, bars: OHLCVBar[]): S
   const st = stoch(high, low, close);
   const dmiSet = dmi(high, low, close);
   const kel = keltner(high, low, close);
-  const don = donchian(high, low, close);
+  const don = donchian(high, low);
   const ppoSet = ppo(close);
   const lastBar = bars[n - 1];
   const prevBar = n > 1 ? bars[n - 2] : lastBar;
@@ -515,14 +515,14 @@ function specs(): Spec[] {
     ["adx", "ADX", "adx", 28, "raw"],
     ["adxr", "ADXR", "adxr", 42, "raw"],
   ].map(([id, name, key, req, kind]) => ({
-    id,
+    id: String(id),
     category: "Momentum",
-    name,
-    key,
+    name: String(name),
+    key: String(key),
     required: Number(req),
     kind: kind as Spec["kind"],
-    calc: name,
-    desc: `${name} from OHLCV`,
+    calc: String(name),
+    desc: `${String(name)} from OHLCV`,
     higherBetter: id !== "dmi_minus" && id !== "williams",
   }));
 
@@ -754,7 +754,7 @@ export function cellsFromSnap(snap: SeriesSnap): Record<string, CompareCell> {
   return out;
 }
 
-function scoreFromSignal(s: CompareSignal) {
+function scoreFromSignal(s: CompareSignal): number | null {
   switch (s) {
     case "STRONG BULLISH":
       return 100;
